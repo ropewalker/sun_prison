@@ -17,7 +17,7 @@ pub fn sun_movement_system(
             if normal_orientation.0 == *path.get(index).unwrap() {
                 sprite.index = 2;
             } else if normal_orientation.0 == *path.get((index + 1) % path.len()).unwrap()
-                || normal_orientation.0 == *path.get((index - 1) % path.len()).unwrap()
+                || normal_orientation.0 == *path.get((path.len() + index - 1) % path.len()).unwrap()
             {
                 sprite.index = 1;
             } else {
