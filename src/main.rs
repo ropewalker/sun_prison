@@ -34,6 +34,7 @@ fn main() {
         .add_system(cube_rotation_system.system())
         .add_system(highlight_layer_system.system())
         .add_system(translation_system.system())
+        .add_system(insolation_system.system())
         .add_system(sun_movement_system.system())
         .add_system(player_sprite_update_system.system())
         .add_system(tile_sprite_update_system.system())
