@@ -43,7 +43,10 @@ impl Default for SunPath {
 }
 
 #[derive(Default, Eq, PartialEq)]
-pub struct CurrentTurn(pub GameSide);
+pub struct CurrentTurn {
+    pub side: GameSide,
+    pub turn_number: usize,
+}
 
 #[derive(Eq, PartialEq)]
 pub enum GameSide {

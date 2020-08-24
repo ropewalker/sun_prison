@@ -1,5 +1,6 @@
 mod algebra;
 mod components;
+mod entities;
 mod events;
 mod resources;
 mod systems;
@@ -35,5 +36,6 @@ fn main() {
         .add_system(translation_system.system())
         .add_system(sun_movement_system.system())
         .add_system(player_sprite_update_system.system())
+        .add_system(tile_sprite_update_system.system())
         .run();
 }

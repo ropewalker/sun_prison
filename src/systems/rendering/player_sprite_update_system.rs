@@ -3,10 +3,10 @@ use crate::components::*;
 use bevy::prelude::*;
 
 pub fn player_sprite_update_system(
+    _player: &Player,
     normal_orientation: &NormalOrientation,
     tangent_orientation: &TangentOrientation,
     mut sprite: Mut<TextureAtlasSprite>,
-    _player: &Player,
 ) {
     const UP: u32 = 3;
     const DOWN: u32 = 0;

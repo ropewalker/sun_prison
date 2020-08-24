@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use std::ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign};
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]

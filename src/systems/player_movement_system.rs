@@ -12,7 +12,7 @@ pub fn player_movement_system(
     mut normal_orientation: Mut<NormalOrientation>,
     mut tangent_orientation: Mut<TangentOrientation>,
 ) {
-    if *current_turn == CurrentTurn(GameSide::Player) {
+    if current_turn.side == GameSide::Player {
         if keyboard_input.just_pressed(KeyCode::Up) || keyboard_input.just_pressed(KeyCode::W) {
             let new_cubelet_position = cubelet_position.0 + tangent_orientation.0;
 
@@ -27,7 +27,7 @@ pub fn player_movement_system(
                 cubelet_position.0 = new_cubelet_position;
             }
 
-            *current_turn = CurrentTurn(GameSide::Sun);
+            current_turn.side = GameSide::Sun;
         } else if keyboard_input.just_pressed(KeyCode::Down)
             || keyboard_input.just_pressed(KeyCode::S)
         {
@@ -44,7 +44,7 @@ pub fn player_movement_system(
                 cubelet_position.0 = new_cubelet_position;
             }
 
-            *current_turn = CurrentTurn(GameSide::Sun);
+            current_turn.side = GameSide::Sun;
         } else if keyboard_input.just_pressed(KeyCode::Left)
             || keyboard_input.just_pressed(KeyCode::A)
         {
@@ -61,7 +61,7 @@ pub fn player_movement_system(
             );
 
             rotate_layer_events.send(RotateLayerEvent(rotation_info));
-            *current_turn = CurrentTurn(GameSide::Sun);
+            current_turn.side = GameSide::Sun;
         }
     }
 }

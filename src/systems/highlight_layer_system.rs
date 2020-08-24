@@ -10,7 +10,7 @@ pub fn highlight_layer_system(
         &NormalOrientation,
         &TangentOrientation,
     )>,
-    mut tiles_query: Query<(&Tile, &CubeletPosition, Mut<TextureAtlasSprite>)>,
+    mut tiles_query: Query<(&Tile, &CubeletPosition, Mut<IsHighlighted>)>,
 ) {
     for (_, player_cubelet_position, normal_orientation, tangent_orientation) in
         &mut player_query.iter()
@@ -21,43 +21,16 @@ pub fn highlight_layer_system(
             &tangent_orientation,
         );
 
-        for (_, cubelet_position, mut sprite) in &mut tiles_query.iter() {
-            match (axis.x, axis.y, axis.z) {
-                (1, 0, 0) | (-1, 0, 0) => {
-                    if cubelet_position.0.x == layer {
-                        sprite.index = if keyboard_input.pressed(KeyCode::Tab) {
-                            1
-                        } else {
-                            0
-                        };
-                    } else {
-                        sprite.index = 0;
-                    }
-                }
-                (0, 1, 0) | (0, -1, 0) => {
-                    if cubelet_position.0.y == layer {
-                        sprite.index = if keyboard_input.pressed(KeyCode::Tab) {
-                            1
-                        } else {
-                            0
-                        };
-                    } else {
-                        sprite.index = 0;
-                    }
-                }
-                (0, 0, 1) | (0, 0, -1) => {
-                    if cubelet_position.0.z == layer {
-                        sprite.index = if keyboard_input.pressed(KeyCode::Tab) {
-                            1
-                        } else {
-                            0
-                        };
-                    } else {
-                        sprite.index = 0;
-                    }
-                }
-                _ => {}
-            }
+        for (_, cubelet_position, mut is_highlighted) in &mut tiles_query.iter() {
+            let current_layer = match (axis.x, axis.y, axis.z) {
+                (1, 0, 0) | (-1, 0, 0) => cubelet_position.0.x,
+                (0, 1, 0) | (0, -1, 0) => cubelet_position.0.y,
+                (0, 0, 1) | (0, 0, -1) => cubelet_position.0.z,
+                _ => panic!("wrong axis!"),
+            };
+
+            *is_highlighted =
+                IsHighlighted(current_layer == layer && keyboard_input.pressed(KeyCode::Tab));
         }
     }
 }
