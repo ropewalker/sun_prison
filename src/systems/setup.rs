@@ -21,12 +21,12 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 4, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
     let cubelet_position = CubeletPosition(Vector3 { x: 2, y: 0, z: 0 });
+    let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
+    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
+
     let translation =
         game_coordinates_to_translation(&tile_size, &cubelet_position, &normal_orientation, 1.0);
-
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
 
     commands
         .spawn(SpriteSheetComponents {
@@ -35,9 +35,11 @@ pub fn setup(
             ..Default::default()
         })
         .with(Player)
-        .with(tangent_orientation)
-        .with(cubelet_position)
-        .with(normal_orientation);
+        .with_bundle(GameCoordinates {
+            cubelet_position,
+            normal_orientation,
+            tangent_orientation,
+        });
 
     //right
     let texture_handle = asset_server
@@ -57,14 +59,18 @@ pub fn setup(
         for z in -2..=2 {
             let cubelet_position = CubeletPosition(Vector3 { x: 2, y, z });
 
+            let game_coordinates = GameCoordinates {
+                cubelet_position,
+                normal_orientation,
+                tangent_orientation,
+            };
+
             create_tile(
                 &mut commands,
                 &tile_size,
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-                &insolation,
-                &is_highlighted,
+                game_coordinates,
+                insolation,
+                is_highlighted,
                 texture_atlas,
             );
         }
@@ -88,14 +94,18 @@ pub fn setup(
         for z in -2..=2 {
             let cubelet_position = CubeletPosition(Vector3 { x, y: 2, z });
 
+            let game_coordinates = GameCoordinates {
+                cubelet_position,
+                normal_orientation,
+                tangent_orientation,
+            };
+
             create_tile(
                 &mut commands,
                 &tile_size,
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-                &insolation,
-                &is_highlighted,
+                game_coordinates,
+                insolation,
+                is_highlighted,
                 texture_atlas,
             );
         }
@@ -119,14 +129,18 @@ pub fn setup(
         for x in -2..=2 {
             let cubelet_position = CubeletPosition(Vector3 { x, y, z: 2 });
 
+            let game_coordinates = GameCoordinates {
+                cubelet_position,
+                normal_orientation,
+                tangent_orientation,
+            };
+
             create_tile(
                 &mut commands,
                 &tile_size,
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-                &insolation,
-                &is_highlighted,
+                game_coordinates,
+                insolation,
+                is_highlighted,
                 texture_atlas,
             );
         }
@@ -150,14 +164,18 @@ pub fn setup(
         for z in -2..=2 {
             let cubelet_position = CubeletPosition(Vector3 { x: -2, y, z });
 
+            let game_coordinates = GameCoordinates {
+                cubelet_position,
+                normal_orientation,
+                tangent_orientation,
+            };
+
             create_tile(
                 &mut commands,
                 &tile_size,
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-                &insolation,
-                &is_highlighted,
+                game_coordinates,
+                insolation,
+                is_highlighted,
                 texture_atlas,
             );
         }
@@ -181,14 +199,18 @@ pub fn setup(
         for z in -2..=2 {
             let cubelet_position = CubeletPosition(Vector3 { x, y: -2, z });
 
+            let game_coordinates = GameCoordinates {
+                cubelet_position,
+                normal_orientation,
+                tangent_orientation,
+            };
+
             create_tile(
                 &mut commands,
                 &tile_size,
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-                &insolation,
-                &is_highlighted,
+                game_coordinates,
+                insolation,
+                is_highlighted,
                 texture_atlas,
             );
         }
@@ -212,14 +234,18 @@ pub fn setup(
         for x in -2..=2 {
             let cubelet_position = CubeletPosition(Vector3 { x, y, z: -2 });
 
+            let game_coordinates = GameCoordinates {
+                cubelet_position,
+                normal_orientation,
+                tangent_orientation,
+            };
+
             create_tile(
                 &mut commands,
                 &tile_size,
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-                &insolation,
-                &is_highlighted,
+                game_coordinates,
+                insolation,
+                is_highlighted,
                 texture_atlas,
             );
         }

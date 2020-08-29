@@ -10,8 +10,8 @@ pub fn translation_system(
 ) {
     *translation = game_coordinates_to_translation(
         &tile_size,
-        &cubelet_position,
-        &normal_orientation,
+        cubelet_position,
+        normal_orientation,
         translation.0.z(),
     );
 }
