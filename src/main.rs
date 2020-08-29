@@ -17,8 +17,8 @@ fn main() {
         .add_event::<RotateLayerEvent>()
         .add_resource(WindowDescriptor {
             title: "Sun Prison".to_string(),
-            width: 800,
-            height: 600,
+            width: 1440,
+            height: 1080,
             vsync: true,
             mode: WindowMode::Windowed,
             ..Default::default()
