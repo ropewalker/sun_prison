@@ -2,18 +2,12 @@ mod constants;
 
 pub use self::constants::*;
 use crate::algebra::*;
-use crate::events::*;
 use bevy::input::keyboard::KeyboardInput;
 use bevy::prelude::*;
 
 #[derive(Default)]
 pub struct KeyboardState {
     pub event_reader: EventReader<KeyboardInput>,
-}
-
-#[derive(Default)]
-pub struct EventListenerState {
-    pub event_reader: EventReader<RotateLayerEvent>,
 }
 
 pub struct SunPath {

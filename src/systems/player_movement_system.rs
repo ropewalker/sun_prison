@@ -1,11 +1,9 @@
 use crate::components::*;
-use crate::events::*;
 use crate::resources::*;
 use bevy::prelude::*;
 
 pub fn player_movement_system(
     keyboard_input: Res<Input<KeyCode>>,
-    mut rotate_layer_events: ResMut<Events<RotateLayerEvent>>,
     mut current_turn: ResMut<CurrentTurn>,
     _player: &Player,
     mut cubelet_position: Mut<CubeletPosition>,
@@ -53,15 +51,6 @@ pub fn player_movement_system(
             || keyboard_input.just_pressed(KeyCode::D)
         {
             tangent_orientation.0 = tangent_orientation.0.cross(normal_orientation.0);
-        } else if keyboard_input.just_pressed(KeyCode::Space) {
-            let rotation_info = calculate_rotation_info(
-                &cubelet_position,
-                &normal_orientation,
-                &tangent_orientation,
-            );
-
-            rotate_layer_events.send(RotateLayerEvent(rotation_info));
-            current_turn.side = GameSide::Sun;
         }
     }
 }

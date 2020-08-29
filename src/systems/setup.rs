@@ -28,7 +28,8 @@ pub fn setup(
     let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
     let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
 
-    let translation = game_coordinates_to_translation(&cubelet_position, &normal_orientation, 1.0);
+    let mut translation: Translation = Default::default();
+    translation.0.set_z(1.0);
 
     commands
         .spawn(SpriteSheetComponents {

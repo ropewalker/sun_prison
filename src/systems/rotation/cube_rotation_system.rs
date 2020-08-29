@@ -1,39 +1,42 @@
 use crate::algebra::*;
 use crate::components::*;
-use crate::events::*;
 use crate::resources::*;
 use bevy::prelude::*;
 
 pub fn cube_rotation_system(
-    mut state: ResMut<EventListenerState>,
-    events: ResMut<Events<RotateLayerEvent>>,
+    keyboard_input: Res<Input<KeyCode>>,
+    mut current_turn: ResMut<CurrentTurn>,
     mut coordinates_query: Query<(
         Mut<CubeletPosition>,
         Mut<NormalOrientation>,
         Mut<TangentOrientation>,
     )>,
 ) {
-    for event in state.event_reader.iter(&events) {
-        let RotateLayerEvent(RotationInfo { layer, axis }) = event;
-
+    if keyboard_input.just_pressed(KeyCode::Space) {
         for (mut cubelet_position, mut normal_orientation, mut tangent_orientation) in
             &mut coordinates_query.iter()
         {
+            let RotationInfo { layer, axis } = super::calculate_rotation_info(
+                &cubelet_position,
+                &normal_orientation,
+                &tangent_orientation,
+            );
+
             let mut rotate = false;
 
             match (axis.x, axis.y, axis.z) {
                 (1, 0, 0) | (-1, 0, 0) => {
-                    if cubelet_position.0.x == *layer {
+                    if cubelet_position.0.x == layer {
                         rotate = true;
                     }
                 }
                 (0, 1, 0) | (0, -1, 0) => {
-                    if cubelet_position.0.y == *layer {
+                    if cubelet_position.0.y == layer {
                         rotate = true;
                     }
                 }
                 (0, 0, 1) | (0, 0, -1) => {
-                    if cubelet_position.0.z == *layer {
+                    if cubelet_position.0.z == layer {
                         rotate = true;
                     }
                 }
@@ -46,5 +49,7 @@ pub fn cube_rotation_system(
                 tangent_orientation.0 = tangent_orientation.0.rotate(&axis);
             }
         }
+
+        current_turn.side = GameSide::Sun;
     }
 }

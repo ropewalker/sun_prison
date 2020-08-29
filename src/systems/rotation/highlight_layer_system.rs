@@ -15,7 +15,7 @@ pub fn highlight_layer_system(
     for (_, player_cubelet_position, normal_orientation, tangent_orientation) in
         &mut player_query.iter()
     {
-        let RotationInfo { axis, layer } = calculate_rotation_info(
+        let RotationInfo { axis, layer } = super::calculate_rotation_info(
             &player_cubelet_position,
             &normal_orientation,
             &tangent_orientation,
