@@ -16,9 +16,9 @@ pub fn player_movement_system(
         if keyboard_input.just_pressed(KeyCode::Up) || keyboard_input.just_pressed(KeyCode::W) {
             let new_cubelet_position = cubelet_position.0 + tangent_orientation.0;
 
-            if new_cubelet_position.x.abs() > 2
-                || new_cubelet_position.y.abs() > 2
-                || new_cubelet_position.z.abs() > 2
+            if new_cubelet_position.x.abs() > PLANET_RADIUS
+                || new_cubelet_position.y.abs() > PLANET_RADIUS
+                || new_cubelet_position.z.abs() > PLANET_RADIUS
             {
                 let new_tangent_orientation = -normal_orientation.0;
                 normal_orientation.0 = tangent_orientation.0;
@@ -33,9 +33,9 @@ pub fn player_movement_system(
         {
             let new_cubelet_position = cubelet_position.0 - tangent_orientation.0;
 
-            if new_cubelet_position.x.abs() > 2
-                || new_cubelet_position.y.abs() > 2
-                || new_cubelet_position.z.abs() > 2
+            if new_cubelet_position.x.abs() > PLANET_RADIUS
+                || new_cubelet_position.y.abs() > PLANET_RADIUS
+                || new_cubelet_position.z.abs() > PLANET_RADIUS
             {
                 let new_tangent_orientation = normal_orientation.0;
                 normal_orientation.0 = -tangent_orientation.0;

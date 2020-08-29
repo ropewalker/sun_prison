@@ -1,3 +1,6 @@
+mod constants;
+
+pub use self::constants::*;
 use crate::algebra::*;
 use crate::events::*;
 use bevy::input::keyboard::KeyboardInput;
@@ -11,14 +14,6 @@ pub struct KeyboardState {
 #[derive(Default)]
 pub struct EventListenerState {
     pub event_reader: EventReader<RotateLayerEvent>,
-}
-
-pub struct TileSize(pub f32);
-
-impl Default for TileSize {
-    fn default() -> Self {
-        TileSize(32.0)
-    }
 }
 
 pub struct SunPath {

@@ -6,7 +6,6 @@ use bevy::prelude::*;
 
 pub fn setup(
     mut commands: Commands,
-    tile_size: Res<TileSize>,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
     mut textures: ResMut<Assets<Texture>>,
@@ -21,12 +20,15 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 4, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let cubelet_position = CubeletPosition(Vector3 { x: 2, y: 0, z: 0 });
+    let cubelet_position = CubeletPosition(Vector3 {
+        x: PLANET_RADIUS,
+        y: 0,
+        z: 0,
+    });
     let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
     let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
 
-    let translation =
-        game_coordinates_to_translation(&tile_size, &cubelet_position, &normal_orientation, 1.0);
+    let translation = game_coordinates_to_translation(&cubelet_position, &normal_orientation, 1.0);
 
     commands
         .spawn(SpriteSheetComponents {
@@ -55,9 +57,13 @@ pub fn setup(
     let insolation = Insolation::Day;
     let is_highlighted = IsHighlighted(false);
 
-    for y in -2..=2 {
-        for z in -2..=2 {
-            let cubelet_position = CubeletPosition(Vector3 { x: 2, y, z });
+    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+        for z in -PLANET_RADIUS..=PLANET_RADIUS {
+            let cubelet_position = CubeletPosition(Vector3 {
+                x: PLANET_RADIUS,
+                y,
+                z,
+            });
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -67,7 +73,6 @@ pub fn setup(
 
             create_tile(
                 &mut commands,
-                &tile_size,
                 game_coordinates,
                 insolation,
                 is_highlighted,
@@ -90,9 +95,13 @@ pub fn setup(
     let insolation = Insolation::Night;
     let is_highlighted = IsHighlighted(false);
 
-    for x in -2..=2 {
-        for z in -2..=2 {
-            let cubelet_position = CubeletPosition(Vector3 { x, y: 2, z });
+    for x in -PLANET_RADIUS..=PLANET_RADIUS {
+        for z in -PLANET_RADIUS..=PLANET_RADIUS {
+            let cubelet_position = CubeletPosition(Vector3 {
+                x,
+                y: PLANET_RADIUS,
+                z,
+            });
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -102,7 +111,6 @@ pub fn setup(
 
             create_tile(
                 &mut commands,
-                &tile_size,
                 game_coordinates,
                 insolation,
                 is_highlighted,
@@ -125,9 +133,13 @@ pub fn setup(
     let insolation = Insolation::Night;
     let is_highlighted = IsHighlighted(false);
 
-    for y in -2..=2 {
-        for x in -2..=2 {
-            let cubelet_position = CubeletPosition(Vector3 { x, y, z: 2 });
+    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+        for x in -PLANET_RADIUS..=PLANET_RADIUS {
+            let cubelet_position = CubeletPosition(Vector3 {
+                x,
+                y,
+                z: PLANET_RADIUS,
+            });
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -137,7 +149,6 @@ pub fn setup(
 
             create_tile(
                 &mut commands,
-                &tile_size,
                 game_coordinates,
                 insolation,
                 is_highlighted,
@@ -160,9 +171,13 @@ pub fn setup(
     let insolation = Insolation::Night;
     let is_highlighted = IsHighlighted(false);
 
-    for y in -2..=2 {
-        for z in -2..=2 {
-            let cubelet_position = CubeletPosition(Vector3 { x: -2, y, z });
+    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+        for z in -PLANET_RADIUS..=PLANET_RADIUS {
+            let cubelet_position = CubeletPosition(Vector3 {
+                x: -PLANET_RADIUS,
+                y,
+                z,
+            });
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -172,7 +187,6 @@ pub fn setup(
 
             create_tile(
                 &mut commands,
-                &tile_size,
                 game_coordinates,
                 insolation,
                 is_highlighted,
@@ -195,9 +209,13 @@ pub fn setup(
     let insolation = Insolation::Twilight;
     let is_highlighted = IsHighlighted(false);
 
-    for x in -2..=2 {
-        for z in -2..=2 {
-            let cubelet_position = CubeletPosition(Vector3 { x, y: -2, z });
+    for x in -PLANET_RADIUS..=PLANET_RADIUS {
+        for z in -PLANET_RADIUS..=PLANET_RADIUS {
+            let cubelet_position = CubeletPosition(Vector3 {
+                x,
+                y: -PLANET_RADIUS,
+                z,
+            });
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -207,7 +225,6 @@ pub fn setup(
 
             create_tile(
                 &mut commands,
-                &tile_size,
                 game_coordinates,
                 insolation,
                 is_highlighted,
@@ -230,9 +247,13 @@ pub fn setup(
     let insolation = Insolation::Twilight;
     let is_highlighted = IsHighlighted(false);
 
-    for y in -2..=2 {
-        for x in -2..=2 {
-            let cubelet_position = CubeletPosition(Vector3 { x, y, z: -2 });
+    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+        for x in -PLANET_RADIUS..=PLANET_RADIUS {
+            let cubelet_position = CubeletPosition(Vector3 {
+                x,
+                y,
+                z: -PLANET_RADIUS,
+            });
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -242,7 +263,6 @@ pub fn setup(
 
             create_tile(
                 &mut commands,
-                &tile_size,
                 game_coordinates,
                 insolation,
                 is_highlighted,

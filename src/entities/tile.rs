@@ -1,17 +1,14 @@
 use crate::components::*;
-use crate::resources::*;
 use bevy::prelude::*;
 
 pub fn create_tile(
     commands: &mut Commands,
-    tile_size: &Res<TileSize>,
     game_coordinates: GameCoordinates,
     insolation: Insolation,
     is_highlighted: IsHighlighted,
     texture_atlas: Handle<TextureAtlas>,
 ) {
     let translation = game_coordinates_to_translation(
-        &tile_size,
         &game_coordinates.cubelet_position,
         &game_coordinates.normal_orientation,
         0.0,

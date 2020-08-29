@@ -24,7 +24,6 @@ fn main() {
             ..Default::default()
         })
         .add_resource(ClearColor(Color::rgba(1.0, 1.0, 1.0, 1.0)))
-        .init_resource::<TileSize>()
         .init_resource::<EventListenerState>()
         .init_resource::<SunPath>()
         .init_resource::<CurrentTurn>()
