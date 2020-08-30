@@ -19,12 +19,12 @@ fn game_coordinates_to_translation(
     let edge_len = (PLANET_RADIUS * 2 + 1) as f32;
 
     let columns = [
-        -edge_len * 1.5,
-        -edge_len / 2.0,
-        edge_len / 2.0,
-        edge_len * 1.5,
+        -edge_len * 1.5 - 1.5,
+        -edge_len / 2.0 - 0.5,
+        edge_len / 2.0 + 0.5,
+        edge_len * 1.5 + 1.5,
     ];
-    let rows = [edge_len, 0.0, -edge_len];
+    let rows = [edge_len + 1.0, 0.0, -edge_len - 1.0];
 
     let (x, y) = match (
         normal_orientation.0.x,
