@@ -15,3 +15,7 @@ pub enum Insolation {
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub struct IsHighlighted(pub bool);
+
+pub struct Movable;
+
+pub struct Obstacle;
