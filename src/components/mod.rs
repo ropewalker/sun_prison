@@ -17,5 +17,7 @@ pub enum Insolation {
 pub struct IsHighlighted(pub bool);
 
 pub struct Movable;
+pub struct Immovable;
 
-pub struct Obstacle;
+pub struct Wall;
+pub struct Object;
