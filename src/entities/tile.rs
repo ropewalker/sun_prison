@@ -17,7 +17,7 @@ pub fn create_tile(
             translation,
             ..Default::default()
         })
-        .with_bundle(game_coordinates)
+        .with(game_coordinates)
         .with(Tile)
         .with(insolation)
         .with(is_highlighted);

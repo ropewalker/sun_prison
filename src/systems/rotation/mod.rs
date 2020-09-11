@@ -42,15 +42,11 @@ fn coordinates_to_axis(
     }
 }
 
-pub fn calculate_rotation_info(
-    cubelet_position: &CubeletPosition,
-    normal_orientation: &NormalOrientation,
-    tangent_orientation: &TangentOrientation,
-) -> RotationInfo {
+pub fn calculate_rotation_info(coordinates: &GameCoordinates) -> RotationInfo {
     let (x_axis, y_axis) = match (
-        normal_orientation.0.x,
-        normal_orientation.0.y,
-        normal_orientation.0.z,
+        coordinates.normal_orientation.x,
+        coordinates.normal_orientation.y,
+        coordinates.normal_orientation.z,
     ) {
         //right
         (1, 0, 0) => (Vector3::new(0, 1, 0), Vector3::new(0, 0, 1)),
@@ -71,10 +67,10 @@ pub fn calculate_rotation_info(
     let neg_y_axis = -y_axis;
 
     let (x, y, tx, ty) = (
-        cubelet_position.0.dot(x_axis),
-        cubelet_position.0.dot(y_axis),
-        tangent_orientation.0.dot(x_axis),
-        tangent_orientation.0.dot(y_axis),
+        coordinates.cubelet_position.dot(x_axis),
+        coordinates.cubelet_position.dot(y_axis),
+        coordinates.tangent_orientation.dot(x_axis),
+        coordinates.tangent_orientation.dot(y_axis),
     );
 
     let plane_axis = coordinates_to_axis(x, y, tx, ty);

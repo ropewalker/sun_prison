@@ -20,13 +20,13 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 4, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let cubelet_position = CubeletPosition(Vector3 {
+    let cubelet_position = Vector3 {
         x: PLANET_RADIUS,
         y: 0,
         z: 0,
-    });
-    let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
+    };
+    let normal_orientation = Vector3 { x: 1, y: 0, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: 0, z: 1 };
 
     let mut translation: Translation = Default::default();
     translation.0.set_z(1.0);
@@ -38,7 +38,7 @@ pub fn setup(
             ..Default::default()
         })
         .with(Player)
-        .with_bundle(GameCoordinates {
+        .with(GameCoordinates {
             cubelet_position,
             normal_orientation,
             tangent_orientation,
@@ -53,13 +53,13 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 1, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let cubelet_position = CubeletPosition(Vector3 {
+    let cubelet_position = Vector3 {
         x: PLANET_RADIUS,
         y: 1,
         z: 1,
-    });
-    let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
+    };
+    let normal_orientation = Vector3 { x: 1, y: 0, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: 0, z: 1 };
 
     let mut translation: Translation = Default::default();
     translation.0.set_z(1.0);
@@ -71,7 +71,7 @@ pub fn setup(
             ..Default::default()
         })
         .with(Wall)
-        .with_bundle(GameCoordinates {
+        .with(GameCoordinates {
             cubelet_position,
             normal_orientation,
             tangent_orientation,
@@ -86,13 +86,13 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 1, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let cubelet_position = CubeletPosition(Vector3 {
+    let cubelet_position = Vector3 {
         x: PLANET_RADIUS,
         y: -1,
         z: -1,
-    });
-    let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
+    };
+    let normal_orientation = Vector3 { x: 1, y: 0, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: 0, z: 1 };
 
     let mut translation: Translation = Default::default();
     translation.0.set_z(1.0);
@@ -104,7 +104,7 @@ pub fn setup(
             ..Default::default()
         })
         .with(Object)
-        .with_bundle(GameCoordinates {
+        .with(GameCoordinates {
             cubelet_position,
             normal_orientation,
             tangent_orientation,
@@ -119,19 +119,19 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: 1, y: 0, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 1, z: 0 });
+    let normal_orientation = Vector3 { x: 1, y: 0, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: 1, z: 0 };
 
     let insolation = Insolation::Day;
     let is_highlighted = IsHighlighted(false);
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = CubeletPosition(Vector3 {
+            let cubelet_position = Vector3 {
                 x: PLANET_RADIUS,
                 y,
                 z,
-            });
+            };
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -157,19 +157,19 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: 0, y: 1, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: 1 });
+    let normal_orientation = Vector3 { x: 0, y: 1, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: 0, z: 1 };
 
     let insolation = Insolation::Night;
     let is_highlighted = IsHighlighted(false);
 
     for x in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = CubeletPosition(Vector3 {
+            let cubelet_position = Vector3 {
                 x,
                 y: PLANET_RADIUS,
                 z,
-            });
+            };
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -195,19 +195,19 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: 0, y: 0, z: 1 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 1, y: 0, z: 0 });
+    let normal_orientation = Vector3 { x: 0, y: 0, z: 1 };
+    let tangent_orientation = Vector3 { x: 1, y: 0, z: 0 };
 
     let insolation = Insolation::Night;
     let is_highlighted = IsHighlighted(false);
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = CubeletPosition(Vector3 {
+            let cubelet_position = Vector3 {
                 x,
                 y,
                 z: PLANET_RADIUS,
-            });
+            };
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -233,19 +233,19 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: -1, y: 0, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: -1, z: 0 });
+    let normal_orientation = Vector3 { x: -1, y: 0, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: -1, z: 0 };
 
     let insolation = Insolation::Night;
     let is_highlighted = IsHighlighted(false);
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = CubeletPosition(Vector3 {
+            let cubelet_position = Vector3 {
                 x: -PLANET_RADIUS,
                 y,
                 z,
-            });
+            };
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -271,19 +271,19 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: 0, y: -1, z: 0 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: 0, y: 0, z: -1 });
+    let normal_orientation = Vector3 { x: 0, y: -1, z: 0 };
+    let tangent_orientation = Vector3 { x: 0, y: 0, z: -1 };
 
     let insolation = Insolation::Twilight;
     let is_highlighted = IsHighlighted(false);
 
     for x in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = CubeletPosition(Vector3 {
+            let cubelet_position = Vector3 {
                 x,
                 y: -PLANET_RADIUS,
                 z,
-            });
+            };
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
@@ -309,19 +309,19 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let normal_orientation = NormalOrientation(Vector3 { x: 0, y: 0, z: -1 });
-    let tangent_orientation = TangentOrientation(Vector3 { x: -1, y: 0, z: 0 });
+    let normal_orientation = Vector3 { x: 0, y: 0, z: -1 };
+    let tangent_orientation = Vector3 { x: -1, y: 0, z: 0 };
 
     let insolation = Insolation::Twilight;
     let is_highlighted = IsHighlighted(false);
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = CubeletPosition(Vector3 {
+            let cubelet_position = Vector3 {
                 x,
                 y,
                 z: -PLANET_RADIUS,
-            });
+            };
 
             let game_coordinates = GameCoordinates {
                 cubelet_position,
