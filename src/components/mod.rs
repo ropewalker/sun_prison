@@ -20,4 +20,3 @@ pub struct Movable;
 pub struct Immovable;
 
 pub struct Wall;
-pub struct Object;
