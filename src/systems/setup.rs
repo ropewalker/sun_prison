@@ -262,15 +262,17 @@ pub fn setup(
         &mut texture_atlases,
         &mut textures,
         wall_coordinates,
+        false,
     );
 
     //movable_walls
-    create_movable_walls(
+    create_walls(
         &mut commands,
         &asset_server,
         &mut texture_atlases,
         &mut textures,
         mov_wall_coordinates,
+        true,
     );
 
     //tiles
