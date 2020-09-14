@@ -20,10 +20,6 @@ impl Vector3 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    pub fn new(x: isize, y: isize, z: isize) -> Vector3 {
-        Vector3 { x, y, z }
-    }
-
     pub fn rotate(self, axis: &Vector3) -> Vector3 {
         let matrix = match (axis.x, axis.y, axis.z) {
             (1, 0, 0) => Matrix3 {

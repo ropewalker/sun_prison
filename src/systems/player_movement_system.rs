@@ -34,7 +34,7 @@ fn next_tile(coordinates: &GameCoordinates, direction: Vector3) -> (GameCoordina
             GameCoordinates {
                 cubelet_position: coordinates.cubelet_position,
                 normal_orientation: direction,
-                tangent_orientation: Vector3::new(0, 0, 0),
+                tangent_orientation: (0, 0, 0).into(),
             },
             -coordinates.normal_orientation,
         )
@@ -43,7 +43,7 @@ fn next_tile(coordinates: &GameCoordinates, direction: Vector3) -> (GameCoordina
             GameCoordinates {
                 cubelet_position: new_cubelet_position,
                 normal_orientation: coordinates.normal_orientation,
-                tangent_orientation: Vector3::new(0, 0, 0),
+                tangent_orientation: (0, 0, 0).into(),
             },
             direction,
         )

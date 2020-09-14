@@ -19,12 +19,12 @@ impl Default for SunPath {
     fn default() -> Self {
         SunPath {
             path: vec![
-                Vector3::new(1, 0, 0),  //right
-                Vector3::new(0, -1, 0), //down
-                Vector3::new(0, 0, 1),  //front
-                Vector3::new(-1, 0, 0), //left
-                Vector3::new(0, 1, 0),  //up
-                Vector3::new(0, 0, -1), //back
+                (1, 0, 0).into(),  //right
+                (0, -1, 0).into(), //down
+                (0, 0, 1).into(),  //front
+                (-1, 0, 0).into(), //left
+                (0, 1, 0).into(),  //up
+                (0, 0, -1).into(), //back
             ],
             current_stage_index: 0,
         }

@@ -43,23 +43,23 @@ fn coordinates_to_axis(
 }
 
 pub fn calculate_rotation_info(coordinates: &GameCoordinates) -> RotationInfo {
-    let (x_axis, y_axis) = match (
+    let (x_axis, y_axis): (Vector3, Vector3) = match (
         coordinates.normal_orientation.x,
         coordinates.normal_orientation.y,
         coordinates.normal_orientation.z,
     ) {
         //right
-        (1, 0, 0) => (Vector3::new(0, 1, 0), Vector3::new(0, 0, 1)),
+        (1, 0, 0) => ((0, 1, 0).into(), (0, 0, 1).into()),
         //up
-        (0, 1, 0) => (Vector3::new(0, 0, 1), Vector3::new(1, 0, 0)),
+        (0, 1, 0) => ((0, 0, 1).into(), (1, 0, 0).into()),
         //front
-        (0, 0, 1) => (Vector3::new(1, 0, 0), Vector3::new(0, 1, 0)),
+        (0, 0, 1) => ((1, 0, 0).into(), (0, 1, 0).into()),
         //left
-        (-1, 0, 0) => (Vector3::new(0, 0, 1), Vector3::new(0, 1, 0)),
+        (-1, 0, 0) => ((0, 0, 1).into(), (0, 1, 0).into()),
         //bottom
-        (0, -1, 0) => (Vector3::new(1, 0, 0), Vector3::new(0, 0, 1)),
+        (0, -1, 0) => ((1, 0, 0).into(), (0, 0, 1).into()),
         //back
-        (0, 0, -1) => (Vector3::new(0, 1, 0), Vector3::new(1, 0, 0)),
+        (0, 0, -1) => ((0, 1, 0).into(), (1, 0, 0).into()),
         _ => panic!("wrong orientation!"),
     };
 
