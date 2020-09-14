@@ -5,13 +5,13 @@ use bevy::prelude::*;
 use std::collections::HashMap;
 
 fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: Vector3) {
-    let new_cubelet_position = coordinates.cubelet_position + direction;
+    let new_cubelet_position = &coordinates.cubelet_position + &direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
         || new_cubelet_position.y.abs() > PLANET_RADIUS
         || new_cubelet_position.z.abs() > PLANET_RADIUS
     {
-        coordinates.tangent_orientation = match coordinates.tangent_orientation.dot(direction) {
+        coordinates.tangent_orientation = match coordinates.tangent_orientation.dot(&direction) {
             x if x > 0 => -coordinates.normal_orientation,
             x if x < 0 => coordinates.normal_orientation,
             _ => coordinates.tangent_orientation,
@@ -24,7 +24,7 @@ fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: Vector3) {
 }
 
 fn next_tile(coordinates: &GameCoordinates, direction: Vector3) -> (GameCoordinates, Vector3) {
-    let new_cubelet_position = coordinates.cubelet_position + direction;
+    let new_cubelet_position = &coordinates.cubelet_position + &direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
         || new_cubelet_position.y.abs() > PLANET_RADIUS
@@ -73,25 +73,35 @@ pub fn player_movement_system(
             {
                 player_coordinates.tangent_orientation = -player_coordinates
                     .tangent_orientation
-                    .cross(player_coordinates.normal_orientation);
+                    .cross(&player_coordinates.normal_orientation);
             } else if keyboard_input.just_pressed(KeyCode::Right)
                 || keyboard_input.just_pressed(KeyCode::D)
             {
                 player_coordinates.tangent_orientation = player_coordinates
                     .tangent_orientation
-                    .cross(player_coordinates.normal_orientation);
+                    .cross(&player_coordinates.normal_orientation);
             }
 
             if let Some(direction) = direction {
                 let mov: HashMap<Vector3, u32> = movables_query
                     .iter()
                     .iter()
-                    .map(|t| ((t.2).cubelet_position + (t.2).normal_orientation, t.0.id()))
+                    .map(|t| {
+                        (
+                            &(t.2).cubelet_position + &(t.2).normal_orientation,
+                            t.0.id(),
+                        )
+                    })
                     .collect::<HashMap<_, _>>();
                 let immov: HashMap<Vector3, u32> = immovables_query
                     .iter()
                     .iter()
-                    .map(|t| ((t.2).cubelet_position + (t.2).normal_orientation, t.0.id()))
+                    .map(|t| {
+                        (
+                            &(t.2).cubelet_position + &(t.2).normal_orientation,
+                            t.0.id(),
+                        )
+                    })
                     .collect::<HashMap<_, _>>();
 
                 let (mut new_coordinates, mut new_direction) = (*player_coordinates, direction);
@@ -103,7 +113,7 @@ pub fn player_movement_system(
                     new_direction = tile.1;
 
                     let coordinate_vec =
-                        new_coordinates.cubelet_position + new_coordinates.normal_orientation;
+                        &new_coordinates.cubelet_position + &new_coordinates.normal_orientation;
 
                     if let Some(id) = mov.get(&coordinate_vec) {
                         to_move.insert(*id, new_direction);

@@ -67,10 +67,10 @@ pub fn calculate_rotation_info(coordinates: &GameCoordinates) -> RotationInfo {
     let neg_y_axis = -y_axis;
 
     let (x, y, tx, ty) = (
-        coordinates.cubelet_position.dot(x_axis),
-        coordinates.cubelet_position.dot(y_axis),
-        coordinates.tangent_orientation.dot(x_axis),
-        coordinates.tangent_orientation.dot(y_axis),
+        coordinates.cubelet_position.dot(&x_axis),
+        coordinates.cubelet_position.dot(&y_axis),
+        coordinates.tangent_orientation.dot(&x_axis),
+        coordinates.tangent_orientation.dot(&y_axis),
     );
 
     let plane_axis = coordinates_to_axis(x, y, tx, ty);

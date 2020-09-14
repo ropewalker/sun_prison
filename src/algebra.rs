@@ -8,7 +8,7 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
-    pub fn cross(self, other: Vector3) -> Vector3 {
+    pub fn cross(&self, other: &Vector3) -> Vector3 {
         Vector3 {
             x: self.y * other.z - self.z * other.y,
             y: self.z * other.x - self.x * other.z,
@@ -16,11 +16,11 @@ impl Vector3 {
         }
     }
 
-    pub fn dot(self, other: Vector3) -> isize {
+    pub fn dot(&self, other: &Vector3) -> isize {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    pub fn rotate(self, axis: &Vector3) -> Vector3 {
+    pub fn rotate(&self, axis: &Vector3) -> Vector3 {
         let matrix = match (axis.x, axis.y, axis.z) {
             (1, 0, 0) => Matrix3 {
                 x: Vector3 { x: 1, y: 0, z: 0 },
@@ -65,10 +65,10 @@ impl From<(isize, isize, isize)> for Vector3 {
     }
 }
 
-impl Add<Vector3> for Vector3 {
+impl<'a, 'b> Add<&'b Vector3> for &'a Vector3 {
     type Output = Vector3;
 
-    fn add(self, other: Vector3) -> Vector3 {
+    fn add(self, other: &Vector3) -> Vector3 {
         Vector3 {
             x: self.x + other.x,
             y: self.y + other.y,
@@ -77,18 +77,18 @@ impl Add<Vector3> for Vector3 {
     }
 }
 
-impl AddAssign<Vector3> for Vector3 {
-    fn add_assign(&mut self, rhs: Vector3) {
+impl AddAssign<&Vector3> for Vector3 {
+    fn add_assign(&mut self, rhs: &Vector3) {
         self.x += rhs.x;
         self.y += rhs.y;
         self.z += rhs.z;
     }
 }
 
-impl Sub<Vector3> for Vector3 {
+impl<'a, 'b> Sub<&'b Vector3> for &'a Vector3 {
     type Output = Vector3;
 
-    fn sub(self, other: Vector3) -> Vector3 {
+    fn sub(self, other: &Vector3) -> Vector3 {
         Vector3 {
             x: self.x - other.x,
             y: self.y - other.y,
@@ -97,8 +97,8 @@ impl Sub<Vector3> for Vector3 {
     }
 }
 
-impl SubAssign<Vector3> for Vector3 {
-    fn sub_assign(&mut self, rhs: Vector3) {
+impl SubAssign<&Vector3> for Vector3 {
+    fn sub_assign(&mut self, rhs: &Vector3) {
         self.x -= rhs.x;
         self.y -= rhs.y;
         self.z -= rhs.z;
@@ -123,10 +123,10 @@ pub struct Matrix3 {
     pub z: Vector3,
 }
 
-impl Mul<Vector3> for Matrix3 {
+impl Mul<&Vector3> for Matrix3 {
     type Output = Vector3;
 
-    fn mul(self, other: Vector3) -> Vector3 {
+    fn mul(self, other: &Vector3) -> Vector3 {
         Vector3 {
             x: self.x.x * other.x + self.y.x * other.y + self.z.x * other.z,
             y: self.x.y * other.x + self.y.y * other.y + self.z.y * other.z,
