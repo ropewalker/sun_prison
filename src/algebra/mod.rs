@@ -1,4 +1,7 @@
+mod unit_vector;
+
 use std::ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign};
+pub use unit_vector::*;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub struct Vector3 {
@@ -20,39 +23,40 @@ impl Vector3 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    pub fn rotate(&self, axis: &Vector3) -> Vector3 {
-        let matrix = match (axis.x, axis.y, axis.z) {
-            (1, 0, 0) => Matrix3 {
+    pub fn rotate(&self, axis: &UnitVector) -> Vector3 {
+        use UnitVector::*;
+
+        let matrix = match axis {
+            Right => Matrix3 {
                 x: Vector3 { x: 1, y: 0, z: 0 },
                 y: Vector3 { x: 0, y: 0, z: 1 },
                 z: Vector3 { x: 0, y: -1, z: 0 },
             },
-            (0, 1, 0) => Matrix3 {
+            Up => Matrix3 {
                 x: Vector3 { x: 0, y: 0, z: -1 },
                 y: Vector3 { x: 0, y: 1, z: 0 },
                 z: Vector3 { x: 1, y: 0, z: 0 },
             },
-            (0, 0, 1) => Matrix3 {
+            Front => Matrix3 {
                 x: Vector3 { x: 0, y: 1, z: 0 },
                 y: Vector3 { x: -1, y: 0, z: 0 },
                 z: Vector3 { x: 0, y: 0, z: 1 },
             },
-            (-1, 0, 0) => Matrix3 {
+            Left => Matrix3 {
                 x: Vector3 { x: 1, y: 0, z: 0 },
                 y: Vector3 { x: 0, y: 0, z: -1 },
                 z: Vector3 { x: 0, y: 1, z: 0 },
             },
-            (0, -1, 0) => Matrix3 {
+            Down => Matrix3 {
                 x: Vector3 { x: 0, y: 0, z: 1 },
                 y: Vector3 { x: 0, y: 1, z: 0 },
                 z: Vector3 { x: -1, y: 0, z: 0 },
             },
-            (0, 0, -1) => Matrix3 {
+            Back => Matrix3 {
                 x: Vector3 { x: 0, y: -1, z: 0 },
                 y: Vector3 { x: 1, y: 0, z: 0 },
                 z: Vector3 { x: 0, y: 0, z: 1 },
             },
-            _ => panic!("wrong axis!"),
         };
 
         matrix * self
@@ -65,6 +69,21 @@ impl From<(isize, isize, isize)> for Vector3 {
     }
 }
 
+impl From<&UnitVector> for Vector3 {
+    fn from(unit_vector: &UnitVector) -> Self {
+        use UnitVector::*;
+
+        match unit_vector {
+            Right => (1, 0, 0).into(),
+            Left => (-1, 0, 0).into(),
+            Up => (0, 1, 0).into(),
+            Down => (0, -1, 0).into(),
+            Front => (0, 0, 1).into(),
+            Back => (0, 0, -1).into(),
+        }
+    }
+}
+
 impl<'a, 'b> Add<&'b Vector3> for &'a Vector3 {
     type Output = Vector3;
 
@@ -74,6 +93,15 @@ impl<'a, 'b> Add<&'b Vector3> for &'a Vector3 {
             y: self.y + other.y,
             z: self.z + other.z,
         }
+    }
+}
+
+impl<'a, 'b> Add<&'b UnitVector> for &'a Vector3 {
+    type Output = Vector3;
+
+    fn add(self, other: &UnitVector) -> Vector3 {
+        let vector: Vector3 = other.into();
+        self + &vector
     }
 }
 
@@ -136,6 +164,6 @@ impl Mul<&Vector3> for Matrix3 {
 }
 
 pub struct RotationInfo {
-    pub axis: Vector3,
+    pub axis: UnitVector,
     pub layer: isize,
 }

@@ -11,21 +11,16 @@ pub struct KeyboardState {
 }
 
 pub struct SunPath {
-    pub path: Vec<Vector3>,
+    pub path: Vec<UnitVector>,
     pub current_stage_index: usize,
 }
 
 impl Default for SunPath {
     fn default() -> Self {
+        use UnitVector::*;
+
         SunPath {
-            path: vec![
-                (1, 0, 0).into(),  //right
-                (0, -1, 0).into(), //down
-                (0, 0, 1).into(),  //front
-                (-1, 0, 0).into(), //left
-                (0, 1, 0).into(),  //up
-                (0, 0, -1).into(), //back
-            ],
+            path: vec![Right, Down, Front, Left, Up, Back],
             current_stage_index: 0,
         }
     }

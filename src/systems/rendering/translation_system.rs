@@ -1,3 +1,4 @@
+use crate::algebra::*;
 use crate::components::*;
 use crate::resources::*;
 use bevy::prelude::*;
@@ -17,42 +18,33 @@ fn game_coordinates_to_translation(coordinates: &GameCoordinates, z: f32) -> Tra
     ];
     let rows = [edge_len + 1.0, 0.0, -edge_len - 1.0];
 
-    let (x, y) = match (
-        coordinates.normal_orientation.x,
-        coordinates.normal_orientation.y,
-        coordinates.normal_orientation.z,
-    ) {
-        //right
-        (1, 0, 0) => (
+    use UnitVector::*;
+
+    let (x, y) = match coordinates.normal_orientation {
+        Right => (
             (coordinates.cubelet_position.y as f32 + columns[3]) * TILE_SIZE,
             (coordinates.cubelet_position.z as f32 + rows[2]) * TILE_SIZE,
         ),
-        //up
-        (0, 1, 0) => (
+        Up => (
             (coordinates.cubelet_position.z as f32 + columns[1]) * TILE_SIZE,
             (coordinates.cubelet_position.x as f32 + rows[0]) * TILE_SIZE,
         ),
-        //front
-        (0, 0, 1) => (
+        Front => (
             (coordinates.cubelet_position.x as f32 + columns[2]) * TILE_SIZE,
             (coordinates.cubelet_position.y as f32 + rows[1]) * TILE_SIZE,
         ),
-        //left
-        (-1, 0, 0) => (
+        Left => (
             (coordinates.cubelet_position.z as f32 + columns[1]) * TILE_SIZE,
             (coordinates.cubelet_position.y as f32 + rows[1]) * TILE_SIZE,
         ),
-        //bottom
-        (0, -1, 0) => (
+        Down => (
             (coordinates.cubelet_position.x as f32 + columns[2]) * TILE_SIZE,
             (coordinates.cubelet_position.z as f32 + rows[2]) * TILE_SIZE,
         ),
-        //back
-        (0, 0, -1) => (
+        Back => (
             (coordinates.cubelet_position.y as f32 + columns[0]) * TILE_SIZE,
             (coordinates.cubelet_position.x as f32 + rows[0]) * TILE_SIZE,
         ),
-        _ => panic!("wrong orientation!"),
     };
 
     Translation(Vec3::new(x, y, z))

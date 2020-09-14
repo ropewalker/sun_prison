@@ -11,11 +11,12 @@ pub fn highlight_layer_system(
         let RotationInfo { axis, layer } = super::calculate_rotation_info(&player_coordinates);
 
         for (_, coordinates, mut is_highlighted) in &mut tiles_query.iter() {
-            let current_layer = match (axis.x, axis.y, axis.z) {
-                (1, 0, 0) | (-1, 0, 0) => coordinates.cubelet_position.x,
-                (0, 1, 0) | (0, -1, 0) => coordinates.cubelet_position.y,
-                (0, 0, 1) | (0, 0, -1) => coordinates.cubelet_position.z,
-                _ => panic!("wrong axis!"),
+            use UnitVector::*;
+
+            let current_layer = match axis {
+                Right | Left => coordinates.cubelet_position.x,
+                Up | Down => coordinates.cubelet_position.y,
+                Front | Back => coordinates.cubelet_position.z,
             };
 
             *is_highlighted =

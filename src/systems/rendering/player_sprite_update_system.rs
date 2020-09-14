@@ -12,49 +12,50 @@ pub fn player_sprite_update_system(
     const RIGHT: u32 = 2;
     const LEFT: u32 = 1;
 
+    use UnitVector::*;
+
     match player_coordinates.normal_orientation {
-        Vector3 { x: 1, y: 0, z: 0 } => match player_coordinates.tangent_orientation {
-            Vector3 { x: 0, y: 1, z: 0 } => sprite.index = RIGHT,
-            Vector3 { x: 0, y: 0, z: 1 } => sprite.index = UP,
-            Vector3 { x: 0, y: -1, z: 0 } => sprite.index = LEFT,
-            Vector3 { x: 0, y: 0, z: -1 } => sprite.index = DOWN,
+        Right => match player_coordinates.tangent_orientation {
+            Some(Up) => sprite.index = RIGHT,
+            Some(Front) => sprite.index = UP,
+            Some(Down) => sprite.index = LEFT,
+            Some(Back) => sprite.index = DOWN,
             _ => {}
         },
-        Vector3 { x: 0, y: 1, z: 0 } => match player_coordinates.tangent_orientation {
-            Vector3 { x: 1, y: 0, z: 0 } => sprite.index = UP,
-            Vector3 { x: 0, y: 0, z: 1 } => sprite.index = RIGHT,
-            Vector3 { x: -1, y: 0, z: 0 } => sprite.index = DOWN,
-            Vector3 { x: 0, y: 0, z: -1 } => sprite.index = LEFT,
+        Up => match player_coordinates.tangent_orientation {
+            Some(Right) => sprite.index = UP,
+            Some(Front) => sprite.index = RIGHT,
+            Some(Left) => sprite.index = DOWN,
+            Some(Back) => sprite.index = LEFT,
             _ => {}
         },
-        Vector3 { x: 0, y: 0, z: 1 } => match player_coordinates.tangent_orientation {
-            Vector3 { x: 0, y: 1, z: 0 } => sprite.index = UP,
-            Vector3 { x: 1, y: 0, z: 0 } => sprite.index = RIGHT,
-            Vector3 { x: 0, y: -1, z: 0 } => sprite.index = DOWN,
-            Vector3 { x: -1, y: 0, z: 0 } => sprite.index = LEFT,
+        Front => match player_coordinates.tangent_orientation {
+            Some(Up) => sprite.index = UP,
+            Some(Right) => sprite.index = RIGHT,
+            Some(Down) => sprite.index = DOWN,
+            Some(Left) => sprite.index = LEFT,
             _ => {}
         },
-        Vector3 { x: -1, y: 0, z: 0 } => match player_coordinates.tangent_orientation {
-            Vector3 { x: 0, y: 1, z: 0 } => sprite.index = UP,
-            Vector3 { x: 0, y: 0, z: 1 } => sprite.index = RIGHT,
-            Vector3 { x: 0, y: -1, z: 0 } => sprite.index = DOWN,
-            Vector3 { x: 0, y: 0, z: -1 } => sprite.index = LEFT,
+        Left => match player_coordinates.tangent_orientation {
+            Some(Up) => sprite.index = UP,
+            Some(Front) => sprite.index = RIGHT,
+            Some(Down) => sprite.index = DOWN,
+            Some(Back) => sprite.index = LEFT,
             _ => {}
         },
-        Vector3 { x: 0, y: -1, z: 0 } => match player_coordinates.tangent_orientation {
-            Vector3 { x: 1, y: 0, z: 0 } => sprite.index = RIGHT,
-            Vector3 { x: 0, y: 0, z: 1 } => sprite.index = UP,
-            Vector3 { x: -1, y: 0, z: 0 } => sprite.index = LEFT,
-            Vector3 { x: 0, y: 0, z: -1 } => sprite.index = DOWN,
+        Down => match player_coordinates.tangent_orientation {
+            Some(Right) => sprite.index = RIGHT,
+            Some(Front) => sprite.index = UP,
+            Some(Left) => sprite.index = LEFT,
+            Some(Back) => sprite.index = DOWN,
             _ => {}
         },
-        Vector3 { x: 0, y: 0, z: -1 } => match player_coordinates.tangent_orientation {
-            Vector3 { x: 0, y: 1, z: 0 } => sprite.index = RIGHT,
-            Vector3 { x: 1, y: 0, z: 0 } => sprite.index = UP,
-            Vector3 { x: 0, y: -1, z: 0 } => sprite.index = LEFT,
-            Vector3 { x: -1, y: 0, z: 0 } => sprite.index = DOWN,
+        Back => match player_coordinates.tangent_orientation {
+            Some(Up) => sprite.index = RIGHT,
+            Some(Right) => sprite.index = UP,
+            Some(Down) => sprite.index = LEFT,
+            Some(Left) => sprite.index = DOWN,
             _ => {}
         },
-        _ => {}
     }
 }

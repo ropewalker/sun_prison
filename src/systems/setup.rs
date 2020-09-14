@@ -54,10 +54,11 @@ pub fn setup(
 
     let map = init_map();
 
-    //back
+    let tangent_orientation = None;
 
-    let normal_orientation = Vector3 { x: 0, y: 0, z: -1 };
-    let tangent_orientation = Vector3 { x: -1, y: 0, z: 0 };
+    use UnitVector::*;
+
+    let normal_orientation = Back;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -78,7 +79,10 @@ pub fn setup(
             if let Some(c) = map.get(&index) {
                 match &c[..] {
                     "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(game_coordinates),
+                    "@" => player_coordinates.push(GameCoordinates {
+                        tangent_orientation: Some(Left),
+                        ..game_coordinates
+                    }),
                     "o" => mov_wall_coordinates.push(game_coordinates),
                     _ => (),
                 }
@@ -88,8 +92,7 @@ pub fn setup(
 
     //up
 
-    let normal_orientation = Vector3 { x: 0, y: 1, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: 0, z: 1 };
+    let normal_orientation = Up;
 
     for x in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -110,7 +113,10 @@ pub fn setup(
             if let Some(c) = map.get(&index) {
                 match &c[..] {
                     "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(game_coordinates),
+                    "@" => player_coordinates.push(GameCoordinates {
+                        tangent_orientation: Some(Front),
+                        ..game_coordinates
+                    }),
                     "o" => mov_wall_coordinates.push(game_coordinates),
                     _ => (),
                 }
@@ -120,8 +126,7 @@ pub fn setup(
 
     //left
 
-    let normal_orientation = Vector3 { x: -1, y: 0, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: -1, z: 0 };
+    let normal_orientation = Left;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -142,7 +147,10 @@ pub fn setup(
             if let Some(c) = map.get(&index) {
                 match &c[..] {
                     "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(game_coordinates),
+                    "@" => player_coordinates.push(GameCoordinates {
+                        tangent_orientation: Some(Down),
+                        ..game_coordinates
+                    }),
                     "o" => mov_wall_coordinates.push(game_coordinates),
                     _ => (),
                 }
@@ -152,8 +160,7 @@ pub fn setup(
 
     //front
 
-    let normal_orientation = Vector3 { x: 0, y: 0, z: 1 };
-    let tangent_orientation = Vector3 { x: 1, y: 0, z: 0 };
+    let normal_orientation = Front;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -174,7 +181,10 @@ pub fn setup(
             if let Some(c) = map.get(&index) {
                 match &c[..] {
                     "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(game_coordinates),
+                    "@" => player_coordinates.push(GameCoordinates {
+                        tangent_orientation: Some(Right),
+                        ..game_coordinates
+                    }),
                     "o" => mov_wall_coordinates.push(game_coordinates),
                     _ => (),
                 }
@@ -184,8 +194,7 @@ pub fn setup(
 
     //down
 
-    let normal_orientation = Vector3 { x: 0, y: -1, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: 0, z: -1 };
+    let normal_orientation = Down;
 
     for x in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -206,7 +215,10 @@ pub fn setup(
             if let Some(c) = map.get(&index) {
                 match &c[..] {
                     "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(game_coordinates),
+                    "@" => player_coordinates.push(GameCoordinates {
+                        tangent_orientation: Some(Back),
+                        ..game_coordinates
+                    }),
                     "o" => mov_wall_coordinates.push(game_coordinates),
                     _ => (),
                 }
@@ -216,8 +228,7 @@ pub fn setup(
 
     //right
 
-    let normal_orientation = Vector3 { x: 1, y: 0, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: 1, z: 0 };
+    let normal_orientation = Right;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
         for z in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -238,7 +249,10 @@ pub fn setup(
             if let Some(c) = map.get(&index) {
                 match &c[..] {
                     "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(game_coordinates),
+                    "@" => player_coordinates.push(GameCoordinates {
+                        tangent_orientation: Some(Up),
+                        ..game_coordinates
+                    }),
                     "o" => mov_wall_coordinates.push(game_coordinates),
                     _ => (),
                 }

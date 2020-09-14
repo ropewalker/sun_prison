@@ -4,18 +4,20 @@ use crate::resources::*;
 use bevy::prelude::*;
 use std::collections::HashMap;
 
-fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: Vector3) {
+fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: UnitVector) {
     let new_cubelet_position = &coordinates.cubelet_position + &direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
         || new_cubelet_position.y.abs() > PLANET_RADIUS
         || new_cubelet_position.z.abs() > PLANET_RADIUS
     {
-        coordinates.tangent_orientation = match coordinates.tangent_orientation.dot(&direction) {
-            x if x > 0 => -coordinates.normal_orientation,
-            x if x < 0 => coordinates.normal_orientation,
-            _ => coordinates.tangent_orientation,
-        };
+        if let Some(tangent) = coordinates.tangent_orientation {
+            if tangent == direction {
+                coordinates.tangent_orientation = Some(-coordinates.normal_orientation)
+            } else if tangent == -direction {
+                coordinates.tangent_orientation = Some(coordinates.normal_orientation)
+            }
+        }
 
         coordinates.normal_orientation = direction;
     } else {
@@ -23,7 +25,10 @@ fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: Vector3) {
     }
 }
 
-fn next_tile(coordinates: &GameCoordinates, direction: Vector3) -> (GameCoordinates, Vector3) {
+fn next_tile(
+    coordinates: &GameCoordinates,
+    direction: UnitVector,
+) -> (GameCoordinates, UnitVector) {
     let new_cubelet_position = &coordinates.cubelet_position + &direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
@@ -34,7 +39,7 @@ fn next_tile(coordinates: &GameCoordinates, direction: Vector3) -> (GameCoordina
             GameCoordinates {
                 cubelet_position: coordinates.cubelet_position,
                 normal_orientation: direction,
-                tangent_orientation: (0, 0, 0).into(),
+                tangent_orientation: None,
             },
             -coordinates.normal_orientation,
         )
@@ -43,7 +48,7 @@ fn next_tile(coordinates: &GameCoordinates, direction: Vector3) -> (GameCoordina
             GameCoordinates {
                 cubelet_position: new_cubelet_position,
                 normal_orientation: coordinates.normal_orientation,
-                tangent_orientation: (0, 0, 0).into(),
+                tangent_orientation: None,
             },
             direction,
         )
@@ -60,26 +65,32 @@ pub fn player_movement_system(
     if current_turn.side == GameSide::Player {
         for (_player, mut player_coordinates) in &mut player_position_query.iter() {
             let mut direction = None;
-            let mut to_move: HashMap<u32, Vector3> = HashMap::new();
+            let mut to_move: HashMap<u32, UnitVector> = HashMap::new();
 
             if keyboard_input.just_pressed(KeyCode::Up) || keyboard_input.just_pressed(KeyCode::W) {
-                direction = Some(player_coordinates.tangent_orientation);
+                direction = player_coordinates.tangent_orientation;
             } else if keyboard_input.just_pressed(KeyCode::Down)
                 || keyboard_input.just_pressed(KeyCode::S)
             {
-                direction = Some(-player_coordinates.tangent_orientation);
+                direction = Some(-player_coordinates.tangent_orientation.unwrap());
             } else if keyboard_input.just_pressed(KeyCode::Left)
                 || keyboard_input.just_pressed(KeyCode::A)
             {
-                player_coordinates.tangent_orientation = -player_coordinates
-                    .tangent_orientation
-                    .cross(&player_coordinates.normal_orientation);
+                player_coordinates.tangent_orientation = Some(
+                    -player_coordinates
+                        .tangent_orientation
+                        .unwrap()
+                        .cross(&player_coordinates.normal_orientation),
+                );
             } else if keyboard_input.just_pressed(KeyCode::Right)
                 || keyboard_input.just_pressed(KeyCode::D)
             {
-                player_coordinates.tangent_orientation = player_coordinates
-                    .tangent_orientation
-                    .cross(&player_coordinates.normal_orientation);
+                player_coordinates.tangent_orientation = Some(
+                    player_coordinates
+                        .tangent_orientation
+                        .unwrap()
+                        .cross(&player_coordinates.normal_orientation),
+                );
             }
 
             if let Some(direction) = direction {

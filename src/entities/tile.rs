@@ -31,6 +31,8 @@ pub fn create_tiles(
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     textures: &mut ResMut<Assets<Texture>>,
 ) {
+    use UnitVector::*;
+
     //common
     let texture_handle = asset_server
         .load_sync(textures, "assets/images/tile_spritesheet.png")
@@ -39,10 +41,10 @@ pub fn create_tiles(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    //right
-    let normal_orientation = Vector3 { x: 1, y: 0, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: 1, z: 0 };
+    let tangent_orientation = None;
 
+    //right
+    let normal_orientation = Right;
     let insolation = Insolation::Day;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -70,9 +72,7 @@ pub fn create_tiles(
     }
 
     //up
-    let normal_orientation = Vector3 { x: 0, y: 1, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: 0, z: 1 };
-
+    let normal_orientation = Up;
     let insolation = Insolation::Night;
 
     for x in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -100,9 +100,7 @@ pub fn create_tiles(
     }
 
     //front
-    let normal_orientation = Vector3 { x: 0, y: 0, z: 1 };
-    let tangent_orientation = Vector3 { x: 1, y: 0, z: 0 };
-
+    let normal_orientation = Front;
     let insolation = Insolation::Night;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -130,9 +128,7 @@ pub fn create_tiles(
     }
 
     //left
-    let normal_orientation = Vector3 { x: -1, y: 0, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: -1, z: 0 };
-
+    let normal_orientation = Left;
     let insolation = Insolation::Night;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -160,9 +156,7 @@ pub fn create_tiles(
     }
 
     //down
-    let normal_orientation = Vector3 { x: 0, y: -1, z: 0 };
-    let tangent_orientation = Vector3 { x: 0, y: 0, z: -1 };
-
+    let normal_orientation = Down;
     let insolation = Insolation::Twilight;
 
     for x in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -190,9 +184,7 @@ pub fn create_tiles(
     }
 
     //back
-    let normal_orientation = Vector3 { x: 0, y: 0, z: -1 };
-    let tangent_orientation = Vector3 { x: -1, y: 0, z: 0 };
-
+    let normal_orientation = Back;
     let insolation = Insolation::Twilight;
 
     for y in -PLANET_RADIUS..=PLANET_RADIUS {
