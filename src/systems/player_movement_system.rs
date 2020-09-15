@@ -5,7 +5,7 @@ use bevy::prelude::*;
 use std::collections::HashMap;
 
 fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: UnitVector) {
-    let new_cubelet_position = &coordinates.cubelet_position + &direction;
+    let new_cubelet_position = coordinates.cubelet_position + direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
         || new_cubelet_position.y.abs() > PLANET_RADIUS
@@ -29,7 +29,7 @@ fn next_tile(
     coordinates: &GameCoordinates,
     direction: UnitVector,
 ) -> (GameCoordinates, UnitVector) {
-    let new_cubelet_position = &coordinates.cubelet_position + &direction;
+    let new_cubelet_position = coordinates.cubelet_position + direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
         || new_cubelet_position.y.abs() > PLANET_RADIUS
@@ -97,22 +97,12 @@ pub fn player_movement_system(
                 let mov: HashMap<Vector3, u32> = movables_query
                     .iter()
                     .iter()
-                    .map(|t| {
-                        (
-                            &(t.2).cubelet_position + &(t.2).normal_orientation,
-                            t.0.id(),
-                        )
-                    })
+                    .map(|t| ((t.2).cubelet_position + (t.2).normal_orientation, t.0.id()))
                     .collect::<HashMap<_, _>>();
                 let immov: HashMap<Vector3, u32> = immovables_query
                     .iter()
                     .iter()
-                    .map(|t| {
-                        (
-                            &(t.2).cubelet_position + &(t.2).normal_orientation,
-                            t.0.id(),
-                        )
-                    })
+                    .map(|t| ((t.2).cubelet_position + (t.2).normal_orientation, t.0.id()))
                     .collect::<HashMap<_, _>>();
 
                 let (mut new_coordinates, mut new_direction) = (*player_coordinates, direction);
@@ -124,7 +114,7 @@ pub fn player_movement_system(
                     new_direction = tile.1;
 
                     let coordinate_vec =
-                        &new_coordinates.cubelet_position + &new_coordinates.normal_orientation;
+                        new_coordinates.cubelet_position + new_coordinates.normal_orientation;
 
                     if let Some(id) = mov.get(&coordinate_vec) {
                         to_move.insert(*id, new_direction);

@@ -33,7 +33,6 @@ pub fn create_tiles(
 ) {
     use UnitVector::*;
 
-    //common
     let texture_handle = asset_server
         .load_sync(textures, "assets/images/tile_spritesheet.png")
         .unwrap();
@@ -42,172 +41,38 @@ pub fn create_tiles(
     let texture_atlas = texture_atlases.add(texture_atlas);
 
     let tangent_orientation = None;
+    let is_highlighted = IsHighlighted(false);
 
-    //right
-    let normal_orientation = Right;
-    let insolation = Insolation::Day;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x: PLANET_RADIUS,
-                y,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            create_tile(
-                commands,
-                game_coordinates,
-                insolation,
-                IsHighlighted(false),
-                texture_atlas,
-            );
-        }
-    }
-
-    //up
-    let normal_orientation = Up;
-    let insolation = Insolation::Night;
-
-    for x in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y: PLANET_RADIUS,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            create_tile(
-                commands,
-                game_coordinates,
-                insolation,
-                IsHighlighted(false),
-                texture_atlas,
-            );
-        }
-    }
-
-    //front
-    let normal_orientation = Front;
-    let insolation = Insolation::Night;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+    for &normal_orientation in &[Right, Up, Front, Left, Down, Back] {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y,
-                z: PLANET_RADIUS,
-            };
+            for y in -PLANET_RADIUS..=PLANET_RADIUS {
+                use Insolation::*;
 
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
+                let insolation = match normal_orientation {
+                    Right => Day,
+                    Down | Back => Twilight,
+                    _ => Night,
+                };
 
-            create_tile(
-                commands,
-                game_coordinates,
-                insolation,
-                IsHighlighted(false),
-                texture_atlas,
-            );
-        }
-    }
+                let (abscissa, ordinate) = normal_orientation.abscissa_and_ordinate();
 
-    //left
-    let normal_orientation = Left;
-    let insolation = Insolation::Night;
+                let cubelet_position =
+                    PLANET_RADIUS * normal_orientation + x * abscissa + y * ordinate;
 
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x: -PLANET_RADIUS,
-                y,
-                z,
-            };
+                let game_coordinates = GameCoordinates {
+                    cubelet_position,
+                    normal_orientation,
+                    tangent_orientation,
+                };
 
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            create_tile(
-                commands,
-                game_coordinates,
-                insolation,
-                IsHighlighted(false),
-                texture_atlas,
-            );
-        }
-    }
-
-    //down
-    let normal_orientation = Down;
-    let insolation = Insolation::Twilight;
-
-    for x in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y: -PLANET_RADIUS,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            create_tile(
-                commands,
-                game_coordinates,
-                insolation,
-                IsHighlighted(false),
-                texture_atlas,
-            );
-        }
-    }
-
-    //back
-    let normal_orientation = Back;
-    let insolation = Insolation::Twilight;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
-        for x in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y,
-                z: -PLANET_RADIUS,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            create_tile(
-                commands,
-                game_coordinates,
-                insolation,
-                IsHighlighted(false),
-                texture_atlas,
-            );
+                create_tile(
+                    commands,
+                    game_coordinates,
+                    insolation,
+                    is_highlighted,
+                    texture_atlas,
+                );
+            }
         }
     }
 }

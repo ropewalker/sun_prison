@@ -69,8 +69,8 @@ impl From<(isize, isize, isize)> for Vector3 {
     }
 }
 
-impl From<&UnitVector> for Vector3 {
-    fn from(unit_vector: &UnitVector) -> Self {
+impl From<UnitVector> for Vector3 {
+    fn from(unit_vector: UnitVector) -> Self {
         use UnitVector::*;
 
         match unit_vector {
@@ -84,10 +84,10 @@ impl From<&UnitVector> for Vector3 {
     }
 }
 
-impl<'a, 'b> Add<&'b Vector3> for &'a Vector3 {
+impl Add<Vector3> for Vector3 {
     type Output = Vector3;
 
-    fn add(self, other: &Vector3) -> Vector3 {
+    fn add(self, other: Vector3) -> Vector3 {
         Vector3 {
             x: self.x + other.x,
             y: self.y + other.y,
@@ -96,27 +96,27 @@ impl<'a, 'b> Add<&'b Vector3> for &'a Vector3 {
     }
 }
 
-impl<'a, 'b> Add<&'b UnitVector> for &'a Vector3 {
+impl Add<UnitVector> for Vector3 {
     type Output = Vector3;
 
-    fn add(self, other: &UnitVector) -> Vector3 {
+    fn add(self, other: UnitVector) -> Vector3 {
         let vector: Vector3 = other.into();
-        self + &vector
+        self + vector
     }
 }
 
-impl AddAssign<&Vector3> for Vector3 {
-    fn add_assign(&mut self, rhs: &Vector3) {
+impl AddAssign<Vector3> for Vector3 {
+    fn add_assign(&mut self, rhs: Vector3) {
         self.x += rhs.x;
         self.y += rhs.y;
         self.z += rhs.z;
     }
 }
 
-impl<'a, 'b> Sub<&'b Vector3> for &'a Vector3 {
+impl Sub<Vector3> for Vector3 {
     type Output = Vector3;
 
-    fn sub(self, other: &Vector3) -> Vector3 {
+    fn sub(self, other: Vector3) -> Vector3 {
         Vector3 {
             x: self.x - other.x,
             y: self.y - other.y,
@@ -125,8 +125,8 @@ impl<'a, 'b> Sub<&'b Vector3> for &'a Vector3 {
     }
 }
 
-impl SubAssign<&Vector3> for Vector3 {
-    fn sub_assign(&mut self, rhs: &Vector3) {
+impl SubAssign<Vector3> for Vector3 {
+    fn sub_assign(&mut self, rhs: Vector3) {
         self.x -= rhs.x;
         self.y -= rhs.y;
         self.z -= rhs.z;
@@ -141,6 +141,30 @@ impl Neg for Vector3 {
             x: -self.x,
             y: -self.y,
             z: -self.z,
+        }
+    }
+}
+
+impl Mul<isize> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, other: isize) -> Vector3 {
+        Vector3 {
+            x: self.x * other,
+            y: self.y * other,
+            z: self.z * other,
+        }
+    }
+}
+
+impl Mul<Vector3> for isize {
+    type Output = Vector3;
+
+    fn mul(self, other: Vector3) -> Vector3 {
+        Vector3 {
+            x: self * other.x,
+            y: self * other.y,
+            z: self * other.z,
         }
     }
 }

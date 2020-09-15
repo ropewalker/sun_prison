@@ -58,203 +58,39 @@ pub fn setup(
 
     use UnitVector::*;
 
-    let normal_orientation = Back;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+    for (i, &normal_orientation) in [Back, Up, Left, Front, Down, Right].iter().enumerate() {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y,
-                z: -PLANET_RADIUS,
-            };
+            for y in -PLANET_RADIUS..=PLANET_RADIUS {
+                let (abscissa, ordinate) = normal_orientation.abscissa_and_ordinate();
 
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
+                let cubelet_position =
+                    PLANET_RADIUS * normal_orientation + x * abscissa + y * ordinate;
 
-            let index = (y + PLANET_RADIUS, -x + PLANET_RADIUS + 1);
+                let game_coordinates = GameCoordinates {
+                    cubelet_position,
+                    normal_orientation,
+                    tangent_orientation,
+                };
 
-            if let Some(c) = map.get(&index) {
-                match &c[..] {
-                    "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(GameCoordinates {
-                        tangent_orientation: Some(Left),
-                        ..game_coordinates
-                    }),
-                    "o" => mov_wall_coordinates.push(game_coordinates),
-                    _ => (),
-                }
-            }
-        }
-    }
+                let i = i as isize;
 
-    //up
+                let sign = 2 * (i % 2) - 1;
 
-    let normal_orientation = Up;
+                let index = (
+                    sign * x + PLANET_RADIUS,
+                    -y * sign + (2 * i + 1) * (PLANET_RADIUS + 1),
+                );
 
-    for x in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y: PLANET_RADIUS,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            let index = (z + PLANET_RADIUS, -x + 3 * PLANET_RADIUS + 3);
-
-            if let Some(c) = map.get(&index) {
-                match &c[..] {
-                    "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(GameCoordinates {
-                        tangent_orientation: Some(Front),
-                        ..game_coordinates
-                    }),
-                    "o" => mov_wall_coordinates.push(game_coordinates),
-                    _ => (),
-                }
-            }
-        }
-    }
-
-    //left
-
-    let normal_orientation = Left;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x: -PLANET_RADIUS,
-                y,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            let index = (z + PLANET_RADIUS, -y + 5 * PLANET_RADIUS + 5);
-
-            if let Some(c) = map.get(&index) {
-                match &c[..] {
-                    "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(GameCoordinates {
-                        tangent_orientation: Some(Down),
-                        ..game_coordinates
-                    }),
-                    "o" => mov_wall_coordinates.push(game_coordinates),
-                    _ => (),
-                }
-            }
-        }
-    }
-
-    //front
-
-    let normal_orientation = Front;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
-        for x in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y,
-                z: PLANET_RADIUS,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            let index = (x + PLANET_RADIUS, -y + 7 * PLANET_RADIUS + 7);
-
-            if let Some(c) = map.get(&index) {
-                match &c[..] {
-                    "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(GameCoordinates {
-                        tangent_orientation: Some(Right),
-                        ..game_coordinates
-                    }),
-                    "o" => mov_wall_coordinates.push(game_coordinates),
-                    _ => (),
-                }
-            }
-        }
-    }
-
-    //down
-
-    let normal_orientation = Down;
-
-    for x in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x,
-                y: -PLANET_RADIUS,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            let index = (x + PLANET_RADIUS, -z + 9 * PLANET_RADIUS + 9);
-
-            if let Some(c) = map.get(&index) {
-                match &c[..] {
-                    "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(GameCoordinates {
-                        tangent_orientation: Some(Back),
-                        ..game_coordinates
-                    }),
-                    "o" => mov_wall_coordinates.push(game_coordinates),
-                    _ => (),
-                }
-            }
-        }
-    }
-
-    //right
-
-    let normal_orientation = Right;
-
-    for y in -PLANET_RADIUS..=PLANET_RADIUS {
-        for z in -PLANET_RADIUS..=PLANET_RADIUS {
-            let cubelet_position = Vector3 {
-                x: PLANET_RADIUS,
-                y,
-                z,
-            };
-
-            let game_coordinates = GameCoordinates {
-                cubelet_position,
-                normal_orientation,
-                tangent_orientation,
-            };
-
-            let index = (y + PLANET_RADIUS, -z + 11 * PLANET_RADIUS + 11);
-
-            if let Some(c) = map.get(&index) {
-                match &c[..] {
-                    "#" => wall_coordinates.push(game_coordinates),
-                    "@" => player_coordinates.push(GameCoordinates {
-                        tangent_orientation: Some(Up),
-                        ..game_coordinates
-                    }),
-                    "o" => mov_wall_coordinates.push(game_coordinates),
-                    _ => (),
+                if let Some(c) = map.get(&index) {
+                    match &c[..] {
+                        "#" => wall_coordinates.push(game_coordinates),
+                        "@" => player_coordinates.push(GameCoordinates {
+                            tangent_orientation: Some(abscissa),
+                            ..game_coordinates
+                        }),
+                        "o" => mov_wall_coordinates.push(game_coordinates),
+                        _ => (),
+                    }
                 }
             }
         }
