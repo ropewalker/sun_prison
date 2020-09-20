@@ -32,7 +32,6 @@ pub fn create_walls(
                 transform,
                 ..Default::default()
             })
-            .with(Wall)
             .with(wall_coordinates)
             .with(Opaque);
 

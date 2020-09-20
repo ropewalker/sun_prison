@@ -1,6 +1,7 @@
 mod game_coordinates;
 
 pub use self::game_coordinates::*;
+use std::collections::HashSet;
 
 pub struct Player;
 
@@ -18,7 +19,5 @@ pub struct IsHighlighted(pub bool);
 
 pub struct Movable;
 pub struct Immovable;
-
-pub struct Wall;
 
 pub struct Opaque;
