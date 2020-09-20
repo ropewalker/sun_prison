@@ -10,13 +10,12 @@ pub fn create_tile(
     is_highlighted: IsHighlighted,
     texture_atlas: Handle<TextureAtlas>,
 ) {
-    let mut translation: Translation = Default::default();
-    translation.0.set_z(0.0);
+    let transform = Transform::identity();
 
     commands
         .spawn(SpriteSheetComponents {
             texture_atlas,
-            translation,
+            transform,
             ..Default::default()
         })
         .with(game_coordinates)

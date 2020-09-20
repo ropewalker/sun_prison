@@ -23,14 +23,13 @@ pub fn create_walls(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 1, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let mut translation: Translation = Default::default();
-    translation.0.set_z(1.0);
+    let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.0));
 
     for wall_coordinates in walls_coordinates {
         let commands = commands
             .spawn(SpriteSheetComponents {
                 texture_atlas,
-                translation,
+                transform,
                 ..Default::default()
             })
             .with(Wall)

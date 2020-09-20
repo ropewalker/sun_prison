@@ -3,11 +3,11 @@ use crate::components::*;
 use crate::resources::*;
 use bevy::prelude::*;
 
-pub fn translation_system(mut translation: Mut<Translation>, coordinates: &GameCoordinates) {
-    *translation = game_coordinates_to_translation(coordinates, translation.0.z());
+pub fn translation_system(mut transform: Mut<Transform>, coordinates: &GameCoordinates) {
+    *transform = game_coordinates_to_translation(coordinates, transform.translation().z());
 }
 
-fn game_coordinates_to_translation(coordinates: &GameCoordinates, z: f32) -> Translation {
+fn game_coordinates_to_translation(coordinates: &GameCoordinates, z: f32) -> Transform {
     let edge_len = (PLANET_RADIUS * 2 + 1) as f32;
 
     let columns = [
@@ -47,5 +47,5 @@ fn game_coordinates_to_translation(coordinates: &GameCoordinates, z: f32) -> Tra
         ),
     };
 
-    Translation(Vec3::new(x, y, z))
+    Transform::from_translation(Vec3::new(x, y, z))
 }
