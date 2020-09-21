@@ -20,3 +20,28 @@ impl GameCoordinates {
         }
     }
 }
+
+#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
+pub struct Position {
+    pub cubelet_position: Vector3,
+    pub normal_orientation: UnitVector,
+}
+
+impl From<GameCoordinates> for Position {
+    fn from(game_coordinates: GameCoordinates) -> Position {
+        Position {
+            cubelet_position: game_coordinates.cubelet_position,
+            normal_orientation: game_coordinates.normal_orientation,
+        }
+    }
+}
+
+impl From<Position> for GameCoordinates {
+    fn from(position: Position) -> GameCoordinates {
+        GameCoordinates {
+            cubelet_position: position.cubelet_position,
+            normal_orientation: position.normal_orientation,
+            tangent_orientation: None,
+        }
+    }
+}

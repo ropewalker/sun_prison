@@ -25,30 +25,25 @@ fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: UnitVector) {
     }
 }
 
-fn next_tile(
-    coordinates: &GameCoordinates,
-    direction: UnitVector,
-) -> (GameCoordinates, UnitVector) {
-    let new_cubelet_position = coordinates.cubelet_position + direction;
+fn next_tile(position: &Position, direction: UnitVector) -> (Position, UnitVector) {
+    let new_cubelet_position = position.cubelet_position + direction;
 
     if new_cubelet_position.x.abs() > PLANET_RADIUS
         || new_cubelet_position.y.abs() > PLANET_RADIUS
         || new_cubelet_position.z.abs() > PLANET_RADIUS
     {
         (
-            GameCoordinates {
-                cubelet_position: coordinates.cubelet_position,
+            Position {
+                cubelet_position: position.cubelet_position,
                 normal_orientation: direction,
-                tangent_orientation: None,
             },
-            -coordinates.normal_orientation,
+            -position.normal_orientation,
         )
     } else {
         (
-            GameCoordinates {
+            Position {
                 cubelet_position: new_cubelet_position,
-                normal_orientation: coordinates.normal_orientation,
-                tangent_orientation: None,
+                normal_orientation: position.normal_orientation,
             },
             direction,
         )
@@ -94,31 +89,29 @@ pub fn player_movement_system(
             }
 
             if let Some(direction) = direction {
-                let mov: HashMap<Vector3, u32> = movables_query
+                let mov: HashMap<Position, u32> = movables_query
                     .iter()
                     .iter()
-                    .map(|t| ((t.2).cubelet_position + (t.2).normal_orientation, t.0.id()))
+                    .map(|t| ((*t.2).into(), t.0.id()))
                     .collect::<HashMap<_, _>>();
-                let immov: HashMap<Vector3, u32> = immovables_query
+                let immov: HashMap<Position, u32> = immovables_query
                     .iter()
                     .iter()
-                    .map(|t| ((t.2).cubelet_position + (t.2).normal_orientation, t.0.id()))
+                    .map(|t| ((*t.2).into(), t.0.id()))
                     .collect::<HashMap<_, _>>();
 
-                let (mut new_coordinates, mut new_direction) = (*player_coordinates, direction);
+                let (mut new_position, mut new_direction) =
+                    ((*player_coordinates).into(), direction);
 
                 loop {
-                    let tile = next_tile(&new_coordinates, new_direction);
+                    let tile = next_tile(&new_position, new_direction);
 
-                    new_coordinates = tile.0;
+                    new_position = tile.0;
                     new_direction = tile.1;
 
-                    let coordinate_vec =
-                        new_coordinates.cubelet_position + new_coordinates.normal_orientation;
-
-                    if let Some(id) = mov.get(&coordinate_vec) {
+                    if let Some(id) = mov.get(&new_position) {
                         to_move.insert(*id, new_direction);
-                    } else if immov.contains_key(&coordinate_vec) {
+                    } else if immov.contains_key(&new_position) {
                         to_move.clear();
                         break;
                     } else {

@@ -1,7 +1,6 @@
 mod game_coordinates;
 
 pub use self::game_coordinates::*;
-use std::collections::HashSet;
 
 pub struct Player;
 
