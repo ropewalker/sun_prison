@@ -21,17 +21,17 @@ pub fn cube_rotation_system(
 
                 match axis {
                     Right | Left => {
-                        if coordinates.cubelet_position.x == layer {
+                        if coordinates.cubelet.x == layer {
                             rotate = true;
                         }
                     }
                     Up | Down => {
-                        if coordinates.cubelet_position.y == layer {
+                        if coordinates.cubelet.y == layer {
                             rotate = true;
                         }
                     }
                     Front | Back => {
-                        if coordinates.cubelet_position.z == layer {
+                        if coordinates.cubelet.z == layer {
                             rotate = true;
                         }
                     }

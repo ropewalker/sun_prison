@@ -1,5 +1,5 @@
 use crate::algebra::*;
-use crate::components::GameCoordinates;
+use crate::components::{GameCoordinates, Position};
 use crate::entities::*;
 use crate::resources::*;
 use bevy::prelude::*;
@@ -54,23 +54,16 @@ pub fn setup(
 
     let map = init_map();
 
-    let tangent_orientation = None;
-
     use UnitVector::*;
 
-    for (i, &normal_orientation) in [Back, Up, Left, Front, Down, Right].iter().enumerate() {
+    for (i, &normal) in [Back, Up, Left, Front, Down, Right].iter().enumerate() {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
             for y in -PLANET_RADIUS..=PLANET_RADIUS {
-                let (abscissa, ordinate) = normal_orientation.abscissa_and_ordinate();
+                let (abscissa, ordinate) = normal.abscissa_and_ordinate();
 
-                let cubelet_position =
-                    PLANET_RADIUS * normal_orientation + x * abscissa + y * ordinate;
+                let cubelet = PLANET_RADIUS * normal + x * abscissa + y * ordinate;
 
-                let game_coordinates = GameCoordinates {
-                    cubelet_position,
-                    normal_orientation,
-                    tangent_orientation,
-                };
+                let game_coordinates = Position { cubelet, normal }.into();
 
                 let i = i as isize;
 
@@ -85,7 +78,7 @@ pub fn setup(
                     match &c[..] {
                         "#" => wall_coordinates.push(game_coordinates),
                         "@" => player_coordinates.push(GameCoordinates {
-                            tangent_orientation: Some(abscissa),
+                            tangent: Some(abscissa),
                             ..game_coordinates
                         }),
                         "o" => mov_wall_coordinates.push(game_coordinates),

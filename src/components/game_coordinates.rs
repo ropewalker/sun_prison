@@ -2,17 +2,17 @@ use crate::algebra::*;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub struct GameCoordinates {
-    pub cubelet_position: Vector3,
-    pub normal_orientation: UnitVector,
-    pub tangent_orientation: Option<UnitVector>,
+    pub cubelet: Vector3,
+    pub normal: UnitVector,
+    pub tangent: Option<UnitVector>,
 }
 
 impl GameCoordinates {
     pub fn rotate(self, axis: &UnitVector) -> GameCoordinates {
         GameCoordinates {
-            cubelet_position: self.cubelet_position.rotate(axis),
-            normal_orientation: self.normal_orientation.rotate(axis),
-            tangent_orientation: if let Some(tangent) = self.tangent_orientation {
+            cubelet: self.cubelet.rotate(axis),
+            normal: self.normal.rotate(axis),
+            tangent: if let Some(tangent) = self.tangent {
                 Some(tangent.rotate(axis))
             } else {
                 None
@@ -23,15 +23,15 @@ impl GameCoordinates {
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub struct Position {
-    pub cubelet_position: Vector3,
-    pub normal_orientation: UnitVector,
+    pub cubelet: Vector3,
+    pub normal: UnitVector,
 }
 
 impl From<GameCoordinates> for Position {
     fn from(game_coordinates: GameCoordinates) -> Position {
         Position {
-            cubelet_position: game_coordinates.cubelet_position,
-            normal_orientation: game_coordinates.normal_orientation,
+            cubelet: game_coordinates.cubelet,
+            normal: game_coordinates.normal,
         }
     }
 }
@@ -39,9 +39,9 @@ impl From<GameCoordinates> for Position {
 impl From<Position> for GameCoordinates {
     fn from(position: Position) -> GameCoordinates {
         GameCoordinates {
-            cubelet_position: position.cubelet_position,
-            normal_orientation: position.normal_orientation,
-            tangent_orientation: None,
+            cubelet: position.cubelet,
+            normal: position.normal,
+            tangent: None,
         }
     }
 }

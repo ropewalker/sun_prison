@@ -20,30 +20,30 @@ fn game_coordinates_to_translation(coordinates: &GameCoordinates, z: f32) -> Tra
 
     use UnitVector::*;
 
-    let (x, y) = match coordinates.normal_orientation {
+    let (x, y) = match coordinates.normal {
         Right => (
-            (coordinates.cubelet_position.y as f32 + columns[3]) * TILE_SIZE,
-            (coordinates.cubelet_position.z as f32 + rows[2]) * TILE_SIZE,
+            (coordinates.cubelet.y as f32 + columns[3]) * TILE_SIZE,
+            (coordinates.cubelet.z as f32 + rows[2]) * TILE_SIZE,
         ),
         Up => (
-            (coordinates.cubelet_position.z as f32 + columns[1]) * TILE_SIZE,
-            (coordinates.cubelet_position.x as f32 + rows[0]) * TILE_SIZE,
+            (coordinates.cubelet.z as f32 + columns[1]) * TILE_SIZE,
+            (coordinates.cubelet.x as f32 + rows[0]) * TILE_SIZE,
         ),
         Front => (
-            (coordinates.cubelet_position.x as f32 + columns[2]) * TILE_SIZE,
-            (coordinates.cubelet_position.y as f32 + rows[1]) * TILE_SIZE,
+            (coordinates.cubelet.x as f32 + columns[2]) * TILE_SIZE,
+            (coordinates.cubelet.y as f32 + rows[1]) * TILE_SIZE,
         ),
         Left => (
-            (coordinates.cubelet_position.z as f32 + columns[1]) * TILE_SIZE,
-            (coordinates.cubelet_position.y as f32 + rows[1]) * TILE_SIZE,
+            (coordinates.cubelet.z as f32 + columns[1]) * TILE_SIZE,
+            (coordinates.cubelet.y as f32 + rows[1]) * TILE_SIZE,
         ),
         Down => (
-            (coordinates.cubelet_position.x as f32 + columns[2]) * TILE_SIZE,
-            (coordinates.cubelet_position.z as f32 + rows[2]) * TILE_SIZE,
+            (coordinates.cubelet.x as f32 + columns[2]) * TILE_SIZE,
+            (coordinates.cubelet.z as f32 + rows[2]) * TILE_SIZE,
         ),
         Back => (
-            (coordinates.cubelet_position.y as f32 + columns[0]) * TILE_SIZE,
-            (coordinates.cubelet_position.x as f32 + rows[0]) * TILE_SIZE,
+            (coordinates.cubelet.y as f32 + columns[0]) * TILE_SIZE,
+            (coordinates.cubelet.x as f32 + rows[0]) * TILE_SIZE,
         ),
     };
 

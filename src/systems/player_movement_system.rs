@@ -5,45 +5,45 @@ use bevy::prelude::*;
 use std::collections::HashMap;
 
 fn make_move(coordinates: &mut Mut<GameCoordinates>, direction: UnitVector) {
-    let new_cubelet_position = coordinates.cubelet_position + direction;
+    let new_cubelet = coordinates.cubelet + direction;
 
-    if new_cubelet_position.x.abs() > PLANET_RADIUS
-        || new_cubelet_position.y.abs() > PLANET_RADIUS
-        || new_cubelet_position.z.abs() > PLANET_RADIUS
+    if new_cubelet.x.abs() > PLANET_RADIUS
+        || new_cubelet.y.abs() > PLANET_RADIUS
+        || new_cubelet.z.abs() > PLANET_RADIUS
     {
-        if let Some(tangent) = coordinates.tangent_orientation {
+        if let Some(tangent) = coordinates.tangent {
             if tangent == direction {
-                coordinates.tangent_orientation = Some(-coordinates.normal_orientation)
+                coordinates.tangent = Some(-coordinates.normal)
             } else if tangent == -direction {
-                coordinates.tangent_orientation = Some(coordinates.normal_orientation)
+                coordinates.tangent = Some(coordinates.normal)
             }
         }
 
-        coordinates.normal_orientation = direction;
+        coordinates.normal = direction;
     } else {
-        coordinates.cubelet_position = new_cubelet_position;
+        coordinates.cubelet = new_cubelet;
     }
 }
 
 fn next_tile(position: &Position, direction: UnitVector) -> (Position, UnitVector) {
-    let new_cubelet_position = position.cubelet_position + direction;
+    let new_cubelet = position.cubelet + direction;
 
-    if new_cubelet_position.x.abs() > PLANET_RADIUS
-        || new_cubelet_position.y.abs() > PLANET_RADIUS
-        || new_cubelet_position.z.abs() > PLANET_RADIUS
+    if new_cubelet.x.abs() > PLANET_RADIUS
+        || new_cubelet.y.abs() > PLANET_RADIUS
+        || new_cubelet.z.abs() > PLANET_RADIUS
     {
         (
             Position {
-                cubelet_position: position.cubelet_position,
-                normal_orientation: direction,
+                cubelet: position.cubelet,
+                normal: direction,
             },
-            -position.normal_orientation,
+            -position.normal,
         )
     } else {
         (
             Position {
-                cubelet_position: new_cubelet_position,
-                normal_orientation: position.normal_orientation,
+                cubelet: new_cubelet,
+                normal: position.normal,
             },
             direction,
         )
@@ -63,28 +63,28 @@ pub fn player_movement_system(
             let mut to_move: HashMap<u32, UnitVector> = HashMap::new();
 
             if keyboard_input.just_pressed(KeyCode::Up) || keyboard_input.just_pressed(KeyCode::W) {
-                direction = player_coordinates.tangent_orientation;
+                direction = player_coordinates.tangent;
             } else if keyboard_input.just_pressed(KeyCode::Down)
                 || keyboard_input.just_pressed(KeyCode::S)
             {
-                direction = Some(-player_coordinates.tangent_orientation.unwrap());
+                direction = Some(-player_coordinates.tangent.unwrap());
             } else if keyboard_input.just_pressed(KeyCode::Left)
                 || keyboard_input.just_pressed(KeyCode::A)
             {
-                player_coordinates.tangent_orientation = Some(
+                player_coordinates.tangent = Some(
                     -player_coordinates
-                        .tangent_orientation
+                        .tangent
                         .unwrap()
-                        .cross(&player_coordinates.normal_orientation),
+                        .cross(&player_coordinates.normal),
                 );
             } else if keyboard_input.just_pressed(KeyCode::Right)
                 || keyboard_input.just_pressed(KeyCode::D)
             {
-                player_coordinates.tangent_orientation = Some(
+                player_coordinates.tangent = Some(
                     player_coordinates
-                        .tangent_orientation
+                        .tangent
                         .unwrap()
-                        .cross(&player_coordinates.normal_orientation),
+                        .cross(&player_coordinates.normal),
                 );
             }
 

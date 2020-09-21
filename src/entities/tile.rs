@@ -39,30 +39,24 @@ pub fn create_tiles(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 3, 2);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
-    let tangent_orientation = None;
     let is_highlighted = IsHighlighted(false);
 
-    for &normal_orientation in &[Right, Up, Front, Left, Down, Back] {
+    for &normal in &[Right, Up, Front, Left, Down, Back] {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
             for y in -PLANET_RADIUS..=PLANET_RADIUS {
                 use Insolation::*;
 
-                let insolation = match normal_orientation {
+                let insolation = match normal {
                     Right => Day,
                     Down | Back => Twilight,
                     _ => Night,
                 };
 
-                let (abscissa, ordinate) = normal_orientation.abscissa_and_ordinate();
+                let (abscissa, ordinate) = normal.abscissa_and_ordinate();
 
-                let cubelet_position =
-                    PLANET_RADIUS * normal_orientation + x * abscissa + y * ordinate;
+                let cubelet = PLANET_RADIUS * normal + x * abscissa + y * ordinate;
 
-                let game_coordinates = GameCoordinates {
-                    cubelet_position,
-                    normal_orientation,
-                    tangent_orientation,
-                };
+                let game_coordinates = Position { cubelet, normal }.into();
 
                 create_tile(
                     commands,

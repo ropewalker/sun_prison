@@ -10,11 +10,10 @@ pub fn insolation_system(
     let path = &sun_path.path;
 
     for (_, coordinates, mut insolation) in &mut sky_query.iter() {
-        if coordinates.normal_orientation == *path.get(index).unwrap() {
+        if coordinates.normal == *path.get(index).unwrap() {
             *insolation = Insolation::Day;
-        } else if coordinates.normal_orientation == *path.get((index + 1) % path.len()).unwrap()
-            || coordinates.normal_orientation
-                == *path.get((path.len() + index - 1) % path.len()).unwrap()
+        } else if coordinates.normal == *path.get((index + 1) % path.len()).unwrap()
+            || coordinates.normal == *path.get((path.len() + index - 1) % path.len()).unwrap()
         {
             *insolation = Insolation::Twilight;
         } else {
