@@ -22,9 +22,9 @@ pub fn viewshed_update_system(
             .map(|t| (*t.1).into())
             .collect::<HashSet<_>>();
 
-        use Cardinal::*;
-
-        for &cardinal in [North, East, South, West].iter() {
+        //use Cardinal::*;
+        //for &cardinal in [North, East, South, West].iter() {
+        if let Some(cardinal) = view_direction(viewer_coordinates) {
             let quadrant = Quadrant {
                 cardinal,
                 origin: viewer_position,
@@ -104,6 +104,28 @@ enum Cardinal {
     South,
     West,
     East,
+}
+
+fn view_direction(coordinates: &GameCoordinates) -> Option<Cardinal> {
+    let (abscissa, ordinate) = coordinates.normal.abscissa_and_ordinate();
+
+    use Cardinal::*;
+
+    if let Some(tangent) = coordinates.tangent {
+        if tangent == ordinate {
+            Some(North)
+        } else if tangent == -ordinate {
+            Some(South)
+        } else if tangent == abscissa {
+            Some(East)
+        } else if tangent == -abscissa {
+            Some(West)
+        } else {
+            None
+        }
+    } else {
+        None
+    }
 }
 
 struct Quadrant {
