@@ -1,4 +1,5 @@
 use crate::algebra::*;
+use crate::resources::PLANET_RADIUS;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub struct GameCoordinates {
@@ -25,6 +26,15 @@ impl GameCoordinates {
 pub struct Position {
     pub cubelet: Vector3,
     pub normal: UnitVector,
+}
+
+impl Position {
+    pub fn on_surface(&self) -> bool {
+        self.cubelet.x.abs() <= PLANET_RADIUS
+            && self.cubelet.y.abs() <= PLANET_RADIUS
+            && self.cubelet.z.abs() <= PLANET_RADIUS
+            && self.cubelet.dot(&self.normal.into()) == PLANET_RADIUS
+    }
 }
 
 impl From<GameCoordinates> for Position {

@@ -1,5 +1,6 @@
 use crate::components::*;
 use bevy::prelude::*;
+use std::collections::HashSet;
 
 pub fn create_player(
     commands: &mut Commands,
@@ -26,6 +27,7 @@ pub fn create_player(
             })
             .with(Player)
             .with(player_coordinates)
-            .with(Movable);
+            .with(Movable)
+            .with(Viewshed(HashSet::new()));
     }
 }
