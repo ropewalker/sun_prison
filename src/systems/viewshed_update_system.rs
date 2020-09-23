@@ -147,9 +147,9 @@ impl Quadrant {
 
         let (row, col) = (tile.row, tile.col);
 
-        let mut normal = self.origin.normal;
         let mut y_shift = row * ordinate;
-        let mut x_shift = col * abscissa;
+
+        let mut flipped = false;
 
         let mut y_position = Position {
             cubelet: self.origin.cubelet + y_shift,
@@ -160,45 +160,37 @@ impl Quadrant {
             y_shift = (row - 1) * (-self.origin.normal);
             y_position.cubelet = self.origin.cubelet + y_shift;
             y_position.normal = ordinate;
-            normal = ordinate;
+
+            flipped = true;
         }
 
         if !y_position.on_surface() {
             return None;
         }
 
-        let mut x_position = Position {
-            cubelet: self.origin.cubelet + x_shift,
-            normal: self.origin.normal,
+        let mut x_shift = col * abscissa;
+
+        let mut position = Position {
+            cubelet: y_position.cubelet + x_shift,
+            normal: y_position.normal,
         };
 
-        if !x_position.on_surface() {
+        if !position.on_surface() && !flipped {
             x_shift = (col - 1) * (-self.origin.normal);
-            x_position.cubelet = self.origin.cubelet + x_shift;
-            x_position.normal = abscissa;
-            normal = abscissa;
+            position.cubelet = y_position.cubelet + x_shift;
+            position.normal = abscissa;
+
+            if !position.on_surface() {
+                x_shift = (col + 1) * self.origin.normal;
+                position.cubelet = y_position.cubelet + x_shift;
+                position.normal = -abscissa;
+            }
         }
 
-        if !x_position.on_surface() {
-            x_shift = (col + 1) * self.origin.normal;
-            x_position.cubelet = self.origin.cubelet + x_shift;
-            x_position.normal = -abscissa;
-            normal = -abscissa;
-        }
-
-        if !x_position.on_surface() {
-            return None;
-        }
-
-        let position = Position {
-            cubelet: self.origin.cubelet + x_shift + y_shift,
-            normal,
-        };
-
-        if position.on_surface() {
-            Some(position)
-        } else {
+        if !position.on_surface() {
             None
+        } else {
+            Some(position)
         }
     }
 }
