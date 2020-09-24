@@ -12,7 +12,10 @@ pub fn tile_sprite_update_system(
 ) {
     for (_, viewshed) in &mut player_query.iter() {
         for (_, tile_coordinates, is_highlighted, mut sprite) in &mut tile_query.iter() {
-            if viewshed.0.contains(&((*tile_coordinates).into())) {
+            if viewshed
+                .visible_positions
+                .contains(&((*tile_coordinates).into()))
+            {
                 sprite.index = match is_highlighted.0 {
                     false => 0,
                     true => 3,

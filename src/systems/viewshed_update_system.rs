@@ -8,13 +8,13 @@ pub fn viewshed_update_system(
     mut obstacles_query: Query<(&Opaque, &GameCoordinates)>,
 ) {
     for (mut viewshed, viewer_coordinates) in &mut viewer_coordinates_query.iter() {
-        viewshed.0.clear();
+        viewshed.visible_positions.clear();
         let viewer_position = Position {
             cubelet: viewer_coordinates.cubelet,
             normal: viewer_coordinates.normal,
         };
 
-        viewshed.0.insert(viewer_position);
+        viewshed.visible_positions.insert(viewer_position);
 
         let obstacles: HashSet<Position> = obstacles_query
             .iter()
@@ -22,9 +22,20 @@ pub fn viewshed_update_system(
             .map(|t| (*t.1).into())
             .collect::<HashSet<_>>();
 
-        //use Cardinal::*;
-        //for &cardinal in [North, East, South, West].iter() {
-        if let Some(cardinal) = view_direction(viewer_coordinates) {
+        use Cardinal::*;
+
+        let cardinals = match viewshed.shape {
+            ViewshedShape::Circle => vec![North, East, South, West],
+            ViewshedShape::Quadrant => {
+                if let Some(cardinal) = view_direction(viewer_coordinates) {
+                    vec![cardinal]
+                } else {
+                    vec![]
+                }
+            }
+        };
+
+        for &cardinal in cardinals.iter() {
             let quadrant = Quadrant {
                 cardinal,
                 origin: viewer_position,
@@ -45,7 +56,7 @@ pub fn viewshed_update_system(
                 for tile in row.tiles() {
                     if is_wall(&Some(tile), &quadrant, &obstacles) || is_symmetric(&row, &tile) {
                         if let Some(position) = quadrant.transform(&tile) {
-                            viewshed.0.insert(position);
+                            viewshed.visible_positions.insert(position);
                         }
                     }
 

@@ -28,6 +28,9 @@ pub fn create_player(
             .with(Player)
             .with(player_coordinates)
             .with(Movable)
-            .with(Viewshed(HashSet::new()));
+            .with(Viewshed {
+                visible_positions: HashSet::new(),
+                shape: ViewshedShape::Circle,
+            });
     }
 }

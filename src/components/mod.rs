@@ -22,4 +22,13 @@ pub struct Immovable;
 
 pub struct Opaque;
 
-pub struct Viewshed(pub HashSet<Position>);
+#[allow(dead_code)]
+pub enum ViewshedShape {
+    Circle,
+    Quadrant,
+}
+
+pub struct Viewshed {
+    pub visible_positions: HashSet<Position>,
+    pub shape: ViewshedShape,
+}
