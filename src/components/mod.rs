@@ -23,7 +23,6 @@ pub struct Immovable;
 
 pub struct Opaque;
 
-#[allow(dead_code)]
 pub enum ViewshedShape {
     Circle,
     Quadrant,
