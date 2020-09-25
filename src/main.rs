@@ -26,6 +26,7 @@ fn main() {
         .add_default_plugins()
         .add_startup_system(setup.system())
         .add_system(player_movement_system.system())
+        .add_system(enemies_movement_system.system())
         .add_system(viewshed_update_system.system())
         .add_system(cube_rotation_system.system())
         .add_system(highlight_layer_system.system())
@@ -33,6 +34,7 @@ fn main() {
         .add_system(insolation_system.system())
         .add_system(sun_movement_system.system())
         .add_system(player_sprite_update_system.system())
+        .add_system(enemy_sprite_update_system.system())
         .add_system(tile_sprite_update_system.system())
         .add_system(objects_visibility_system.system())
         .run();

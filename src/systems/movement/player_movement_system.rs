@@ -55,7 +55,7 @@ pub fn player_movement_system(
     mut current_turn: ResMut<CurrentTurn>,
     mut player_position_query: Query<(&Player, &mut GameCoordinates)>,
     mut movables_query: Query<Without<Player, (Entity, &Movable, &mut GameCoordinates)>>,
-    mut immovables_query: Query<(Entity, &Immovable, &mut GameCoordinates)>,
+    mut immovables_query: Query<(Entity, &Immovable, &GameCoordinates)>,
 ) {
     if current_turn.side == GameSide::Player {
         for (_player, mut player_coordinates) in &mut player_position_query.iter() {
@@ -126,7 +126,7 @@ pub fn player_movement_system(
                     }
                 }
 
-                current_turn.side = GameSide::Sun;
+                current_turn.side = GameSide::Enemies;
             }
         }
     }

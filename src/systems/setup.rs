@@ -83,7 +83,7 @@ pub fn setup(
                             ..game_coordinates
                         }),
                         "z" => enemies_coordinates.push(GameCoordinates {
-                            tangent: Some(abscissa),
+                            tangent: Some(ordinate),
                             ..game_coordinates
                         }),
                         "o" => mov_wall_coordinates.push(game_coordinates),

@@ -35,6 +35,7 @@ pub struct CurrentTurn {
 #[derive(Eq, PartialEq)]
 pub enum GameSide {
     Player,
+    Enemies,
     Sun,
 }
 

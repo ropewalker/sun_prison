@@ -1,12 +1,11 @@
 mod insolation_system;
-mod player_movement_system;
+mod movement;
 mod rendering;
 mod rotation;
 mod setup;
-mod sun_movement_system;
 mod viewshed_update_system;
 
 pub use self::{
-    insolation_system::*, player_movement_system::*, rendering::*, rotation::*, setup::*,
-    sun_movement_system::*, viewshed_update_system::*,
+    insolation_system::*, movement::*, rendering::*, rotation::*, setup::*,
+    viewshed_update_system::*,
 };
