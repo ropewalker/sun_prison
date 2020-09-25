@@ -42,9 +42,41 @@ impl Position {
 
     #[allow(dead_code)]
     pub fn manhattan_distance_to(&self, other: &Position) -> isize {
-        (self.cubelet - other.cubelet).manhattan_length()
-            - self.normal.to_vector().dot(&other.normal.to_vector())
-            + 1
+        if self.normal == other.normal {
+            (self.cubelet - other.cubelet).manhattan_length()
+        } else if self.normal == -other.normal {
+            let (abscissa, ordinate) = self.normal.abscissa_and_ordinate();
+            let (self_x, self_y) = (
+                self.cubelet.dot(&abscissa.to_vector()),
+                self.cubelet.dot(&ordinate.to_vector()),
+            );
+            let (other_x, other_y) = (
+                other.cubelet.dot(&abscissa.to_vector()),
+                other.cubelet.dot(&ordinate.to_vector()),
+            );
+
+            2 * PLANET_RADIUS
+                + 2
+                + [
+                    (self_x - PLANET_RADIUS).abs()
+                        + (other_x - PLANET_RADIUS).abs()
+                        + (self_y - other_y).abs(),
+                    (self_x + PLANET_RADIUS).abs()
+                        + (other_x + PLANET_RADIUS).abs()
+                        + (self_y - other_y).abs(),
+                    (self_y - PLANET_RADIUS).abs()
+                        + (other_y - PLANET_RADIUS).abs()
+                        + (self_x - other_x).abs(),
+                    (self_y + PLANET_RADIUS).abs()
+                        + (other_y + PLANET_RADIUS).abs()
+                        + (self_x - other_x).abs(),
+                ]
+                .iter()
+                .min()
+                .unwrap()
+        } else {
+            (self.cubelet - other.cubelet).manhattan_length() + 1
+        }
     }
 }
 
