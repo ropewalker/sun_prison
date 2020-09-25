@@ -9,17 +9,14 @@ pub fn viewshed_update_system(
 ) {
     for (mut viewshed, viewer_coordinates) in &mut viewer_coordinates_query.iter() {
         viewshed.visible_positions.clear();
-        let viewer_position = Position {
-            cubelet: viewer_coordinates.cubelet,
-            normal: viewer_coordinates.normal,
-        };
+        let viewer_position = viewer_coordinates.position();
 
         viewshed.visible_positions.insert(viewer_position);
 
-        let obstacles: HashSet<Position> = obstacles_query
+        let obstacles = obstacles_query
             .iter()
             .iter()
-            .map(|t| (*t.1).into())
+            .map(|t| (*t.1).position())
             .collect::<HashSet<_>>();
 
         use Cardinal::*;

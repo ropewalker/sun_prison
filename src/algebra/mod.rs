@@ -11,6 +11,10 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
+    pub fn manhattan_length(&self) -> isize {
+        self.x.abs() + self.y.abs() + self.z.abs()
+    }
+
     pub fn cross(&self, other: &Vector3) -> Vector3 {
         Vector3 {
             x: self.y * other.z - self.z * other.y,
@@ -100,7 +104,7 @@ impl Add<UnitVector> for Vector3 {
     type Output = Vector3;
 
     fn add(self, other: UnitVector) -> Vector3 {
-        let vector: Vector3 = other.into();
+        let vector: Vector3 = other.to_vector();
         self + vector
     }
 }

@@ -20,6 +20,10 @@ impl GameCoordinates {
             },
         }
     }
+
+    pub fn position(&self) -> Position {
+        (*self).into()
+    }
 }
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
@@ -33,7 +37,14 @@ impl Position {
         self.cubelet.x.abs() <= PLANET_RADIUS
             && self.cubelet.y.abs() <= PLANET_RADIUS
             && self.cubelet.z.abs() <= PLANET_RADIUS
-            && self.cubelet.dot(&self.normal.into()) == PLANET_RADIUS
+            && self.cubelet.dot(&self.normal.to_vector()) == PLANET_RADIUS
+    }
+
+    #[allow(dead_code)]
+    pub fn manhattan_distance_to(&self, other: &Position) -> isize {
+        (self.cubelet - other.cubelet).manhattan_length()
+            - self.normal.to_vector().dot(&other.normal.to_vector())
+            + 1
     }
 }
 

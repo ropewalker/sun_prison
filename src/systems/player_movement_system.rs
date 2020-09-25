@@ -89,19 +89,19 @@ pub fn player_movement_system(
             }
 
             if let Some(direction) = direction {
-                let mov: HashMap<Position, u32> = movables_query
+                let mov = movables_query
                     .iter()
                     .iter()
-                    .map(|t| ((*t.2).into(), t.0.id()))
+                    .map(|t| ((*t.2).position(), t.0.id()))
                     .collect::<HashMap<_, _>>();
-                let immov: HashMap<Position, u32> = immovables_query
+                let immov = immovables_query
                     .iter()
                     .iter()
-                    .map(|t| ((*t.2).into(), t.0.id()))
+                    .map(|t| ((*t.2).position(), t.0.id()))
                     .collect::<HashMap<_, _>>();
 
                 let (mut new_position, mut new_direction) =
-                    ((*player_coordinates).into(), direction);
+                    ((*player_coordinates).position(), direction);
 
                 loop {
                     let tile = next_tile(&new_position, new_direction);

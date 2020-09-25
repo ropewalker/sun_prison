@@ -13,14 +13,18 @@ pub enum UnitVector {
 }
 
 impl UnitVector {
+    pub fn to_vector(&self) -> Vector3 {
+        (*self).into()
+    }
+
     pub fn rotate(&self, axis: &UnitVector) -> UnitVector {
-        let vector: Vector3 = (*self).into();
+        let vector: Vector3 = (*self).to_vector();
         vector.rotate(axis).try_into().unwrap()
     }
 
     pub fn cross(&self, other: &UnitVector) -> UnitVector {
-        let vector: Vector3 = (*self).into();
-        let other: Vector3 = (*other).into();
+        let vector = (*self).to_vector();
+        let other = (*other).to_vector();
         vector.cross(&other).try_into().unwrap()
     }
 
@@ -60,8 +64,8 @@ impl Add<UnitVector> for UnitVector {
     type Output = Vector3;
 
     fn add(self, other: UnitVector) -> Vector3 {
-        let self_vector: Vector3 = self.into();
-        let other_vector: Vector3 = other.into();
+        let self_vector = self.to_vector();
+        let other_vector = other.to_vector();
         self_vector + other_vector
     }
 }
@@ -70,7 +74,7 @@ impl Mul<isize> for UnitVector {
     type Output = Vector3;
 
     fn mul(self, other: isize) -> Vector3 {
-        let vector: Vector3 = self.into();
+        let vector = self.to_vector();
         other * vector
     }
 }
@@ -79,7 +83,7 @@ impl Mul<UnitVector> for isize {
     type Output = Vector3;
 
     fn mul(self, other: UnitVector) -> Vector3 {
-        let vector: Vector3 = other.into();
+        let vector = other.to_vector();
         self * vector
     }
 }

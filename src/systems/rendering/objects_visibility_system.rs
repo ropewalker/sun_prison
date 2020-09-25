@@ -9,7 +9,7 @@ pub fn objects_visibility_system(
         for (object_coordinates, mut sprite) in &mut objects_query.iter() {
             if viewshed
                 .visible_positions
-                .contains(&((*object_coordinates).into()))
+                .contains(&((*object_coordinates).position()))
             {
                 sprite.color.a = 1.0;
             } else {
