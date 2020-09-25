@@ -4,6 +4,7 @@ pub use self::game_coordinates::*;
 use std::collections::HashSet;
 
 pub struct Player;
+pub struct Enemy;
 
 pub struct Tile;
 

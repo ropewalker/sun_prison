@@ -51,6 +51,7 @@ pub fn setup(
     let mut player_coordinates = Vec::new();
     let mut wall_coordinates = Vec::new();
     let mut mov_wall_coordinates = Vec::new();
+    let mut enemies_coordinates = Vec::new();
 
     let map = init_map();
 
@@ -81,6 +82,10 @@ pub fn setup(
                             tangent: Some(abscissa),
                             ..game_coordinates
                         }),
+                        "z" => enemies_coordinates.push(GameCoordinates {
+                            tangent: Some(abscissa),
+                            ..game_coordinates
+                        }),
                         "o" => mov_wall_coordinates.push(game_coordinates),
                         _ => (),
                     }
@@ -96,6 +101,15 @@ pub fn setup(
         &mut texture_atlases,
         &mut textures,
         player_coordinates,
+    );
+
+    //enemies
+    create_enemies(
+        &mut commands,
+        &asset_server,
+        &mut texture_atlases,
+        &mut textures,
+        enemies_coordinates,
     );
 
     //walls
