@@ -1,16 +1,18 @@
 use super::*;
 use std::collections::HashMap;
 
+type QueryWithoutPlayer<'a, T> = Query<'a, Without<Player, T>>;
+
 pub fn player_movement_system(
     keyboard_input: Res<Input<KeyCode>>,
     mut current_turn: ResMut<CurrentTurn>,
-    mut player_position_query: Query<(&Player, &mut GameCoordinates)>,
-    mut movables_query: Query<Without<Player, (Entity, &Movable, &mut GameCoordinates)>>,
-    mut immovables_query: Query<(Entity, &Immovable, &GameCoordinates)>,
+    mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
+    mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
+    mut immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
 ) {
     if current_turn.side == GameSide::Player {
         let mut player_position_query_borrow = player_position_query.iter();
-        let mut player_coordinates = player_position_query_borrow.iter().next().unwrap().1;
+        let mut player_coordinates = player_position_query_borrow.iter().next().unwrap();
 
         let mut direction = None;
         let mut to_move: HashMap<u32, UnitVector> = HashMap::new();
@@ -47,12 +49,12 @@ pub fn player_movement_system(
             let mov = movables_query
                 .iter()
                 .iter()
-                .map(|t| ((*t.2).position(), t.0.id()))
+                .map(|t| ((*t.1).position(), t.0.id()))
                 .collect::<HashMap<_, _>>();
             let immov = immovables_query
                 .iter()
                 .iter()
-                .map(|t| ((*t.2).position(), t.0.id()))
+                .map(|t| ((*t.1).position(), t.0.id()))
                 .collect::<HashMap<_, _>>();
 
             let (mut new_position, mut new_direction) =
@@ -75,7 +77,7 @@ pub fn player_movement_system(
                 }
             }
 
-            for (entity, _movable, mut coordinates) in &mut movables_query.iter() {
+            for (entity, mut coordinates) in &mut movables_query.iter() {
                 if let Some(direction) = to_move.remove(&entity.id()) {
                     make_move(&mut coordinates, direction);
                 }

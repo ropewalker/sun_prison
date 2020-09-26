@@ -5,7 +5,7 @@ use std::collections::{HashSet, VecDeque};
 
 pub fn viewshed_update_system(
     mut viewer_coordinates_query: Query<(&mut Viewshed, &GameCoordinates)>,
-    mut obstacles_query: Query<(&Opaque, &GameCoordinates)>,
+    mut obstacles_query: Query<With<Opaque, &GameCoordinates>>,
 ) {
     for (mut viewshed, viewer_coordinates) in &mut viewer_coordinates_query.iter() {
         viewshed.visible_positions.clear();
@@ -16,7 +16,7 @@ pub fn viewshed_update_system(
         let obstacles = obstacles_query
             .iter()
             .iter()
-            .map(|t| (*t.1).position())
+            .map(|t| (*t).position())
             .collect::<HashSet<_>>();
 
         use Cardinal::*;

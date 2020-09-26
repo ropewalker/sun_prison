@@ -6,12 +6,12 @@ use bevy::prelude::*;
 pub fn cube_rotation_system(
     keyboard_input: Res<Input<KeyCode>>,
     mut current_turn: ResMut<CurrentTurn>,
-    mut player_query: Query<(&Player, Mut<GameCoordinates>)>,
-    mut coordinates_query: Query<Without<Player, Mut<GameCoordinates>>>,
+    mut player_query: Query<With<Player, &mut GameCoordinates>>,
+    mut coordinates_query: Query<Without<Player, &mut GameCoordinates>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Space) {
         let mut player_query_borrow = player_query.iter();
-        let mut coordinates = player_query_borrow.iter().next().unwrap().1;
+        let mut coordinates = player_query_borrow.iter().next().unwrap();
 
         let RotationInfo { axis, layer } = super::calculate_rotation_info(&coordinates);
         *coordinates = coordinates.rotate(&axis);
