@@ -20,7 +20,6 @@ pub struct IsHighlighted(pub bool);
 
 pub struct Movable;
 pub struct Immovable;
-
 pub struct Opaque;
 
 pub enum ViewshedShape {
@@ -32,3 +31,5 @@ pub struct Viewshed {
     pub visible_positions: HashSet<Position>,
     pub shape: ViewshedShape,
 }
+
+pub struct LastPlayerPosition(pub Option<Position>);

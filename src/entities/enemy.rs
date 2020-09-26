@@ -31,6 +31,7 @@ pub fn create_enemies(
             .with(Viewshed {
                 visible_positions: HashSet::new(),
                 shape: ViewshedShape::Quadrant,
-            });
+            })
+            .with(LastPlayerPosition(None));
     }
 }

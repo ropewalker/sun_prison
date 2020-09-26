@@ -61,7 +61,7 @@ pub fn player_movement_system(
                 ((*player_coordinates).position(), direction);
 
             loop {
-                let tile = next_tile(&new_position, new_direction);
+                let tile = next_tile_with_direction(&new_position, new_direction);
 
                 new_position = tile.0;
                 new_direction = tile.1;
@@ -72,14 +72,14 @@ pub fn player_movement_system(
                     to_move.clear();
                     break;
                 } else {
-                    make_move(&mut player_coordinates, direction);
+                    strafe(&mut player_coordinates, direction);
                     break;
                 }
             }
 
             for (entity, mut coordinates) in &mut movables_query.iter() {
                 if let Some(direction) = to_move.remove(&entity.id()) {
-                    make_move(&mut coordinates, direction);
+                    strafe(&mut coordinates, direction);
                 }
             }
 
