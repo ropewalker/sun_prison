@@ -48,7 +48,7 @@ pub fn setup(
 ) {
     commands.spawn(Camera2dComponents::default());
 
-    let mut player_coordinates = Vec::new();
+    let mut player_coordinates = None;
     let mut wall_coordinates = Vec::new();
     let mut mov_wall_coordinates = Vec::new();
     let mut enemies_coordinates = Vec::new();
@@ -78,10 +78,16 @@ pub fn setup(
                 if let Some(c) = map.get(&index) {
                     match &c[..] {
                         "#" => wall_coordinates.push(game_coordinates),
-                        "@" => player_coordinates.push(GameCoordinates {
-                            tangent: Some(abscissa),
-                            ..game_coordinates
-                        }),
+                        "@" => {
+                            if player_coordinates.is_some() {
+                                panic!("Only one player is supported!")
+                            } else {
+                                player_coordinates = Some(GameCoordinates {
+                                    tangent: Some(abscissa),
+                                    ..game_coordinates
+                                });
+                            }
+                        }
                         "z" => enemies_coordinates.push(GameCoordinates {
                             tangent: Some(ordinate),
                             ..game_coordinates
@@ -95,13 +101,17 @@ pub fn setup(
     }
 
     //player
-    create_player(
-        &mut commands,
-        &asset_server,
-        &mut texture_atlases,
-        &mut textures,
-        player_coordinates,
-    );
+    if let Some(player_coordinates) = player_coordinates {
+        create_player(
+            &mut commands,
+            &asset_server,
+            &mut texture_atlases,
+            &mut textures,
+            player_coordinates,
+        );
+    } else {
+        panic!("No player on this map!")
+    }
 
     //enemies
     create_enemies(

@@ -10,36 +10,37 @@ pub fn cube_rotation_system(
     mut coordinates_query: Query<Without<Player, Mut<GameCoordinates>>>,
 ) {
     if keyboard_input.just_pressed(KeyCode::Space) {
-        for (_, mut coordinates) in &mut player_query.iter() {
-            let RotationInfo { axis, layer } = super::calculate_rotation_info(&coordinates);
-            *coordinates = coordinates.rotate(&axis);
+        let mut player_query_borrow = player_query.iter();
+        let mut coordinates = player_query_borrow.iter().next().unwrap().1;
 
-            for mut coordinates in &mut coordinates_query.iter() {
-                let mut rotate = false;
+        let RotationInfo { axis, layer } = super::calculate_rotation_info(&coordinates);
+        *coordinates = coordinates.rotate(&axis);
 
-                use UnitVector::*;
+        for mut coordinates in &mut coordinates_query.iter() {
+            let mut rotate = false;
 
-                match axis {
-                    Right | Left => {
-                        if coordinates.cubelet.x == layer {
-                            rotate = true;
-                        }
-                    }
-                    Up | Down => {
-                        if coordinates.cubelet.y == layer {
-                            rotate = true;
-                        }
-                    }
-                    Front | Back => {
-                        if coordinates.cubelet.z == layer {
-                            rotate = true;
-                        }
+            use UnitVector::*;
+
+            match axis {
+                Right | Left => {
+                    if coordinates.cubelet.x == layer {
+                        rotate = true;
                     }
                 }
-
-                if rotate {
-                    *coordinates = coordinates.rotate(&axis);
+                Up | Down => {
+                    if coordinates.cubelet.y == layer {
+                        rotate = true;
+                    }
                 }
+                Front | Back => {
+                    if coordinates.cubelet.z == layer {
+                        rotate = true;
+                    }
+                }
+            }
+
+            if rotate {
+                *coordinates = coordinates.rotate(&axis);
             }
         }
 

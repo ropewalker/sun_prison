@@ -7,7 +7,7 @@ pub fn create_player(
     asset_server: &Res<AssetServer>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     textures: &mut ResMut<Assets<Texture>>,
-    players_coordinates: Vec<GameCoordinates>,
+    player_coordinates: GameCoordinates,
 ) {
     let texture_handle = asset_server
         .load_sync(textures, "assets/images/player_spritesheet.png")
@@ -18,19 +18,17 @@ pub fn create_player(
 
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.0));
 
-    for player_coordinates in players_coordinates {
-        commands
-            .spawn(SpriteSheetComponents {
-                texture_atlas,
-                transform,
-                ..Default::default()
-            })
-            .with(Player)
-            .with(player_coordinates)
-            .with(Movable)
-            .with(Viewshed {
-                visible_positions: HashSet::new(),
-                shape: ViewshedShape::Circle,
-            });
-    }
+    commands
+        .spawn(SpriteSheetComponents {
+            texture_atlas,
+            transform,
+            ..Default::default()
+        })
+        .with(Player)
+        .with(player_coordinates)
+        .with(Movable)
+        .with(Viewshed {
+            visible_positions: HashSet::new(),
+            shape: ViewshedShape::Circle,
+        });
 }

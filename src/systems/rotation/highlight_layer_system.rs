@@ -7,20 +7,21 @@ pub fn highlight_layer_system(
     mut player_query: Query<(&Player, &GameCoordinates)>,
     mut tiles_query: Query<(&Tile, &GameCoordinates, Mut<IsHighlighted>)>,
 ) {
-    for (_, player_coordinates) in &mut player_query.iter() {
-        let RotationInfo { axis, layer } = super::calculate_rotation_info(&player_coordinates);
+    let mut player_query_borrow = player_query.iter();
+    let player_coordinates = player_query_borrow.iter().next().unwrap().1;
 
-        for (_, coordinates, mut is_highlighted) in &mut tiles_query.iter() {
-            use UnitVector::*;
+    let RotationInfo { axis, layer } = super::calculate_rotation_info(&player_coordinates);
 
-            let current_layer = match axis {
-                Right | Left => coordinates.cubelet.x,
-                Up | Down => coordinates.cubelet.y,
-                Front | Back => coordinates.cubelet.z,
-            };
+    for (_, coordinates, mut is_highlighted) in &mut tiles_query.iter() {
+        use UnitVector::*;
 
-            *is_highlighted =
-                IsHighlighted(current_layer == layer && keyboard_input.pressed(KeyCode::Tab));
-        }
+        let current_layer = match axis {
+            Right | Left => coordinates.cubelet.x,
+            Up | Down => coordinates.cubelet.y,
+            Front | Back => coordinates.cubelet.z,
+        };
+
+        *is_highlighted =
+            IsHighlighted(current_layer == layer && keyboard_input.pressed(KeyCode::Tab));
     }
 }
