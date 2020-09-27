@@ -51,7 +51,8 @@ pub fn setup(
     let mut player_coordinates = None;
     let mut wall_coordinates = Vec::new();
     let mut mov_wall_coordinates = Vec::new();
-    let mut enemies_coordinates = Vec::new();
+    let mut dumb_enemies_coordinates = Vec::new();
+    let mut smart_enemies_coordinates = Vec::new();
 
     let map = init_map();
 
@@ -88,7 +89,11 @@ pub fn setup(
                                 });
                             }
                         }
-                        "z" => enemies_coordinates.push(GameCoordinates {
+                        "z" => dumb_enemies_coordinates.push(GameCoordinates {
+                            tangent: Some(ordinate),
+                            ..game_coordinates
+                        }),
+                        "x" => smart_enemies_coordinates.push(GameCoordinates {
                             tangent: Some(ordinate),
                             ..game_coordinates
                         }),
@@ -119,7 +124,17 @@ pub fn setup(
         &asset_server,
         &mut texture_atlases,
         &mut textures,
-        enemies_coordinates,
+        dumb_enemies_coordinates,
+        false,
+    );
+
+    create_enemies(
+        &mut commands,
+        &asset_server,
+        &mut texture_atlases,
+        &mut textures,
+        smart_enemies_coordinates,
+        true,
     );
 
     //walls

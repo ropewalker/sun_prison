@@ -8,9 +8,17 @@ pub fn create_enemies(
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     textures: &mut ResMut<Assets<Texture>>,
     enemies_coordinates: Vec<GameCoordinates>,
+    smart: bool,
 ) {
     let texture_handle = asset_server
-        .load_sync(textures, "assets/images/zombie_spritesheet.png")
+        .load_sync(
+            textures,
+            if smart {
+                "assets/images/zombie_spritesheet.png"
+            } else {
+                "assets/images/ghoul_spritesheet.png"
+            },
+        )
         .unwrap();
     let texture = textures.get(&texture_handle).unwrap();
     let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 4, 1);
@@ -30,7 +38,11 @@ pub fn create_enemies(
             .with(Movable)
             .with(Viewshed {
                 visible_positions: HashSet::new(),
-                shape: ViewshedShape::Quadrant,
+                shape: if smart {
+                    ViewshedShape::Quadrant
+                } else {
+                    ViewshedShape::Circle
+                },
             })
             .with(LastPlayerPosition(None))
             .with(RememberedObstacles(HashSet::new()));
