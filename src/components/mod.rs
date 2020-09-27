@@ -12,6 +12,7 @@ pub enum Enemy {
 }
 
 pub struct Tile;
+pub struct Portal;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub enum Insolation {

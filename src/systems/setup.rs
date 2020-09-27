@@ -49,6 +49,7 @@ pub fn setup(
     commands.spawn(Camera2dComponents::default());
 
     let mut player_coordinates = None;
+    let mut portal_coordinates = None;
     let mut wall_coordinates = Vec::new();
     let mut mov_wall_coordinates = Vec::new();
     let mut zombies_coordinates = Vec::new();
@@ -90,6 +91,13 @@ pub fn setup(
                                 });
                             }
                         }
+                        "Q" => {
+                            if portal_coordinates.is_some() {
+                                panic!("Only one portal is supported!")
+                            } else {
+                                portal_coordinates = Some(game_coordinates);
+                            }
+                        }
                         "z" => zombies_coordinates.push(GameCoordinates {
                             tangent: Some(ordinate),
                             ..game_coordinates
@@ -121,6 +129,19 @@ pub fn setup(
         );
     } else {
         panic!("No player on this map!")
+    }
+
+    //portal
+    if let Some(portal_coordinates) = portal_coordinates {
+        create_portal(
+            &mut commands,
+            &asset_server,
+            &mut texture_atlases,
+            &mut textures,
+            portal_coordinates,
+        );
+    } else {
+        panic!("No portal on this map!")
     }
 
     //enemies
