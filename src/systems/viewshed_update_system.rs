@@ -9,14 +9,14 @@ pub fn viewshed_update_system(
 ) {
     for (mut viewshed, viewer_coordinates) in &mut viewer_coordinates_query.iter() {
         viewshed.visible_positions.clear();
-        let viewer_position = viewer_coordinates.position();
+        let viewer_position = viewer_coordinates.position;
 
         viewshed.visible_positions.insert(viewer_position);
 
         let obstacles = obstacles_query
             .iter()
             .iter()
-            .map(|t| (*t).position())
+            .map(|t| t.position)
             .collect::<HashSet<_>>();
 
         use Cardinal::*;
@@ -115,7 +115,7 @@ enum Cardinal {
 }
 
 fn view_direction(coordinates: &GameCoordinates) -> Option<Cardinal> {
-    let (abscissa, ordinate) = coordinates.normal.abscissa_and_ordinate();
+    let (abscissa, ordinate) = coordinates.position.normal.abscissa_and_ordinate();
 
     use Cardinal::*;
 

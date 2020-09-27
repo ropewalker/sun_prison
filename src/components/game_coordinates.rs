@@ -3,26 +3,23 @@ use crate::resources::PLANET_RADIUS;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub struct GameCoordinates {
-    pub cubelet: Vector3,
-    pub normal: UnitVector,
+    pub position: Position,
     pub tangent: Option<UnitVector>,
 }
 
 impl GameCoordinates {
     pub fn rotate(self, axis: &UnitVector) -> GameCoordinates {
         GameCoordinates {
-            cubelet: self.cubelet.rotate(axis),
-            normal: self.normal.rotate(axis),
+            position: Position {
+                cubelet: self.position.cubelet.rotate(axis),
+                normal: self.position.normal.rotate(axis),
+            },
             tangent: if let Some(tangent) = self.tangent {
                 Some(tangent.rotate(axis))
             } else {
                 None
             },
         }
-    }
-
-    pub fn position(&self) -> Position {
-        (*self).into()
     }
 }
 
@@ -80,20 +77,10 @@ impl Position {
     }
 }
 
-impl From<GameCoordinates> for Position {
-    fn from(game_coordinates: GameCoordinates) -> Position {
-        Position {
-            cubelet: game_coordinates.cubelet,
-            normal: game_coordinates.normal,
-        }
-    }
-}
-
 impl From<Position> for GameCoordinates {
     fn from(position: Position) -> GameCoordinates {
         GameCoordinates {
-            cubelet: position.cubelet,
-            normal: position.normal,
+            position,
             tangent: None,
         }
     }

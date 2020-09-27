@@ -30,7 +30,7 @@ pub fn player_movement_system(
                 -player_coordinates
                     .tangent
                     .unwrap()
-                    .cross(&player_coordinates.normal),
+                    .cross(&player_coordinates.position.normal),
             );
         } else if keyboard_input.just_pressed(KeyCode::Right)
             || keyboard_input.just_pressed(KeyCode::D)
@@ -39,7 +39,7 @@ pub fn player_movement_system(
                 player_coordinates
                     .tangent
                     .unwrap()
-                    .cross(&player_coordinates.normal),
+                    .cross(&player_coordinates.position.normal),
             );
         } else if keyboard_input.just_pressed(KeyCode::E) {
             current_turn.side = GameSide::Enemies;
@@ -49,16 +49,15 @@ pub fn player_movement_system(
             let mov = movables_query
                 .iter()
                 .iter()
-                .map(|t| ((*t.1).position(), t.0.id()))
+                .map(|t| (t.1.position, t.0.id()))
                 .collect::<HashMap<_, _>>();
             let immov = immovables_query
                 .iter()
                 .iter()
-                .map(|t| ((*t.1).position(), t.0.id()))
+                .map(|t| (t.1.position, t.0.id()))
                 .collect::<HashMap<_, _>>();
 
-            let (mut new_position, mut new_direction) =
-                ((*player_coordinates).position(), direction);
+            let (mut new_position, mut new_direction) = (player_coordinates.position, direction);
 
             loop {
                 let tile = next_tile_with_direction(&new_position, new_direction);

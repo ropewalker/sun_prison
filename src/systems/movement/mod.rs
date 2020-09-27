@@ -10,7 +10,7 @@ use bevy::prelude::*;
 pub use self::{enemies_movement_system::*, player_movement_system::*, sun_movement_system::*};
 
 pub fn strafe(coordinates: &mut GameCoordinates, direction: UnitVector) {
-    let new_cubelet = coordinates.cubelet + direction;
+    let new_cubelet = coordinates.position.cubelet + direction;
 
     if new_cubelet.x.abs() > PLANET_RADIUS
         || new_cubelet.y.abs() > PLANET_RADIUS
@@ -18,32 +18,32 @@ pub fn strafe(coordinates: &mut GameCoordinates, direction: UnitVector) {
     {
         if let Some(tangent) = coordinates.tangent {
             if tangent == direction {
-                coordinates.tangent = Some(-coordinates.normal)
+                coordinates.tangent = Some(-coordinates.position.normal)
             } else if tangent == -direction {
-                coordinates.tangent = Some(coordinates.normal)
+                coordinates.tangent = Some(coordinates.position.normal)
             }
         }
 
-        coordinates.normal = direction;
+        coordinates.position.normal = direction;
     } else {
-        coordinates.cubelet = new_cubelet;
+        coordinates.position.cubelet = new_cubelet;
     }
 }
 
 pub fn turn_and_move(coordinates: &mut GameCoordinates, direction: UnitVector) {
-    let new_cubelet = coordinates.cubelet + direction;
+    let new_cubelet = coordinates.position.cubelet + direction;
 
     if new_cubelet.x.abs() > PLANET_RADIUS
         || new_cubelet.y.abs() > PLANET_RADIUS
         || new_cubelet.z.abs() > PLANET_RADIUS
     {
         if coordinates.tangent.is_some() {
-            coordinates.tangent = Some(-coordinates.normal);
+            coordinates.tangent = Some(-coordinates.position.normal);
         }
 
-        coordinates.normal = direction;
+        coordinates.position.normal = direction;
     } else {
-        coordinates.cubelet = new_cubelet;
+        coordinates.position.cubelet = new_cubelet;
 
         if coordinates.tangent.is_some() {
             coordinates.tangent = Some(direction);

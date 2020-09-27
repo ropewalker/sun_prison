@@ -14,7 +14,7 @@ pub fn enemy_sprite_update_system(
 
     use UnitVector::*;
 
-    match coordinates.normal {
+    match coordinates.position.normal {
         Right => match coordinates.tangent {
             Some(Up) => sprite.index = RIGHT,
             Some(Front) => sprite.index = UP,

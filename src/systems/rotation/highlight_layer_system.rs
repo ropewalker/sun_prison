@@ -15,10 +15,12 @@ pub fn highlight_layer_system(
     for (coordinates, mut is_highlighted) in &mut tiles_query.iter() {
         use UnitVector::*;
 
+        let cubelet = coordinates.position.cubelet;
+
         let current_layer = match axis {
-            Right | Left => coordinates.cubelet.x,
-            Up | Down => coordinates.cubelet.y,
-            Front | Back => coordinates.cubelet.z,
+            Right | Left => cubelet.x,
+            Up | Down => cubelet.y,
+            Front | Back => cubelet.z,
         };
 
         *is_highlighted =

@@ -11,20 +11,15 @@ pub fn enemies_movement_system(
     mut obstacles_query: Query<Without<Tile, &GameCoordinates>>,
 ) {
     if current_turn.side == GameSide::Enemies {
-        let player_position = player_position_query
-            .iter()
-            .iter()
-            .next()
-            .unwrap()
-            .position();
+        let player_position = player_position_query.iter().iter().next().unwrap().position;
 
         let mut obstacles = obstacles_query
             .iter()
             .iter()
-            .map(|c| (*c).position())
+            .map(|c| c.position)
             .collect::<HashSet<_>>();
 
-        for (viewshed, mut last_player_position, mut coordinates) in
+        for (viewshed, mut last_player_position, mut enemy_coordinates) in
             &mut enemies_position_query.iter()
         {
             if viewshed.visible_positions.contains(&player_position) {
@@ -41,7 +36,7 @@ pub fn enemies_movement_system(
                     })
                     .collect::<HashSet<_>>();
 
-                let enemy_position = coordinates.position();
+                let enemy_position = enemy_coordinates.position;
 
                 if goal == enemy_position {
                     last_player_position.0 = None;
@@ -53,16 +48,20 @@ pub fn enemies_movement_system(
                 {
                     if !obstacles.contains(&next_tile) {
                         obstacles.remove(&enemy_position);
-                        turn_and_move(&mut coordinates, direction);
-                        obstacles.insert(coordinates.position());
+                        turn_and_move(&mut enemy_coordinates, direction);
+                        obstacles.insert(enemy_coordinates.position);
                         moved = true;
                     }
                 }
             }
 
             if !moved {
-                coordinates.tangent =
-                    Some(coordinates.tangent.unwrap().rotate(&coordinates.normal));
+                enemy_coordinates.tangent = Some(
+                    enemy_coordinates
+                        .tangent
+                        .unwrap()
+                        .rotate(&enemy_coordinates.position.normal),
+                );
             }
         }
 

@@ -17,29 +17,14 @@ pub fn cube_rotation_system(
         *coordinates = coordinates.rotate(&axis);
 
         for mut coordinates in &mut coordinates_query.iter() {
-            let mut rotate = false;
-
             use UnitVector::*;
 
-            match axis {
-                Right | Left => {
-                    if coordinates.cubelet.x == layer {
-                        rotate = true;
-                    }
-                }
-                Up | Down => {
-                    if coordinates.cubelet.y == layer {
-                        rotate = true;
-                    }
-                }
-                Front | Back => {
-                    if coordinates.cubelet.z == layer {
-                        rotate = true;
-                    }
-                }
-            }
+            let cubelet = coordinates.position.cubelet;
 
-            if rotate {
+            if (axis == Right || axis == Left) && layer == cubelet.x
+                || (axis == Up || axis == Down) && layer == cubelet.y
+                || (axis == Front || axis == Back) && layer == cubelet.z
+            {
                 *coordinates = coordinates.rotate(&axis);
             }
         }

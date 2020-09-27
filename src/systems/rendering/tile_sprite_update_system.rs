@@ -9,7 +9,7 @@ pub fn tile_sprite_update_system(
         for (tile_coordinates, is_highlighted, mut sprite) in &mut tile_query.iter() {
             if viewshed
                 .visible_positions
-                .contains(&((*tile_coordinates).position()))
+                .contains(&tile_coordinates.position)
             {
                 sprite.index = match is_highlighted.0 {
                     false => 0,

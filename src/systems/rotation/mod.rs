@@ -8,14 +8,16 @@ use crate::components::*;
 
 pub fn calculate_rotation_info(coordinates: &GameCoordinates) -> RotationInfo {
     let tangent = coordinates.tangent.unwrap();
-    let axis = coordinates.normal.cross(&tangent);
+    let axis = coordinates.position.normal.cross(&tangent);
 
     use UnitVector::*;
 
+    let cubelet = coordinates.position.cubelet;
+
     let layer = match axis {
-        Right | Left => coordinates.cubelet.x,
-        Up | Down => coordinates.cubelet.y,
-        Front | Back => coordinates.cubelet.z,
+        Right | Left => cubelet.x,
+        Up | Down => cubelet.y,
+        Front | Back => cubelet.z,
     };
 
     RotationInfo { axis, layer }

@@ -14,7 +14,7 @@ pub fn player_sprite_update_system(
 
     use UnitVector::*;
 
-    match player_coordinates.normal {
+    match player_coordinates.position.normal {
         Right => match player_coordinates.tangent {
             Some(Up) => sprite.index = RIGHT,
             Some(Front) => sprite.index = UP,
