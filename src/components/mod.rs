@@ -33,3 +33,4 @@ pub struct Viewshed {
 }
 
 pub struct LastPlayerPosition(pub Option<Position>);
+pub struct RememberedObstacles(pub HashSet<Position>);

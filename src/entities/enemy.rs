@@ -32,6 +32,7 @@ pub fn create_enemies(
                 visible_positions: HashSet::new(),
                 shape: ViewshedShape::Quadrant,
             })
-            .with(LastPlayerPosition(None));
+            .with(LastPlayerPosition(None))
+            .with(RememberedObstacles(HashSet::new()));
     }
 }

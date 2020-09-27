@@ -2,11 +2,16 @@ use super::*;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
+type QueryWithEnemy<'a, T> = Query<'a, With<Enemy, T>>;
+
 pub fn enemies_movement_system(
     mut current_turn: ResMut<CurrentTurn>,
-    mut enemies_position_query: Query<
-        With<Enemy, (&Viewshed, &mut LastPlayerPosition, &mut GameCoordinates)>,
-    >,
+    mut enemies_position_query: QueryWithEnemy<(
+        &Viewshed,
+        &mut RememberedObstacles,
+        &mut LastPlayerPosition,
+        &mut GameCoordinates,
+    )>,
     mut player_position_query: Query<With<Player, &GameCoordinates>>,
     mut obstacles_query: Query<Without<Tile, &GameCoordinates>>,
 ) {
@@ -19,23 +24,29 @@ pub fn enemies_movement_system(
             .map(|c| c.position)
             .collect::<HashSet<_>>();
 
-        for (viewshed, mut last_player_position, mut enemy_coordinates) in
+        for (viewshed, mut remembered_obstacles, mut last_player_position, mut enemy_coordinates) in
             &mut enemies_position_query.iter()
         {
             if viewshed.visible_positions.contains(&player_position) {
                 last_player_position.0 = Some(player_position);
             }
 
+            remembered_obstacles.0 = remembered_obstacles
+                .0
+                .difference(&viewshed.visible_positions)
+                .cloned()
+                .collect();
+
+            let visible_obstacles = obstacles
+                .iter()
+                .filter(|&obstacle_position| viewshed.visible_positions.contains(obstacle_position))
+                .collect::<HashSet<_>>();
+
+            remembered_obstacles.0.extend(visible_obstacles);
+
             let mut moved = false;
 
             if let Some(goal) = last_player_position.0 {
-                let visible_obstacles = obstacles
-                    .iter()
-                    .filter(|&obstacle_position| {
-                        viewshed.visible_positions.contains(obstacle_position)
-                    })
-                    .collect::<HashSet<_>>();
-
                 let enemy_position = enemy_coordinates.position;
 
                 if goal == enemy_position {
@@ -46,7 +57,7 @@ pub fn enemies_movement_system(
                 if let Some(GameCoordinates {
                     position: next_tile,
                     tangent: Some(direction),
-                }) = first_step(&enemy_coordinates, &goal, &visible_obstacles)
+                }) = first_step(&enemy_coordinates, &goal, &remembered_obstacles.0)
                 {
                     if !obstacles.contains(&next_tile) {
                         obstacles.remove(&enemy_position);
@@ -74,7 +85,7 @@ pub fn enemies_movement_system(
 fn first_step(
     start: &GameCoordinates,
     goal: &Position,
-    obstacles: &HashSet<&Position>,
+    obstacles: &HashSet<Position>,
 ) -> Option<GameCoordinates> {
     let mut frontier = BinaryHeap::new();
     frontier.push(QueueElement {
