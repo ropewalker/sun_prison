@@ -116,22 +116,24 @@ fn first_step(
             if !obstacles.contains(&next.position) || next.position == *goal {
                 let new_cost = cost_so_far.get(&current).unwrap() + 1;
 
-                let current_cost = cost_so_far.entry(next.position).or_insert(new_cost + 1);
-
-                if new_cost < *current_cost {
-                    cost_so_far.insert(next.position, new_cost);
-                    let priority = 2 * new_cost + queue_element.heuristic(goal);
-
-                    frontier.push(QueueElement {
-                        node: PathNode {
-                            coordinates: next,
-                            came_from: direction,
-                        },
-                        priority,
-                    });
-
-                    came_from.insert(next.position, (current, direction));
+                if let Some(&previous_cost) = cost_so_far.get(&next.position) {
+                    if previous_cost <= new_cost {
+                        continue;
+                    }
                 }
+
+                cost_so_far.insert(next.position, new_cost);
+                let priority = 2 * new_cost + queue_element.heuristic(goal);
+
+                frontier.push(QueueElement {
+                    node: PathNode {
+                        coordinates: next,
+                        came_from: direction,
+                    },
+                    priority,
+                });
+
+                came_from.insert(next.position, (current, direction));
             }
         }
     }
