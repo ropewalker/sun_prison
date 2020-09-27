@@ -14,9 +14,9 @@ pub fn create_enemies(
         .load_sync(
             textures,
             if smart {
-                "assets/images/zombie_spritesheet.png"
-            } else {
                 "assets/images/ghoul_spritesheet.png"
+            } else {
+                "assets/images/zombie_spritesheet.png"
             },
         )
         .unwrap();
@@ -39,9 +39,9 @@ pub fn create_enemies(
             .with(Viewshed {
                 visible_positions: HashSet::new(),
                 shape: if smart {
-                    ViewshedShape::Quadrant
-                } else {
                     ViewshedShape::Circle
+                } else {
+                    ViewshedShape::Quadrant
                 },
             })
             .with(LastPlayerPosition(None))
