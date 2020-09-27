@@ -8,15 +8,15 @@ pub fn create_enemies(
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     textures: &mut ResMut<Assets<Texture>>,
     enemies_coordinates: Vec<GameCoordinates>,
-    smart: bool,
+    kind: Enemy,
 ) {
     let texture_handle = asset_server
         .load_sync(
             textures,
-            if smart {
-                "assets/images/ghoul_spritesheet.png"
-            } else {
-                "assets/images/zombie_spritesheet.png"
+            match kind {
+                Enemy::Zombie => "assets/images/zombie_spritesheet.png",
+                Enemy::Ghoul => "assets/images/ghoul_spritesheet.png",
+                Enemy::Demon => "assets/images/demon_spritesheet.png",
             },
         )
         .unwrap();
@@ -33,15 +33,15 @@ pub fn create_enemies(
                 transform,
                 ..Default::default()
             })
-            .with(Enemy)
+            .with(kind)
             .with(enemy_coordinates)
             .with(Movable)
             .with(Viewshed {
                 visible_positions: HashSet::new(),
-                shape: if smart {
-                    ViewshedShape::Circle
-                } else {
-                    ViewshedShape::Quadrant
+                shape: match kind {
+                    Enemy::Zombie => ViewshedShape::Quadrant,
+                    Enemy::Ghoul => ViewshedShape::Circle,
+                    Enemy::Demon => ViewshedShape::All,
                 },
             })
             .with(LastPlayerPosition(None))

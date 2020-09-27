@@ -1,5 +1,5 @@
 use crate::algebra::*;
-use crate::components::{GameCoordinates, Position};
+use crate::components::{Enemy, GameCoordinates, Position};
 use crate::entities::*;
 use crate::resources::*;
 use bevy::prelude::*;
@@ -51,8 +51,9 @@ pub fn setup(
     let mut player_coordinates = None;
     let mut wall_coordinates = Vec::new();
     let mut mov_wall_coordinates = Vec::new();
-    let mut dumb_enemies_coordinates = Vec::new();
-    let mut smart_enemies_coordinates = Vec::new();
+    let mut zombies_coordinates = Vec::new();
+    let mut ghouls_coordinates = Vec::new();
+    let mut demons_coordinates = Vec::new();
 
     let map = init_map();
 
@@ -89,11 +90,15 @@ pub fn setup(
                                 });
                             }
                         }
-                        "z" => dumb_enemies_coordinates.push(GameCoordinates {
+                        "z" => zombies_coordinates.push(GameCoordinates {
                             tangent: Some(ordinate),
                             ..game_coordinates
                         }),
-                        "x" => smart_enemies_coordinates.push(GameCoordinates {
+                        "x" => ghouls_coordinates.push(GameCoordinates {
+                            tangent: Some(ordinate),
+                            ..game_coordinates
+                        }),
+                        "d" => demons_coordinates.push(GameCoordinates {
                             tangent: Some(ordinate),
                             ..game_coordinates
                         }),
@@ -124,8 +129,8 @@ pub fn setup(
         &asset_server,
         &mut texture_atlases,
         &mut textures,
-        dumb_enemies_coordinates,
-        false,
+        zombies_coordinates,
+        Enemy::Zombie,
     );
 
     create_enemies(
@@ -133,8 +138,17 @@ pub fn setup(
         &asset_server,
         &mut texture_atlases,
         &mut textures,
-        smart_enemies_coordinates,
-        true,
+        ghouls_coordinates,
+        Enemy::Ghoul,
+    );
+
+    create_enemies(
+        &mut commands,
+        &asset_server,
+        &mut texture_atlases,
+        &mut textures,
+        demons_coordinates,
+        Enemy::Demon,
     );
 
     //walls

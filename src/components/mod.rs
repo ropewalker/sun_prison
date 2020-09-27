@@ -4,7 +4,12 @@ pub use self::game_coordinates::*;
 use std::collections::HashSet;
 
 pub struct Player;
-pub struct Enemy;
+#[derive(Clone, Copy)]
+pub enum Enemy {
+    Zombie,
+    Ghoul,
+    Demon,
+}
 
 pub struct Tile;
 
@@ -22,9 +27,11 @@ pub struct Movable;
 pub struct Immovable;
 pub struct Opaque;
 
+#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub enum ViewshedShape {
     Circle,
     Quadrant,
+    All,
 }
 
 pub struct Viewshed {

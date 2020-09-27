@@ -1,4 +1,6 @@
+use crate::algebra::*;
 use crate::components::*;
+use crate::resources::PLANET_RADIUS;
 use bevy::prelude::*;
 use num_rational::Rational;
 use std::collections::{HashSet, VecDeque};
@@ -9,6 +11,28 @@ pub fn viewshed_update_system(
 ) {
     for (mut viewshed, viewer_coordinates) in &mut viewer_coordinates_query.iter() {
         viewshed.visible_positions.clear();
+
+        let shape = &viewshed.shape;
+
+        if *shape == ViewshedShape::All {
+            use UnitVector::*;
+
+            for &normal in &[Right, Up, Front, Left, Down, Back] {
+                for x in -PLANET_RADIUS..=PLANET_RADIUS {
+                    for y in -PLANET_RADIUS..=PLANET_RADIUS {
+                        let (abscissa, ordinate) = normal.abscissa_and_ordinate();
+                        let cubelet = PLANET_RADIUS * normal + x * abscissa + y * ordinate;
+
+                        viewshed
+                            .visible_positions
+                            .insert(Position { cubelet, normal });
+                    }
+                }
+            }
+
+            continue;
+        }
+
         let viewer_position = viewer_coordinates.position;
 
         viewshed.visible_positions.insert(viewer_position);
@@ -30,6 +54,7 @@ pub fn viewshed_update_system(
                     vec![]
                 }
             }
+            _ => vec![],
         };
 
         for &cardinal in cardinals.iter() {
