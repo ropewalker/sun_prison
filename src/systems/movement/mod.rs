@@ -10,102 +10,94 @@ use bevy::prelude::*;
 pub use self::{enemies_movement_system::*, player_movement_system::*, sun_movement_system::*};
 
 pub fn strafe(coordinates: &mut GameCoordinates, direction: UnitVector) {
-    let new_cubelet = coordinates.position.cubelet + direction;
+    let new_coordinates = next_tile(&coordinates.position, direction);
 
-    if new_cubelet.x.abs() > PLANET_RADIUS
-        || new_cubelet.y.abs() > PLANET_RADIUS
-        || new_cubelet.z.abs() > PLANET_RADIUS
-    {
-        if let Some(tangent) = coordinates.tangent {
-            if tangent == direction {
-                coordinates.tangent = Some(-coordinates.position.normal)
-            } else if tangent == -direction {
-                coordinates.tangent = Some(coordinates.position.normal)
+    if let Some(tangent) = coordinates.tangent {
+        if tangent == direction {
+            *coordinates = new_coordinates;
+        } else if tangent == -direction {
+            *coordinates = GameCoordinates {
+                position: new_coordinates.position,
+                tangent: Some(-new_coordinates.tangent.unwrap()),
+            }
+        } else {
+            *coordinates = GameCoordinates {
+                position: new_coordinates.position,
+                tangent: Some(tangent),
             }
         }
-
-        coordinates.position.normal = direction;
     } else {
-        coordinates.position.cubelet = new_cubelet;
+        *coordinates = GameCoordinates {
+            position: new_coordinates.position,
+            tangent: None,
+        }
     }
 }
 
 pub fn turn_and_move(coordinates: &mut GameCoordinates, direction: UnitVector) {
-    let new_cubelet = coordinates.position.cubelet + direction;
+    let new_coordinates = next_tile(&coordinates.position, direction);
 
-    if new_cubelet.x.abs() > PLANET_RADIUS
-        || new_cubelet.y.abs() > PLANET_RADIUS
-        || new_cubelet.z.abs() > PLANET_RADIUS
-    {
-        if coordinates.tangent.is_some() {
-            coordinates.tangent = Some(-coordinates.position.normal);
-        }
-
-        coordinates.position.normal = direction;
+    if coordinates.tangent.is_some() {
+        *coordinates = new_coordinates
     } else {
-        coordinates.position.cubelet = new_cubelet;
-
-        if coordinates.tangent.is_some() {
-            coordinates.tangent = Some(direction);
+        *coordinates = GameCoordinates {
+            position: new_coordinates.position,
+            tangent: None,
         }
     }
 }
 
-pub fn next_tile_with_direction(
-    position: &Position,
-    direction: UnitVector,
-) -> (Position, UnitVector) {
+pub fn next_tile(position: &Position, direction: UnitVector) -> GameCoordinates {
     let new_cubelet = position.cubelet + direction;
 
     if new_cubelet.x.abs() > PLANET_RADIUS
         || new_cubelet.y.abs() > PLANET_RADIUS
         || new_cubelet.z.abs() > PLANET_RADIUS
     {
-        (
-            Position {
+        GameCoordinates {
+            position: Position {
                 cubelet: position.cubelet,
                 normal: direction,
             },
-            -position.normal,
-        )
+            tangent: Some(-position.normal),
+        }
     } else {
-        (
-            Position {
+        GameCoordinates {
+            position: Position {
                 cubelet: new_cubelet,
                 normal: position.normal,
             },
-            direction,
-        )
-    }
-}
-
-pub fn next_tile(position: &Position, direction: UnitVector) -> Position {
-    let new_cubelet = position.cubelet + direction;
-
-    if new_cubelet.x.abs() > PLANET_RADIUS
-        || new_cubelet.y.abs() > PLANET_RADIUS
-        || new_cubelet.z.abs() > PLANET_RADIUS
-    {
-        Position {
-            cubelet: position.cubelet,
-            normal: direction,
-        }
-    } else {
-        Position {
-            cubelet: new_cubelet,
-            normal: position.normal,
+            tangent: Some(direction),
         }
     }
 }
 
-pub fn neighbours(position: &Position) -> impl Iterator<Item = (Position, UnitVector)> {
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Ord, PartialOrd)]
+pub struct PathNode {
+    pub coordinates: GameCoordinates,
+    pub came_from: UnitVector,
+}
+
+pub fn neighbours(position: &Position) -> impl Iterator<Item = PathNode> {
     let (abscissa, ordinate) = position.normal.abscissa_and_ordinate();
 
     vec![
-        (next_tile(position, abscissa), abscissa),
-        (next_tile(position, ordinate), ordinate),
-        (next_tile(position, -abscissa), -abscissa),
-        (next_tile(position, -ordinate), -ordinate),
+        PathNode {
+            coordinates: next_tile(position, abscissa),
+            came_from: abscissa,
+        },
+        PathNode {
+            coordinates: next_tile(position, ordinate),
+            came_from: ordinate,
+        },
+        PathNode {
+            coordinates: next_tile(position, -abscissa),
+            came_from: -abscissa,
+        },
+        PathNode {
+            coordinates: next_tile(position, -ordinate),
+            came_from: -ordinate,
+        },
     ]
     .into_iter()
 }

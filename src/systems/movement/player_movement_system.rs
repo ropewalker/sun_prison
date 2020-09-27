@@ -60,10 +60,10 @@ pub fn player_movement_system(
             let (mut new_position, mut new_direction) = (player_coordinates.position, direction);
 
             loop {
-                let tile = next_tile_with_direction(&new_position, new_direction);
+                let tile = next_tile(&new_position, new_direction);
 
-                new_position = tile.0;
-                new_direction = tile.1;
+                new_position = tile.position;
+                new_direction = tile.tangent.unwrap();
 
                 if let Some(id) = mov.get(&new_position) {
                     to_move.insert(*id, new_direction);

@@ -3,7 +3,7 @@ mod unit_vector;
 use std::ops::{Add, AddAssign, Mul, Neg, Sub, SubAssign};
 pub use unit_vector::*;
 
-#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone, Ord, PartialOrd)]
 pub struct Vector3 {
     pub x: isize,
     pub y: isize,

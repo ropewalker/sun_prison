@@ -43,8 +43,10 @@ pub fn enemies_movement_system(
                     continue;
                 }
 
-                if let Some((next_tile, direction)) =
-                    next_tile(&enemy_position, &goal, &visible_obstacles)
+                if let Some(GameCoordinates {
+                    position: next_tile,
+                    tangent: Some(direction),
+                }) = first_step(&enemy_coordinates, &goal, &visible_obstacles)
                 {
                     if !obstacles.contains(&next_tile) {
                         obstacles.remove(&enemy_position);
@@ -69,45 +71,55 @@ pub fn enemies_movement_system(
     }
 }
 
-fn next_tile(
-    start: &Position,
+fn first_step(
+    start: &GameCoordinates,
     goal: &Position,
     obstacles: &HashSet<&Position>,
-) -> Option<(Position, UnitVector)> {
+) -> Option<GameCoordinates> {
     let mut frontier = BinaryHeap::new();
-    frontier.push(PathNode {
-        position: *start,
+    frontier.push(QueueElement {
+        node: PathNode {
+            coordinates: *start,
+            came_from: start.tangent.unwrap(),
+        },
         priority: 0,
     });
 
     let mut came_from = HashMap::new();
 
     let mut cost_so_far = HashMap::new();
-    cost_so_far.insert(*start, 0);
+    cost_so_far.insert(start.position, 0);
 
-    while let Some(path_node) = frontier.pop() {
-        let current = path_node.position;
+    while let Some(queue_element) = frontier.pop() {
+        let current = queue_element.node.coordinates.position;
 
         if current == *goal {
             break;
         }
 
-        for (next, direction) in neighbours(&current) {
-            if !obstacles.contains(&next) || next == *goal {
+        for PathNode {
+            coordinates: next,
+            came_from: direction,
+        } in neighbours(&current)
+        {
+            if !obstacles.contains(&next.position) || next.position == *goal {
                 let new_cost = cost_so_far.get(&current).unwrap() + 1;
 
-                let current_cost = cost_so_far.entry(next).or_insert(new_cost + 1);
+                let current_cost = cost_so_far.entry(next.position).or_insert(new_cost + 1);
 
                 if new_cost < *current_cost {
-                    cost_so_far.insert(next, new_cost);
-                    let priority = new_cost + path_node.heuristic(goal);
+                    cost_so_far.insert(next.position, new_cost);
+                    let priority = 2 * new_cost + queue_element.heuristic(goal);
 
-                    frontier.push(PathNode {
-                        position: next,
+                    frontier.push(QueueElement {
+                        node: PathNode {
+                            coordinates: next,
+                            came_from: direction,
+                        },
                         priority,
                     });
 
-                    came_from.insert(next, (current, direction));
+                    came_from.insert(next.position, (current, direction));
                 }
             }
         }
@@ -118,8 +130,11 @@ fn next_tile(
     while came_from.contains_key(&current) {
         let (previous, direction) = came_from.get(&current).unwrap();
 
-        if previous == start {
-            return Some((*current, *direction));
+        if *previous == start.position {
+            return Some(GameCoordinates {
+                position: *current,
+                tangent: Some(*direction),
+            });
         } else {
             current = previous;
         }
@@ -129,38 +144,32 @@ fn next_tile(
 }
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
-struct PathNode {
-    position: Position,
+struct QueueElement {
+    node: PathNode,
     priority: isize,
 }
 
-impl PathNode {
+impl QueueElement {
     fn heuristic(&self, goal: &Position) -> isize {
-        self.position.manhattan_distance_to(goal)
+        2 * self.node.coordinates.position.manhattan_distance_to(goal)
+            - self
+                .node
+                .came_from
+                .to_vector()
+                .dot(&self.node.coordinates.tangent.unwrap().to_vector())
     }
 }
 
-impl Ord for PathNode {
+impl Ord for QueueElement {
     fn cmp(&self, other: &Self) -> Ordering {
-        let ordering = other.priority.cmp(&self.priority);
-
-        match ordering {
-            Ordering::Equal => {
-                let self_vector = self.position.cubelet + self.position.normal.to_vector();
-                let other_vector = other.position.cubelet + other.position.normal.to_vector();
-
-                self_vector
-                    .x
-                    .cmp(&other_vector.x)
-                    .then(self_vector.y.cmp(&other_vector.y))
-                    .then(self_vector.z.cmp(&other_vector.z))
-            }
-            _ => ordering,
-        }
+        other
+            .priority
+            .cmp(&self.priority)
+            .then(other.node.cmp(&self.node))
     }
 }
 
-impl PartialOrd for PathNode {
+impl PartialOrd for QueueElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }

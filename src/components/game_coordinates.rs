@@ -1,7 +1,7 @@
 use crate::algebra::*;
 use crate::resources::PLANET_RADIUS;
 
-#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone, Ord, PartialOrd)]
 pub struct GameCoordinates {
     pub position: Position,
     pub tangent: Option<UnitVector>,
@@ -23,7 +23,7 @@ impl GameCoordinates {
     }
 }
 
-#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone, Ord, PartialOrd)]
 pub struct Position {
     pub cubelet: Vector3,
     pub normal: UnitVector,

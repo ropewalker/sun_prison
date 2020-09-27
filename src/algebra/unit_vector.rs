@@ -2,7 +2,7 @@ use crate::algebra::Vector3;
 use std::convert::{TryFrom, TryInto};
 use std::ops::{Add, Mul, Neg};
 
-#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone, Ord, PartialOrd)]
 pub enum UnitVector {
     Right,
     Left,
