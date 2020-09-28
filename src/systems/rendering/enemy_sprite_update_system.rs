@@ -4,7 +4,7 @@ use bevy::prelude::*;
 
 pub fn enemy_sprite_update_system(
     _enemy: &Enemy,
-    coordinates: &GameCoordinates,
+    coordinates: Changed<GameCoordinates>,
     mut sprite: Mut<TextureAtlasSprite>,
 ) {
     const UP: u32 = 3;

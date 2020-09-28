@@ -4,7 +4,7 @@ use std::collections::HashMap;
 type QueryWithoutPlayer<'a, T> = Query<'a, Without<Player, T>>;
 
 pub fn player_movement_system(
-    keyboard_input: Res<Input<KeyCode>>,
+    keyboard_input: ChangedRes<Input<KeyCode>>,
     mut current_turn: ResMut<CurrentTurn>,
     mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
     mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,

@@ -5,6 +5,7 @@ use std::collections::{BinaryHeap, HashMap, HashSet};
 type QueryWithEnemy<'a, T> = Query<'a, With<Enemy, T>>;
 
 pub fn enemies_movement_system(
+    _: ChangedRes<CurrentTurn>,
     mut current_turn: ResMut<CurrentTurn>,
     mut enemies_position_query: QueryWithEnemy<(
         &Viewshed,

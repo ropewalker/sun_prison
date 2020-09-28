@@ -3,7 +3,7 @@ use crate::components::*;
 use bevy::prelude::*;
 
 pub fn highlight_layer_system(
-    keyboard_input: Res<Input<KeyCode>>,
+    keyboard_input: ChangedRes<Input<KeyCode>>,
     mut player_query: Query<With<Player, &mut GameCoordinates>>,
     mut tiles_query: Query<With<Tile, (&GameCoordinates, &mut IsHighlighted)>>,
 ) {

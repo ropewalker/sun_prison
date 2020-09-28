@@ -4,12 +4,13 @@ use crate::resources::*;
 use bevy::prelude::*;
 
 pub fn cube_rotation_system(
-    keyboard_input: Res<Input<KeyCode>>,
+    keyboard_input: ChangedRes<Input<KeyCode>>,
+    _: ChangedRes<CurrentTurn>,
     mut current_turn: ResMut<CurrentTurn>,
     mut player_query: Query<With<Player, &mut GameCoordinates>>,
     mut coordinates_query: Query<Without<Player, &mut GameCoordinates>>,
 ) {
-    if keyboard_input.just_pressed(KeyCode::Space) {
+    if current_turn.side == GameSide::Player && keyboard_input.just_pressed(KeyCode::Space) {
         let mut player_query_borrow = player_query.iter();
         let mut coordinates = player_query_borrow.iter().next().unwrap();
 
@@ -29,6 +30,6 @@ pub fn cube_rotation_system(
             }
         }
 
-        current_turn.side = GameSide::Sun;
+        current_turn.side = GameSide::Enemies;
     }
 }
