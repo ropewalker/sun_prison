@@ -13,7 +13,7 @@ pub fn enemies_movement_system(
         &mut GameCoordinates,
     )>,
     mut player_position_query: Query<With<Player, &GameCoordinates>>,
-    mut obstacles_query: Query<Without<Tile, &GameCoordinates>>,
+    mut obstacles_query: Query<Without<Tile, Without<Player, &GameCoordinates>>>,
 ) {
     if current_turn.side == GameSide::Enemies {
         let player_position = player_position_query.iter().iter().next().unwrap().position;
@@ -113,7 +113,7 @@ fn first_step(
             came_from: direction,
         } in neighbours(&current)
         {
-            if !obstacles.contains(&next.position) || next.position == *goal {
+            if !obstacles.contains(&next.position) {
                 let new_cost = cost_so_far.get(&current).unwrap() + 1;
 
                 if let Some(&previous_cost) = cost_so_far.get(&next.position) {
