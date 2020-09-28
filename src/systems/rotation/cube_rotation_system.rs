@@ -5,7 +5,6 @@ use bevy::prelude::*;
 
 pub fn cube_rotation_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
-    _: ChangedRes<CurrentTurn>,
     mut current_turn: ResMut<CurrentTurn>,
     mut player_query: Query<With<Player, &mut GameCoordinates>>,
     mut coordinates_query: Query<Without<Player, &mut GameCoordinates>>,
