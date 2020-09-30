@@ -2,9 +2,26 @@ use crate::algebra::*;
 use crate::components::*;
 use crate::resources::*;
 use bevy::prelude::*;
+use bevy_easings::*;
 
-pub fn translation_system(mut transform: Mut<Transform>, coordinates: Changed<GameCoordinates>) {
-    *transform = game_coordinates_to_translation(*coordinates, transform.translation().z());
+pub fn translation_system(
+    mut commands: Commands,
+    transform: &Transform,
+    coordinates: Changed<GameCoordinates>,
+    entity: Entity,
+) {
+    let new_transform = game_coordinates_to_translation(*coordinates, transform.translation().z());
+
+    commands.insert_one(
+        entity,
+        transform.ease_to(
+            new_transform,
+            EaseFunction::QuadraticIn,
+            EasingType::Once {
+                duration: std::time::Duration::from_millis(250),
+            },
+        ),
+    );
 }
 
 fn game_coordinates_to_translation(coordinates: GameCoordinates, z: f32) -> Transform {

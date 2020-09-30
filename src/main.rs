@@ -9,6 +9,7 @@ use crate::systems::*;
 use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
 use bevy::window::WindowMode;
+use bevy_easings::EasingsPlugin;
 
 fn main() {
     App::build()
@@ -25,6 +26,7 @@ fn main() {
         .init_resource::<CurrentTurn>()
         .add_default_plugins()
         .add_startup_system(setup.system())
+        .add_plugin(EasingsPlugin)
         .add_system(player_movement_system.system())
         .add_system(cube_rotation_system.system())
         .add_system(enemies_movement_system.system())
