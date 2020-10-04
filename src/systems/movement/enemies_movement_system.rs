@@ -63,8 +63,11 @@ pub fn enemies_movement_system(
                         obstacles.remove(&enemy_position);
                         turn_and_move(&mut enemy_coordinates, direction);
                         obstacles.insert(enemy_coordinates.position);
-                        moved = true;
+                    } else {
+                        enemy_coordinates.tangent = Some(direction);
                     }
+
+                    moved = true;
                 }
             }
 
