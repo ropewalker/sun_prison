@@ -5,7 +5,7 @@ use std::collections::{BinaryHeap, HashMap, HashSet};
 type QueryWithEnemy<'a, T> = Query<'a, With<Enemy, T>>;
 
 pub fn enemies_movement_system(
-    mut current_turn: ResMut<CurrentTurn>,
+    mut game_state: ResMut<GameState>,
     mut enemies_position_query: QueryWithEnemy<(
         &Viewshed,
         &mut RememberedObstacles,
@@ -17,7 +17,7 @@ pub fn enemies_movement_system(
 ) {
     let mut lost = false;
 
-    if current_turn.side == GameSide::Enemies && current_turn.state == GameState::Playing {
+    if *game_state == GameState::EnemyTurn {
         let player_position = player_position_query.iter().iter().next().unwrap().position;
 
         let mut obstacles = obstacles_query
@@ -88,10 +88,10 @@ pub fn enemies_movement_system(
         }
 
         if lost {
-            current_turn.state = GameState::Lost;
+            *game_state = GameState::Defeat;
             println!("U DED");
         } else {
-            current_turn.side = GameSide::Sun
+            *game_state = GameState::SunTurn;
         }
     }
 }

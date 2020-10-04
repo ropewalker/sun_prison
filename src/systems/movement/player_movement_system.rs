@@ -5,13 +5,13 @@ type QueryWithoutPlayer<'a, T> = Query<'a, Without<Player, T>>;
 
 pub fn player_movement_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
-    mut current_turn: ResMut<CurrentTurn>,
+    mut game_state: ResMut<GameState>,
     mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
     mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
     mut immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
     mut portal_query: Query<With<Portal, &GameCoordinates>>,
 ) {
-    if current_turn.side == GameSide::Player && current_turn.state == GameState::Playing {
+    if *game_state == GameState::PlayerTurn {
         let mut player_position_query_borrow = player_position_query.iter();
         let mut player_coordinates = player_position_query_borrow.iter().next().unwrap();
 
@@ -43,7 +43,7 @@ pub fn player_movement_system(
                     .cross(&player_coordinates.position.normal),
             );
         } else if keyboard_input.just_pressed(KeyCode::E) {
-            current_turn.side = GameSide::Enemies;
+            *game_state = GameState::EnemyTurn;
         }
 
         if let Some(direction) = direction {
@@ -87,10 +87,10 @@ pub fn player_movement_system(
             let portal_coordinates = portal_query_borrow.iter().next().unwrap();
 
             if player_coordinates.position == portal_coordinates.position {
-                current_turn.state = GameState::Won;
+                *game_state = GameState::Victory;
                 println!("You won!");
             } else {
-                current_turn.side = GameSide::Enemies;
+                *game_state = GameState::EnemyTurn;
             }
         }
     }

@@ -40,34 +40,17 @@ impl Default for SunPath {
     }
 }
 
-#[derive(Default, Eq, PartialEq)]
-pub struct CurrentTurn {
-    pub side: GameSide,
-    pub state: GameState,
-}
-
-#[derive(Eq, PartialEq)]
-pub enum GameSide {
-    Player,
-    Enemies,
-    Sun,
-}
-
-impl Default for GameSide {
-    fn default() -> Self {
-        GameSide::Player
-    }
-}
-
 #[derive(Eq, PartialEq)]
 pub enum GameState {
-    Playing,
-    Lost,
-    Won,
+    PlayerTurn,
+    EnemyTurn,
+    SunTurn,
+    Defeat,
+    Victory,
 }
 
 impl Default for GameState {
     fn default() -> Self {
-        GameState::Playing
+        GameState::PlayerTurn
     }
 }

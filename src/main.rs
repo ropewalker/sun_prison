@@ -23,7 +23,7 @@ fn main() {
         })
         .add_resource(ClearColor(Color::rgba(1.0, 1.0, 1.0, 1.0)))
         .init_resource::<SunPath>()
-        .init_resource::<CurrentTurn>()
+        .init_resource::<GameState>()
         .add_default_plugins()
         .add_startup_system(setup.system())
         .add_plugin(EasingsPlugin)

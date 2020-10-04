@@ -5,14 +5,11 @@ use bevy::prelude::*;
 
 pub fn cube_rotation_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
-    mut current_turn: ResMut<CurrentTurn>,
+    mut game_state: ResMut<GameState>,
     mut player_query: Query<With<Player, &mut GameCoordinates>>,
     mut coordinates_query: Query<Without<Player, &mut GameCoordinates>>,
 ) {
-    if current_turn.side == GameSide::Player
-        && keyboard_input.just_pressed(KeyCode::Space)
-        && current_turn.state == GameState::Playing
-    {
+    if *game_state == GameState::PlayerTurn && keyboard_input.just_pressed(KeyCode::Space) {
         let mut player_query_borrow = player_query.iter();
         let mut coordinates = player_query_borrow.iter().next().unwrap();
 
@@ -32,6 +29,6 @@ pub fn cube_rotation_system(
             }
         }
 
-        current_turn.side = GameSide::Enemies;
+        *game_state = GameState::EnemyTurn;
     }
 }
