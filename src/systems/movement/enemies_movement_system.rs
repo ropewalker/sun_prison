@@ -15,7 +15,9 @@ pub fn enemies_movement_system(
     mut player_position_query: Query<With<Player, &GameCoordinates>>,
     mut obstacles_query: Query<Without<Tile, &GameCoordinates>>,
 ) {
-    if current_turn.side == GameSide::Enemies {
+    let mut lost = false;
+
+    if current_turn.side == GameSide::Enemies && current_turn.state == GameState::Playing {
         let player_position = player_position_query.iter().iter().next().unwrap().position;
 
         let mut obstacles = obstacles_query
@@ -65,6 +67,10 @@ pub fn enemies_movement_system(
                         obstacles.insert(enemy_coordinates.position);
                     } else {
                         enemy_coordinates.tangent = Some(direction);
+
+                        if player_position == next_tile {
+                            lost = true;
+                        }
                     }
 
                     moved = true;
@@ -81,7 +87,12 @@ pub fn enemies_movement_system(
             }
         }
 
-        current_turn.side = GameSide::Sun
+        if lost {
+            current_turn.state = GameState::Lost;
+            println!("U DED");
+        } else {
+            current_turn.side = GameSide::Sun
+        }
     }
 }
 

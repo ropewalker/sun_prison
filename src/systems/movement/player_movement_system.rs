@@ -9,8 +9,9 @@ pub fn player_movement_system(
     mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
     mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
     mut immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
+    mut portal_query: Query<With<Portal, &GameCoordinates>>,
 ) {
-    if current_turn.side == GameSide::Player {
+    if current_turn.side == GameSide::Player && current_turn.state == GameState::Playing {
         let mut player_position_query_borrow = player_position_query.iter();
         let mut player_coordinates = player_position_query_borrow.iter().next().unwrap();
 
@@ -82,7 +83,15 @@ pub fn player_movement_system(
                 }
             }
 
-            current_turn.side = GameSide::Enemies;
+            let mut portal_query_borrow = portal_query.iter();
+            let portal_coordinates = portal_query_borrow.iter().next().unwrap();
+
+            if player_coordinates.position == portal_coordinates.position {
+                current_turn.state = GameState::Won;
+                println!("You won!");
+            } else {
+                current_turn.side = GameSide::Enemies;
+            }
         }
     }
 }

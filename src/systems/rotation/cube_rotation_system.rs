@@ -9,7 +9,10 @@ pub fn cube_rotation_system(
     mut player_query: Query<With<Player, &mut GameCoordinates>>,
     mut coordinates_query: Query<Without<Player, &mut GameCoordinates>>,
 ) {
-    if current_turn.side == GameSide::Player && keyboard_input.just_pressed(KeyCode::Space) {
+    if current_turn.side == GameSide::Player
+        && keyboard_input.just_pressed(KeyCode::Space)
+        && current_turn.state == GameState::Playing
+    {
         let mut player_query_borrow = player_query.iter();
         let mut coordinates = player_query_borrow.iter().next().unwrap();
 
