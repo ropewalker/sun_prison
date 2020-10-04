@@ -11,8 +11,22 @@ pub struct KeyboardState {
 }
 
 pub struct SunPath {
-    pub path: Vec<UnitVector>,
-    pub current_stage_index: usize,
+    path: Vec<UnitVector>,
+    pub hour: usize,
+}
+
+impl SunPath {
+    pub fn sunny_side(&self) -> UnitVector {
+        self.path[self.hour / DAY_LENGTH % self.path.len()]
+    }
+
+    pub fn morning_side(&self) -> UnitVector {
+        self.path[(self.hour / DAY_LENGTH + 1) % self.path.len()]
+    }
+
+    pub fn evening_side(&self) -> UnitVector {
+        self.path[(self.path.len() + self.hour / DAY_LENGTH - 1) % self.path.len()]
+    }
 }
 
 impl Default for SunPath {
@@ -21,7 +35,7 @@ impl Default for SunPath {
 
         SunPath {
             path: vec![Right, Down, Front, Left, Up, Back],
-            current_stage_index: 0,
+            hour: 0,
         }
     }
 }
@@ -30,7 +44,6 @@ impl Default for SunPath {
 pub struct CurrentTurn {
     pub side: GameSide,
     pub state: GameState,
-    pub turn_number: usize,
 }
 
 #[derive(Eq, PartialEq)]
