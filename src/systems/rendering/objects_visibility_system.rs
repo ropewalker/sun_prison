@@ -1,8 +1,10 @@
 use crate::components::*;
 use bevy::prelude::*;
 
+type QueryWithoutTileAndHighlight<'a, T> = Query<'a, Without<Tile, Without<Highlight, T>>>;
+
 pub fn objects_visibility_system(
-    mut objects_query: Query<Without<Tile, (&GameCoordinates, &mut TextureAtlasSprite)>>,
+    mut objects_query: QueryWithoutTileAndHighlight<(&GameCoordinates, &mut TextureAtlasSprite)>,
     mut player_query: Query<With<Player, &Viewshed>>,
 ) {
     let mut player_viewshed_query_borrow = player_query.iter();

@@ -193,7 +193,7 @@ pub fn setup(
     );
 
     //tiles
-    create_tiles(
+    create_tiles_and_highlights(
         &mut commands,
         &asset_server,
         &mut texture_atlases,

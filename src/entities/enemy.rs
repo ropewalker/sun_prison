@@ -36,6 +36,7 @@ pub fn create_enemies(
             .with(kind)
             .with(enemy_coordinates)
             .with(Movable)
+            .with(Obstacle)
             .with(Viewshed {
                 visible_positions: HashSet::new(),
                 shape: match kind {

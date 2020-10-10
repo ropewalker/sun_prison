@@ -27,6 +27,7 @@ pub fn create_player(
         .with(Player)
         .with(player_coordinates)
         .with(Movable)
+        .with(Obstacle)
         .with(Viewshed {
             visible_positions: HashSet::new(),
             shape: ViewshedShape::Circle,

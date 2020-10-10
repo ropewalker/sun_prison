@@ -33,7 +33,8 @@ pub fn create_walls(
                 ..Default::default()
             })
             .with(wall_coordinates)
-            .with(Opaque);
+            .with(Opaque)
+            .with(Obstacle);
 
         if movable {
             commands.with(Movable);

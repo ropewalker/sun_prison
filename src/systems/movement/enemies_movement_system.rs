@@ -13,7 +13,7 @@ pub fn enemies_movement_system(
         &mut GameCoordinates,
     )>,
     mut player_position_query: Query<With<Player, &GameCoordinates>>,
-    mut obstacles_query: Query<Without<Tile, &GameCoordinates>>,
+    mut obstacles_query: Query<With<Obstacle, &GameCoordinates>>,
 ) {
     let mut lost = false;
 

@@ -12,7 +12,9 @@ pub enum Enemy {
 }
 
 pub struct Tile;
+pub struct Highlight;
 pub struct Portal;
+pub struct Obstacle;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
 pub enum Insolation {
@@ -20,9 +22,6 @@ pub enum Insolation {
     Twilight,
     Night,
 }
-
-#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
-pub struct IsHighlighted(pub bool);
 
 pub struct Movable;
 pub struct Immovable;
