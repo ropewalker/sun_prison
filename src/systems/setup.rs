@@ -4,40 +4,23 @@ use crate::entities::*;
 use crate::resources::*;
 use bevy::prelude::*;
 use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
-use std::path::Path;
-
-fn read_layout() -> String {
-    let path = Path::new("assets/config/map.txt");
-    let display = path.display();
-
-    let mut file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", display, why),
-        Ok(file) => file,
-    };
-
-    let mut s = String::new();
-
-    if let Err(why) = file.read_to_string(&mut s) {
-        panic!("couldn't read {}: {}", display, why)
-    }
-
-    String::from(s.trim())
-}
+use std::fs;
 
 fn init_map() -> HashMap<(isize, isize), String> {
-    let layout = read_layout();
+    match fs::read_to_string("assets/config/map.txt") {
+        Ok(layout) => {
+            let mut map = HashMap::new();
 
-    let mut map = HashMap::new();
+            for (y, line) in layout.trim().lines().enumerate() {
+                for (x, c) in line.trim().split(' ').enumerate() {
+                    map.insert((x as isize, y as isize), c.to_string());
+                }
+            }
 
-    for (y, line) in layout.lines().enumerate() {
-        for (x, c) in line.trim().split(' ').enumerate() {
-            map.insert((x as isize, y as isize), c.to_string());
+            map
         }
+        Err(e) => panic!(e),
     }
-
-    map
 }
 
 pub fn setup(
