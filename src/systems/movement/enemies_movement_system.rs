@@ -12,13 +12,14 @@ pub fn enemies_movement_system(
         &mut LastPlayerPosition,
         &mut GameCoordinates,
     )>,
-    mut player_position_query: Query<With<Player, &GameCoordinates>>,
+    mut player_position_query: Query<With<Player, (&mut Health, &GameCoordinates)>>,
     mut obstacles_query: Query<With<Obstacle, &GameCoordinates>>,
 ) {
-    let mut lost = false;
-
     if *game_state == GameState::EnemyTurn {
-        let player_position = player_position_query.iter().iter().next().unwrap().position;
+        let mut player_iter = player_position_query.iter();
+        let player = player_iter.iter().next().unwrap();
+        let mut player_health = player.0;
+        let player_position = player.1.position;
 
         let mut obstacles = obstacles_query
             .iter()
@@ -69,7 +70,8 @@ pub fn enemies_movement_system(
                         enemy_coordinates.tangent = Some(direction);
 
                         if player_position == next_tile {
-                            lost = true;
+                            player_health.0 -= 1;
+                            println!("You got hit for 1 HP");
                         }
                     }
 
@@ -87,7 +89,7 @@ pub fn enemies_movement_system(
             }
         }
 
-        if lost {
+        if player_health.0 <= 0 {
             *game_state = GameState::Defeat;
             println!("U DED");
         } else {

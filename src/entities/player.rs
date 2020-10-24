@@ -31,5 +31,6 @@ pub fn create_player(
         .with(Viewshed {
             visible_positions: HashSet::new(),
             shape: ViewshedShape::Circle,
-        });
+        })
+        .with(Health(3));
 }

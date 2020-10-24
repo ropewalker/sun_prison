@@ -11,12 +11,14 @@ pub enum Enemy {
     Demon,
 }
 
+pub struct Health(pub i8);
+
 pub struct Tile;
 pub struct Highlight;
 pub struct Fog;
 pub struct Exit;
-pub struct Obstacle;
 
+pub struct Obstacle;
 pub struct Movable;
 pub struct Immovable;
 pub struct Opaque;
