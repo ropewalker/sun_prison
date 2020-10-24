@@ -23,6 +23,6 @@ pub fn create_portal(
             transform,
             ..Default::default()
         })
-        .with(Portal)
+        .with(Exit)
         .with(portal_coordinates);
 }

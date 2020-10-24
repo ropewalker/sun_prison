@@ -13,7 +13,7 @@ pub enum Enemy {
 
 pub struct Tile;
 pub struct Highlight;
-pub struct Portal;
+pub struct Exit;
 pub struct Obstacle;
 
 pub struct Movable;

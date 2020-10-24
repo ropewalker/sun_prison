@@ -9,7 +9,7 @@ pub fn player_movement_system(
     mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
     mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
     mut immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
-    mut portal_query: Query<With<Portal, &GameCoordinates>>,
+    mut portal_query: Query<With<Exit, &GameCoordinates>>,
 ) {
     if *game_state == GameState::PlayerTurn {
         let mut player_position_query_borrow = player_position_query.iter();
