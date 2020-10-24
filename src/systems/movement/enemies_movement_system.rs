@@ -91,7 +91,7 @@ pub fn enemies_movement_system(
             *game_state = GameState::Defeat;
             println!("U DED");
         } else {
-            *game_state = GameState::SunTurn;
+            *game_state = GameState::PlayerTurn;
         }
     }
 }

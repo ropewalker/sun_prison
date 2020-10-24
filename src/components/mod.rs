@@ -16,13 +16,6 @@ pub struct Highlight;
 pub struct Portal;
 pub struct Obstacle;
 
-#[derive(Eq, PartialEq, Hash, Debug, Copy, Clone)]
-pub enum Insolation {
-    Day,
-    Twilight,
-    Night,
-}
-
 pub struct Movable;
 pub struct Immovable;
 pub struct Opaque;

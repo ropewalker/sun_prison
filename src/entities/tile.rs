@@ -6,7 +6,6 @@ use bevy::prelude::*;
 pub fn create_tile(
     commands: &mut Commands,
     game_coordinates: GameCoordinates,
-    insolation: Insolation,
     texture_atlas: Handle<TextureAtlas>,
 ) {
     let transform = Transform::identity();
@@ -18,8 +17,7 @@ pub fn create_tile(
             ..Default::default()
         })
         .with(game_coordinates)
-        .with(Tile)
-        .with(insolation);
+        .with(Tile);
 }
 
 pub fn create_highlight(
@@ -67,19 +65,11 @@ pub fn create_tiles_and_highlights(
     for &normal in &[Right, Up, Front, Left, Down, Back] {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
             for y in -PLANET_RADIUS..=PLANET_RADIUS {
-                use Insolation::*;
-
-                let insolation = match normal {
-                    Right => Day,
-                    Down | Back => Twilight,
-                    _ => Night,
-                };
-
                 let (abscissa, ordinate) = normal.abscissa_and_ordinate();
                 let cubelet = PLANET_RADIUS * normal + x * abscissa + y * ordinate;
                 let game_coordinates = Position { cubelet, normal }.into();
 
-                create_tile(commands, game_coordinates, insolation, tile_texture_atlas);
+                create_tile(commands, game_coordinates, tile_texture_atlas);
                 create_highlight(commands, game_coordinates, highlight_texture_atlas);
             }
         }
