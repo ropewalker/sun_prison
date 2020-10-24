@@ -176,7 +176,7 @@ pub fn setup(
     );
 
     //tiles
-    create_tiles_and_highlights(
+    create_planet(
         &mut commands,
         &asset_server,
         &mut texture_atlases,

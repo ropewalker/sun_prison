@@ -39,7 +39,25 @@ pub fn create_highlight(
         .with(Highlight);
 }
 
-pub fn create_tiles_and_highlights(
+pub fn create_fog(
+    commands: &mut Commands,
+    game_coordinates: GameCoordinates,
+    texture_atlas: Handle<TextureAtlas>,
+) {
+    let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.9));
+    let sprite_sheet_components = SpriteSheetComponents {
+        texture_atlas,
+        transform,
+        ..Default::default()
+    };
+
+    commands
+        .spawn(sprite_sheet_components)
+        .with(game_coordinates)
+        .with(Fog);
+}
+
+pub fn create_planet(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
@@ -48,10 +66,10 @@ pub fn create_tiles_and_highlights(
     use UnitVector::*;
 
     let tile_texture_handle = asset_server
-        .load_sync(textures, "assets/images/tile_spritesheet.png")
+        .load_sync(textures, "assets/images/tile.png")
         .unwrap();
     let tile_texture = textures.get(&tile_texture_handle).unwrap();
-    let tile_texture_atlas = TextureAtlas::from_grid(tile_texture_handle, tile_texture.size, 3, 2);
+    let tile_texture_atlas = TextureAtlas::from_grid(tile_texture_handle, tile_texture.size, 1, 1);
     let tile_texture_atlas = texture_atlases.add(tile_texture_atlas);
 
     let highlight_texture_handle = asset_server
@@ -62,6 +80,13 @@ pub fn create_tiles_and_highlights(
         TextureAtlas::from_grid(highlight_texture_handle, highlight_texture.size, 1, 1);
     let highlight_texture_atlas = texture_atlases.add(highlight_texture_atlas);
 
+    let fog_texture_handle = asset_server
+        .load_sync(textures, "assets/images/fog.png")
+        .unwrap();
+    let fog_texture = textures.get(&fog_texture_handle).unwrap();
+    let fog_texture_atlas = TextureAtlas::from_grid(fog_texture_handle, fog_texture.size, 1, 1);
+    let fog_texture_atlas = texture_atlases.add(fog_texture_atlas);
+
     for &normal in &[Right, Up, Front, Left, Down, Back] {
         for x in -PLANET_RADIUS..=PLANET_RADIUS {
             for y in -PLANET_RADIUS..=PLANET_RADIUS {
@@ -71,6 +96,7 @@ pub fn create_tiles_and_highlights(
 
                 create_tile(commands, game_coordinates, tile_texture_atlas);
                 create_highlight(commands, game_coordinates, highlight_texture_atlas);
+                create_fog(commands, game_coordinates, fog_texture_atlas);
             }
         }
     }
