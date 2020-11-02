@@ -1,13 +1,16 @@
 mod enemies_movement_system;
 mod player_movement_system;
 mod rotation;
+mod viewshed_update_system;
 
 use crate::algebra::*;
 use crate::components::*;
 use crate::resources::*;
 use bevy::prelude::*;
 
-pub use self::{enemies_movement_system::*, player_movement_system::*, rotation::*};
+pub use self::{
+    enemies_movement_system::*, player_movement_system::*, rotation::*, viewshed_update_system::*,
+};
 
 pub fn strafe(coordinates: &mut GameCoordinates, direction: UnitVector) {
     let new_coordinates = next_tile(&coordinates.position, direction);
