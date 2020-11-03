@@ -6,8 +6,11 @@ The game is in the *very* early stages of development and is being implemented b
 
 Future plans (besides obvious bug fixing and performance updates):
 
+- [ ] UI (or at least some text on the screen);
 - [ ] Random map generation;
 - [ ] New interactable objects and enemies;
-- [ ] Slightly more interesting win conditions;
-- [ ] Better art?
+- [ ] Day/night cycle (maybe);
+- [ ] Combat;
+- [ ] Slightly more interesting win condition;
+- [ ] Better art;
 - [ ] 3D (maybe, at some point).
