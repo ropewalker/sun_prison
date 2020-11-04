@@ -10,7 +10,7 @@ The game is in the *very* early stages of development and is being implemented b
 
 ### Current goal and rules of the game
 
-The goal (currently, likely to be changed) is to find and step on the exit tile. You can push boxes but not walls and you can rotate layers of the cube at your will. You have three health points and lose one every time a monster tries to step on the tile you are standing one, which may lead to your death and losing the game.
+The goal (currently, likely to be changed) is to find and step on the exit tile. You can push boxes (and monsters) but not walls and you can rotate layers of the cube. You have three health points and lose one every time a monster tries to step on the tile you are standing on, which may lead to your death and losing the game.
 
 There are three types of monsters currently, the only difference between them is how they track you: 
 - Green monsters (called “zombies” in code) have conic field of view and can lose your tracks easily;
