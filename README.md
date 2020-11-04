@@ -30,7 +30,7 @@ The game is turn-based, your turn ends every time you perfrom (or try to perform
 
 ### Controls
 
-Use WASD to move and turn around and SPACE to rotate the layer you are standing on in the direction you are looking in. TAB will highlight the layer that will be rotated by pressing space. Pressing E ends the turn.
+Use WASD to move and turn around and SPACE to rotate the layer you are standing on in the direction you are looking in. TAB will highlight the layer that will be rotated by pressing SPACE. Pressing E ends the turn.
 
 ## Future plans (besides obvious bug fixing and performance updates)
 
