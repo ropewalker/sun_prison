@@ -1,4 +1,5 @@
 use crate::components::*;
+use crate::resources::TILE_SIZE;
 use bevy::prelude::*;
 use std::collections::HashSet;
 
@@ -6,22 +7,16 @@ pub fn create_enemies(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
-    textures: &mut ResMut<Assets<Texture>>,
     enemies_coordinates: Vec<GameCoordinates>,
     kind: Enemy,
 ) {
-    let texture_handle = asset_server
-        .load_sync(
-            textures,
-            match kind {
-                Enemy::Zombie => "assets/images/zombie_spritesheet.png",
-                Enemy::Ghoul => "assets/images/ghoul_spritesheet.png",
-                Enemy::Demon => "assets/images/demon_spritesheet.png",
-            },
-        )
-        .unwrap();
-    let texture = textures.get(&texture_handle).unwrap();
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, texture.size, 4, 1);
+    let texture_handle = asset_server.get_handle(match kind {
+        Enemy::Zombie => "images/zombie_spritesheet.png",
+        Enemy::Ghoul => "images/ghoul_spritesheet.png",
+        Enemy::Demon => "images/demon_spritesheet.png",
+    });
+    let texture_atlas =
+        TextureAtlas::from_grid(texture_handle, Vec2::new(TILE_SIZE, TILE_SIZE), 4, 1);
     let texture_atlas = texture_atlases.add(texture_atlas);
 
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.0));
@@ -29,7 +24,7 @@ pub fn create_enemies(
     for enemy_coordinates in enemies_coordinates {
         commands
             .spawn(SpriteSheetComponents {
-                texture_atlas,
+                texture_atlas: texture_atlas.clone(),
                 transform,
                 ..Default::default()
             })

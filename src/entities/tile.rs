@@ -31,7 +31,7 @@ pub fn create_highlight(
         transform,
         ..Default::default()
     };
-    sprite_sheet_components.sprite.color.a = 0.0;
+    sprite_sheet_components.sprite.color.set_a(0.0);
 
     commands
         .spawn(sprite_sheet_components)
@@ -61,30 +61,26 @@ pub fn create_planet(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
-    textures: &mut ResMut<Assets<Texture>>,
 ) {
     use UnitVector::*;
 
-    let tile_texture_handle = asset_server
-        .load_sync(textures, "assets/images/tile.png")
-        .unwrap();
-    let tile_texture = textures.get(&tile_texture_handle).unwrap();
-    let tile_texture_atlas = TextureAtlas::from_grid(tile_texture_handle, tile_texture.size, 1, 1);
+    let tile_texture_handle = asset_server.get_handle("images/tile.png");
+    let tile_texture_atlas =
+        TextureAtlas::from_grid(tile_texture_handle, Vec2::new(TILE_SIZE, TILE_SIZE), 1, 1);
     let tile_texture_atlas = texture_atlases.add(tile_texture_atlas);
 
-    let highlight_texture_handle = asset_server
-        .load_sync(textures, "assets/images/highlight.png")
-        .unwrap();
-    let highlight_texture = textures.get(&highlight_texture_handle).unwrap();
-    let highlight_texture_atlas =
-        TextureAtlas::from_grid(highlight_texture_handle, highlight_texture.size, 1, 1);
+    let highlight_texture_handle = asset_server.get_handle("images/highlight.png");
+    let highlight_texture_atlas = TextureAtlas::from_grid(
+        highlight_texture_handle,
+        Vec2::new(TILE_SIZE, TILE_SIZE),
+        1,
+        1,
+    );
     let highlight_texture_atlas = texture_atlases.add(highlight_texture_atlas);
 
-    let fog_texture_handle = asset_server
-        .load_sync(textures, "assets/images/fog.png")
-        .unwrap();
-    let fog_texture = textures.get(&fog_texture_handle).unwrap();
-    let fog_texture_atlas = TextureAtlas::from_grid(fog_texture_handle, fog_texture.size, 1, 1);
+    let fog_texture_handle = asset_server.get_handle("images/fog.png");
+    let fog_texture_atlas =
+        TextureAtlas::from_grid(fog_texture_handle, Vec2::new(TILE_SIZE, TILE_SIZE), 1, 1);
     let fog_texture_atlas = texture_atlases.add(fog_texture_atlas);
 
     for &normal in &[Right, Up, Front, Left, Down, Back] {
@@ -94,9 +90,9 @@ pub fn create_planet(
                 let cubelet = PLANET_RADIUS * normal + x * abscissa + y * ordinate;
                 let game_coordinates = Position { cubelet, normal }.into();
 
-                create_tile(commands, game_coordinates, tile_texture_atlas);
-                create_highlight(commands, game_coordinates, highlight_texture_atlas);
-                create_fog(commands, game_coordinates, fog_texture_atlas);
+                create_tile(commands, game_coordinates, tile_texture_atlas.clone());
+                create_highlight(commands, game_coordinates, highlight_texture_atlas.clone());
+                create_fog(commands, game_coordinates, fog_texture_atlas.clone());
             }
         }
     }

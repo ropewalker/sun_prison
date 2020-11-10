@@ -6,29 +6,30 @@ type QueryWithEnemy<'a, T> = Query<'a, With<Enemy, T>>;
 
 pub fn enemies_movement_system(
     mut game_state: ResMut<GameState>,
-    mut enemies_position_query: QueryWithEnemy<(
-        &Viewshed,
-        &mut RememberedObstacles,
-        &mut LastPlayerPosition,
-        &mut GameCoordinates,
-    )>,
     mut player_position_query: Query<With<Player, (&mut Health, &GameCoordinates)>>,
-    mut obstacles_query: Query<With<Obstacle, &GameCoordinates>>,
+    mut queries: QuerySet<(
+        QueryWithEnemy<(
+            &Viewshed,
+            &mut RememberedObstacles,
+            &mut LastPlayerPosition,
+            &mut GameCoordinates,
+        )>,
+        Query<With<Obstacle, &GameCoordinates>>,
+    )>,
 ) {
     if *game_state == GameState::EnemyTurn {
-        let mut player_iter = player_position_query.iter();
-        let player = player_iter.iter().next().unwrap();
+        let player = player_position_query.iter_mut().next().unwrap();
         let mut player_health = player.0;
         let player_position = player.1.position;
 
-        let mut obstacles = obstacles_query
-            .iter()
+        let mut obstacles = queries
+            .q1_mut()
             .iter()
             .map(|c| c.position)
             .collect::<HashSet<_>>();
 
         for (viewshed, mut remembered_obstacles, mut last_player_position, mut enemy_coordinates) in
-            &mut enemies_position_query.iter()
+            queries.q0_mut().iter_mut()
         {
             if viewshed.visible_positions.contains(&player_position) {
                 last_player_position.0 = Some(player_position);

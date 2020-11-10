@@ -4,15 +4,14 @@ use bevy::prelude::*;
 
 pub fn highlight_layer_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
-    mut player_query: Query<With<Player, &mut GameCoordinates>>,
+    player_query: Query<With<Player, &GameCoordinates>>,
     mut highlights_query: Query<With<Highlight, (&GameCoordinates, &mut TextureAtlasSprite)>>,
 ) {
-    let mut player_query_borrow = player_query.iter();
-    let player_coordinates = player_query_borrow.iter().next().unwrap();
+    let player_coordinates = player_query.iter().next().unwrap();
 
     let RotationInfo { axis, layer } = super::calculate_rotation_info(&player_coordinates);
 
-    for (coordinates, mut sprite) in &mut highlights_query.iter() {
+    for (coordinates, mut sprite) in highlights_query.iter_mut() {
         use UnitVector::*;
 
         let cubelet = coordinates.position.cubelet;
@@ -23,10 +22,12 @@ pub fn highlight_layer_system(
             Front | Back => cubelet.z,
         };
 
-        sprite.color.a = if current_layer == layer && keyboard_input.pressed(KeyCode::Tab) {
-            1.0
-        } else {
-            0.0
-        };
+        sprite.color.set_a(
+            if current_layer == layer && keyboard_input.pressed(KeyCode::Tab) {
+                1.0
+            } else {
+                0.0
+            },
+        );
     }
 }

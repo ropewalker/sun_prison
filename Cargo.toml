@@ -5,5 +5,5 @@ authors = ["Dima Lazarev <dmitry.lazarev@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-bevy = "0.2.1"
+bevy = "0.3"
 num-rational = "0.3"

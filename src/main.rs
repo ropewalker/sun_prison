@@ -22,7 +22,7 @@ fn main() {
         })
         .add_resource(ClearColor(Color::rgba(1.0, 1.0, 1.0, 1.0)))
         .init_resource::<GameState>()
-        .add_default_plugins()
+        .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
         .add_system(player_movement_system.system())
         .add_system(cube_rotation_system.system())

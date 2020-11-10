@@ -27,9 +27,10 @@ pub fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut textures: ResMut<Assets<Texture>>,
 ) {
     commands.spawn(Camera2dComponents::default());
+
+    asset_server.load_folder("images").unwrap();
 
     let mut player_coordinates = None;
     let mut portal_coordinates = None;
@@ -107,7 +108,6 @@ pub fn setup(
             &mut commands,
             &asset_server,
             &mut texture_atlases,
-            &mut textures,
             player_coordinates,
         );
     } else {
@@ -120,7 +120,6 @@ pub fn setup(
             &mut commands,
             &asset_server,
             &mut texture_atlases,
-            &mut textures,
             portal_coordinates,
         );
     } else {
@@ -132,7 +131,6 @@ pub fn setup(
         &mut commands,
         &asset_server,
         &mut texture_atlases,
-        &mut textures,
         zombies_coordinates,
         Enemy::Zombie,
     );
@@ -141,7 +139,6 @@ pub fn setup(
         &mut commands,
         &asset_server,
         &mut texture_atlases,
-        &mut textures,
         ghouls_coordinates,
         Enemy::Ghoul,
     );
@@ -150,7 +147,6 @@ pub fn setup(
         &mut commands,
         &asset_server,
         &mut texture_atlases,
-        &mut textures,
         demons_coordinates,
         Enemy::Demon,
     );
@@ -160,7 +156,6 @@ pub fn setup(
         &mut commands,
         &asset_server,
         &mut texture_atlases,
-        &mut textures,
         wall_coordinates,
         false,
     );
@@ -170,16 +165,10 @@ pub fn setup(
         &mut commands,
         &asset_server,
         &mut texture_atlases,
-        &mut textures,
         mov_wall_coordinates,
         true,
     );
 
     //tiles
-    create_planet(
-        &mut commands,
-        &asset_server,
-        &mut texture_atlases,
-        &mut textures,
-    );
+    create_planet(&mut commands, &asset_server, &mut texture_atlases);
 }

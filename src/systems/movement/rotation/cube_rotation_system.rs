@@ -10,13 +10,12 @@ pub fn cube_rotation_system(
     mut coordinates_query: Query<Without<Player, Without<Highlight, &mut GameCoordinates>>>,
 ) {
     if *game_state == GameState::PlayerTurn && keyboard_input.just_pressed(KeyCode::Space) {
-        let mut player_query_borrow = player_query.iter();
-        let mut coordinates = player_query_borrow.iter().next().unwrap();
+        let mut coordinates = player_query.iter_mut().next().unwrap();
 
         let RotationInfo { axis, layer } = super::calculate_rotation_info(&coordinates);
         *coordinates = coordinates.rotate(&axis);
 
-        for mut coordinates in &mut coordinates_query.iter() {
+        for mut coordinates in coordinates_query.iter_mut() {
             use UnitVector::*;
 
             let cubelet = coordinates.position.cubelet;
