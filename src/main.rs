@@ -25,6 +25,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup.system())
         .add_system(player_movement_system.system())
+        .add_system(update_rotation_info_system.system())
         .add_system(cube_rotation_system.system())
         .add_system(enemies_movement_system.system())
         .add_system(viewshed_update_system.system())

@@ -190,8 +190,3 @@ impl Mul<&Vector3> for Matrix3 {
         }
     }
 }
-
-pub struct RotationInfo {
-    pub axis: UnitVector,
-    pub layer: isize,
-}

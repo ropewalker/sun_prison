@@ -23,6 +23,7 @@ pub fn create_player(
             ..Default::default()
         })
         .with(Player)
+        .with(calculate_rotation_info(&player_coordinates))
         .with(player_coordinates)
         .with(Movable)
         .with(Obstacle)

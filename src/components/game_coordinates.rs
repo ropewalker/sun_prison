@@ -85,3 +85,25 @@ impl From<Position> for GameCoordinates {
         }
     }
 }
+
+pub struct RotationInfo {
+    pub axis: UnitVector,
+    pub layer: isize,
+}
+
+pub fn calculate_rotation_info(coordinates: &GameCoordinates) -> RotationInfo {
+    let tangent = coordinates.tangent.unwrap();
+    let axis = coordinates.position.normal.cross(&tangent);
+
+    use UnitVector::*;
+
+    let cubelet = coordinates.position.cubelet;
+
+    let layer = match axis {
+        Right | Left => cubelet.x,
+        Up | Down => cubelet.y,
+        Front | Back => cubelet.z,
+    };
+
+    RotationInfo { axis, layer }
+}

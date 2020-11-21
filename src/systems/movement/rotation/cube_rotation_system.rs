@@ -6,23 +6,20 @@ use bevy::prelude::*;
 pub fn cube_rotation_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
     mut game_state: ResMut<GameState>,
-    mut player_query: Query<With<Player, &mut GameCoordinates>>,
-    mut coordinates_query: Query<Without<Player, Without<Highlight, &mut GameCoordinates>>>,
+    player_query: Query<With<Player, &RotationInfo>>,
+    mut coordinates_query: Query<Without<Highlight, &mut GameCoordinates>>,
 ) {
     if *game_state == GameState::PlayerTurn && keyboard_input.just_pressed(KeyCode::Space) {
-        let mut coordinates = player_query.iter_mut().next().unwrap();
-
-        let RotationInfo { axis, layer } = super::calculate_rotation_info(&coordinates);
-        *coordinates = coordinates.rotate(&axis);
+        let RotationInfo { axis, layer } = player_query.iter().next().unwrap();
 
         for mut coordinates in coordinates_query.iter_mut() {
             use UnitVector::*;
 
             let cubelet = coordinates.position.cubelet;
 
-            if (axis == Right || axis == Left) && layer == cubelet.x
-                || (axis == Up || axis == Down) && layer == cubelet.y
-                || (axis == Front || axis == Back) && layer == cubelet.z
+            if (*axis == Right || *axis == Left) && *layer == cubelet.x
+                || (*axis == Up || *axis == Down) && *layer == cubelet.y
+                || (*axis == Front || *axis == Back) && *layer == cubelet.z
             {
                 *coordinates = coordinates.rotate(&axis);
             }
