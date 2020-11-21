@@ -32,7 +32,6 @@ fn main() {
         .add_system(translation_system.system())
         .add_system(player_sprite_update_system.system())
         .add_system(enemy_sprite_update_system.system())
-        .add_system(tile_sprite_update_system.system())
-        .add_system(objects_visibility_system.system())
+        .add_system(fog_update_system.system())
         .run();
 }

@@ -1,9 +1,9 @@
 use crate::components::*;
 use bevy::prelude::*;
 
-pub fn objects_visibility_system(
+pub fn fog_update_system(
     mut fog_query: Query<With<Fog, (&GameCoordinates, &mut TextureAtlasSprite)>>,
-    player_query: Query<With<Player, &Viewshed>>,
+    player_query: Query<With<Player, Changed<Viewshed>>>,
 ) {
     let viewshed = player_query.iter().next().unwrap();
 
