@@ -3,18 +3,20 @@ use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
 type QueryWithEnemy<'a, T> = Query<'a, With<Enemy, T>>;
+type EnemyComponents<'a> = (
+    &'a Viewshed,
+    &'a mut RememberedObstacles,
+    &'a mut LastPlayerPosition,
+    &'a mut GameCoordinates,
+);
+type QueryWithObstacle<'a, T> = Query<'a, With<Obstacle, T>>;
 
 pub fn enemies_movement_system(
     mut game_state: ResMut<GameState>,
     mut player_position_query: Query<With<Player, (&mut Health, &GameCoordinates)>>,
     mut queries: QuerySet<(
-        QueryWithEnemy<(
-            &Viewshed,
-            &mut RememberedObstacles,
-            &mut LastPlayerPosition,
-            &mut GameCoordinates,
-        )>,
-        Query<With<Obstacle, &GameCoordinates>>,
+        QueryWithEnemy<EnemyComponents>,
+        QueryWithObstacle<&GameCoordinates>,
     )>,
 ) {
     if *game_state == GameState::EnemyTurn {
