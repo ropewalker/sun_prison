@@ -28,9 +28,14 @@ pub fn setup(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    commands.spawn(Camera2dComponents::default());
+    commands
+        .spawn(UiCameraComponents::default())
+        .spawn(Camera2dComponents::default());
 
     asset_server.load_folder("images").unwrap();
+    asset_server.load_folder("fonts").unwrap();
+
+    create_labels(&mut commands, &asset_server);
 
     let mut player_coordinates = None;
     let mut portal_coordinates = None;

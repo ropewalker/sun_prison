@@ -31,6 +31,7 @@ fn main() {
         .add_system(viewshed_update_system.system())
         .add_system(highlight_layer_system.system())
         .add_system(translation_system.system())
+        .add_system(health_display_system.system())
         .add_system(player_sprite_update_system.system())
         .add_system(enemy_sprite_update_system.system())
         .add_system(fog_update_system.system())

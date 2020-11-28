@@ -37,3 +37,14 @@ pub struct Viewshed {
 
 pub struct LastPlayerPosition(pub Option<Position>);
 pub struct RememberedObstacles(pub HashSet<Position>);
+
+#[derive(Eq, PartialEq)]
+pub enum LabelType {
+    Health,
+    GameEvents,
+}
+
+#[derive(Eq, PartialEq)]
+pub struct Label {
+    pub label_type: LabelType,
+}

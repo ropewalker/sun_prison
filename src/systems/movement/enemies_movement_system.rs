@@ -14,6 +14,7 @@ type QueryWithObstacle<'a, T> = Query<'a, With<Obstacle, T>>;
 pub fn enemies_movement_system(
     mut game_state: ResMut<GameState>,
     mut player_position_query: Query<With<Player, (&mut Health, &GameCoordinates)>>,
+    mut label_query: Query<(&mut Text, &Label)>,
     mut queries: QuerySet<(
         QueryWithEnemy<EnemyComponents>,
         QueryWithObstacle<&GameCoordinates>,
@@ -29,6 +30,8 @@ pub fn enemies_movement_system(
             .iter()
             .map(|c| c.position)
             .collect::<HashSet<_>>();
+
+        let mut hits = 0;
 
         for (viewshed, mut remembered_obstacles, mut last_player_position, mut enemy_coordinates) in
             queries.q0_mut().iter_mut()
@@ -74,7 +77,7 @@ pub fn enemies_movement_system(
 
                         if player_position == next_tile {
                             player_health.0 -= 1;
-                            println!("You got hit for 1 HP");
+                            hits += 1;
                         }
                     }
 
@@ -92,9 +95,18 @@ pub fn enemies_movement_system(
             }
         }
 
+        for (mut text, label) in label_query.iter_mut() {
+            if label.label_type == LabelType::GameEvents {
+                if hits > 0 {
+                    (*text).value = format!("You got hit for {} HP.", hits);
+                } else {
+                    (*text).value = "It is dark here.".to_string();
+                }
+            }
+        }
+
         if player_health.0 <= 0 {
             *game_state = GameState::Defeat;
-            println!("U DED");
         } else {
             *game_state = GameState::PlayerTurn;
         }

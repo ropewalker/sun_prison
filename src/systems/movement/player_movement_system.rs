@@ -10,6 +10,7 @@ pub fn player_movement_system(
     mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
     immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
     portal_query: Query<With<Exit, &GameCoordinates>>,
+    mut label_query: Query<(&mut Text, &Label)>,
 ) {
     if *game_state == GameState::PlayerTurn {
         let mut player_coordinates = player_position_query.iter_mut().next().unwrap();
@@ -84,7 +85,11 @@ pub fn player_movement_system(
 
             if player_coordinates.position == portal_coordinates.position {
                 *game_state = GameState::Victory;
-                println!("You won!");
+                for (mut text, label) in label_query.iter_mut() {
+                    if label.label_type == LabelType::GameEvents {
+                        (*text).value = "You won!".to_string();
+                    }
+                }
             } else {
                 *game_state = GameState::EnemyTurn;
             }
