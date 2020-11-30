@@ -25,7 +25,7 @@ The game is turn-based, your turn ends every time you perfrom (or try to perform
 - Black-colored character represents you, other characters represent monsters that are trying to eat you. 
 - White boxes can be moved, like in [Sokoban](https://github.com/ropewalker/bevy_sokoban/); striped boxes represent walls and cannot be moved.
 - Tile with blue frame represents exit.
-- Some information is currently printed in console.
+- Some information (e.g. amount of HP and gameplay state) is printed on screen.
 - The game doesn't (yet) restart automatically when you win or lose, sorry about that.
 
 ### Controls
