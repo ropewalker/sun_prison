@@ -1,11 +1,12 @@
 use crate::components::*;
-use crate::resources::TILE_SIZE;
+use crate::resources::*;
 use bevy::prelude::*;
 use std::collections::HashSet;
 
 pub fn create_player(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
+    turn_queue: &mut ResMut<TurnQueue>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     player_coordinates: GameCoordinates,
 ) {
@@ -16,7 +17,7 @@ pub fn create_player(
 
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.0));
 
-    commands
+    let player_entity = commands
         .spawn(SpriteSheetComponents {
             texture_atlas,
             transform,
@@ -31,5 +32,12 @@ pub fn create_player(
             visible_positions: HashSet::new(),
             shape: ViewshedShape::Circle,
         })
-        .with(Health(3));
+        .with(Health(3))
+        .current_entity()
+        .unwrap();
+
+    (*turn_queue).0.push(TurnQueueElement {
+        entity: player_entity,
+        priority: 0,
+    });
 }

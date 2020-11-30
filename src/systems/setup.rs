@@ -26,6 +26,7 @@ fn init_map() -> HashMap<(isize, isize), String> {
 pub fn setup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
+    mut turn_queue: ResMut<TurnQueue>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     commands
@@ -112,6 +113,7 @@ pub fn setup(
         create_player(
             &mut commands,
             &asset_server,
+            &mut turn_queue,
             &mut texture_atlases,
             player_coordinates,
         );
@@ -135,6 +137,7 @@ pub fn setup(
     create_enemies(
         &mut commands,
         &asset_server,
+        &mut turn_queue,
         &mut texture_atlases,
         zombies_coordinates,
         Enemy::Zombie,
@@ -143,6 +146,7 @@ pub fn setup(
     create_enemies(
         &mut commands,
         &asset_server,
+        &mut turn_queue,
         &mut texture_atlases,
         ghouls_coordinates,
         Enemy::Ghoul,
@@ -151,6 +155,7 @@ pub fn setup(
     create_enemies(
         &mut commands,
         &asset_server,
+        &mut turn_queue,
         &mut texture_atlases,
         demons_coordinates,
         Enemy::Demon,

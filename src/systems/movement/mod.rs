@@ -1,6 +1,7 @@
 mod enemies_movement_system;
 mod player_movement_system;
 mod rotation;
+mod turn_system;
 mod viewshed_update_system;
 
 use crate::algebra::*;
@@ -9,7 +10,8 @@ use crate::resources::*;
 use bevy::prelude::*;
 
 pub use self::{
-    enemies_movement_system::*, player_movement_system::*, rotation::*, viewshed_update_system::*,
+    enemies_movement_system::*, player_movement_system::*, rotation::*, turn_system::*,
+    viewshed_update_system::*,
 };
 
 pub fn strafe(coordinates: &mut GameCoordinates, direction: UnitVector) {

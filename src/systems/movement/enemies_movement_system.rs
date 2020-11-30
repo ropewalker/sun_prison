@@ -13,6 +13,7 @@ type QueryWithObstacle<'a, T> = Query<'a, With<Obstacle, T>>;
 
 pub fn enemies_movement_system(
     mut game_state: ResMut<GameState>,
+    mut turn_queue: ResMut<TurnQueue>,
     mut player_position_query: Query<With<Player, (&mut Health, &GameCoordinates)>>,
     mut label_query: Query<(&mut Text, &Label)>,
     mut queries: QuerySet<(
@@ -20,7 +21,7 @@ pub fn enemies_movement_system(
         QueryWithObstacle<&GameCoordinates>,
     )>,
 ) {
-    if *game_state == GameState::EnemyTurn {
+    if let GameState::EnemyTurn(enemy) = *game_state {
         let player = player_position_query.iter_mut().next().unwrap();
         let mut player_health = player.0;
         let player_position = player.1.position;
@@ -33,66 +34,65 @@ pub fn enemies_movement_system(
 
         let mut hits = 0;
 
-        for (viewshed, mut remembered_obstacles, mut last_player_position, mut enemy_coordinates) in
-            queries.q0_mut().iter_mut()
-        {
-            if viewshed.visible_positions.contains(&player_position) {
-                last_player_position.0 = Some(player_position);
-            }
+        let (viewshed, mut remembered_obstacles, mut last_player_position, mut enemy_coordinates) =
+            queries.q0_mut().get_mut(enemy).unwrap();
 
-            remembered_obstacles.0 = remembered_obstacles
-                .0
-                .difference(&viewshed.visible_positions)
-                .cloned()
-                .collect();
+        if viewshed.visible_positions.contains(&player_position) {
+            last_player_position.0 = Some(player_position);
+        }
 
-            let visible_obstacles = obstacles
-                .iter()
-                .filter(|&obstacle_position| viewshed.visible_positions.contains(obstacle_position))
-                .collect::<HashSet<_>>();
+        remembered_obstacles.0 = remembered_obstacles
+            .0
+            .difference(&viewshed.visible_positions)
+            .cloned()
+            .collect();
 
-            remembered_obstacles.0.extend(visible_obstacles);
+        let visible_obstacles = obstacles
+            .iter()
+            .filter(|&obstacle_position| viewshed.visible_positions.contains(obstacle_position))
+            .collect::<HashSet<_>>();
 
-            let mut moved = false;
+        remembered_obstacles.0.extend(visible_obstacles);
 
-            if let Some(goal) = last_player_position.0 {
-                let enemy_position = enemy_coordinates.position;
+        let mut moved = false;
+        let mut queue_element = (*turn_queue).0.peek_mut().unwrap();
 
-                if goal == enemy_position {
-                    last_player_position.0 = None;
-                    continue;
-                }
+        if let Some(goal) = last_player_position.0 {
+            let enemy_position = enemy_coordinates.position;
 
-                if let Some(GameCoordinates {
-                    position: next_tile,
-                    tangent: Some(direction),
-                }) = first_step(&enemy_coordinates, &goal, &remembered_obstacles.0)
-                {
-                    if !obstacles.contains(&next_tile) {
-                        obstacles.remove(&enemy_position);
-                        turn_and_move(&mut enemy_coordinates, direction);
-                        obstacles.insert(enemy_coordinates.position);
-                    } else {
-                        enemy_coordinates.tangent = Some(direction);
+            if goal == enemy_position {
+                last_player_position.0 = None;
+            } else if let Some(GameCoordinates {
+                position: next_tile,
+                tangent: Some(direction),
+            }) = first_step(&enemy_coordinates, &goal, &remembered_obstacles.0)
+            {
+                if !obstacles.contains(&next_tile) {
+                    obstacles.remove(&enemy_position);
+                    turn_and_move(&mut enemy_coordinates, direction);
+                    obstacles.insert(enemy_coordinates.position);
+                } else {
+                    enemy_coordinates.tangent = Some(direction);
 
-                        if player_position == next_tile {
-                            player_health.0 -= 1;
-                            hits += 1;
-                        }
+                    if player_position == next_tile {
+                        player_health.0 -= 1;
+                        hits += 1;
                     }
-
-                    moved = true;
                 }
-            }
 
-            if !moved {
-                enemy_coordinates.tangent = Some(
-                    enemy_coordinates
-                        .tangent
-                        .unwrap()
-                        .rotate(&enemy_coordinates.position.normal),
-                );
+                (*queue_element).priority += MOVE_COST;
+                moved = true;
             }
+        }
+
+        if !moved {
+            enemy_coordinates.tangent = Some(
+                enemy_coordinates
+                    .tangent
+                    .unwrap()
+                    .rotate(&enemy_coordinates.position.normal),
+            );
+            (*queue_element).priority += ROTATE_COST;
         }
 
         for (mut text, label) in label_query.iter_mut() {
@@ -108,7 +108,7 @@ pub fn enemies_movement_system(
         if player_health.0 <= 0 {
             *game_state = GameState::Defeat;
         } else {
-            *game_state = GameState::PlayerTurn;
+            *game_state = GameState::PassingTurn;
         }
     }
 }

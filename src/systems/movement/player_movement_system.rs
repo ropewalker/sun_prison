@@ -5,7 +5,7 @@ type QueryWithoutPlayer<'a, T> = Query<'a, Without<Player, T>>;
 
 pub fn player_movement_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
-    mut game_state: ResMut<GameState>,
+    (mut game_state, mut turn_queue): (ResMut<GameState>, ResMut<TurnQueue>),
     mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
     mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
     immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
@@ -17,6 +17,8 @@ pub fn player_movement_system(
 
         let mut direction = None;
         let mut to_move: HashMap<u32, UnitVector> = HashMap::new();
+
+        let mut queue_element = (*turn_queue).0.peek_mut().unwrap();
 
         if keyboard_input.just_pressed(KeyCode::Up) || keyboard_input.just_pressed(KeyCode::W) {
             direction = player_coordinates.tangent;
@@ -33,6 +35,8 @@ pub fn player_movement_system(
                     .unwrap()
                     .cross(&player_coordinates.position.normal),
             );
+            (*queue_element).priority += TURN_COST;
+            *game_state = GameState::PassingTurn;
         } else if keyboard_input.just_pressed(KeyCode::Right)
             || keyboard_input.just_pressed(KeyCode::D)
         {
@@ -42,8 +46,11 @@ pub fn player_movement_system(
                     .unwrap()
                     .cross(&player_coordinates.position.normal),
             );
+            (*queue_element).priority += TURN_COST;
+            *game_state = GameState::PassingTurn;
         } else if keyboard_input.just_pressed(KeyCode::E) {
-            *game_state = GameState::EnemyTurn;
+            *game_state = GameState::PassingTurn;
+            (*queue_element).priority += WAIT_COST;
         }
 
         if let Some(direction) = direction {
@@ -68,9 +75,11 @@ pub fn player_movement_system(
                     to_move.insert(*id, new_direction);
                 } else if immov.contains_key(&new_position) {
                     to_move.clear();
+                    (*queue_element).priority += PUSH_COST;
                     break;
                 } else {
                     strafe(&mut player_coordinates, direction);
+                    (*queue_element).priority += MOVE_COST;
                     break;
                 }
             }
@@ -91,7 +100,7 @@ pub fn player_movement_system(
                     }
                 }
             } else {
-                *game_state = GameState::EnemyTurn;
+                *game_state = GameState::PassingTurn;
             }
         }
     }

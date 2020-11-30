@@ -1,11 +1,12 @@
 use crate::components::*;
-use crate::resources::TILE_SIZE;
+use crate::resources::*;
 use bevy::prelude::*;
 use std::collections::HashSet;
 
 pub fn create_enemies(
     commands: &mut Commands,
     asset_server: &Res<AssetServer>,
+    turn_queue: &mut ResMut<TurnQueue>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     enemies_coordinates: Vec<GameCoordinates>,
     kind: Enemy,
@@ -21,8 +22,8 @@ pub fn create_enemies(
 
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.0));
 
-    for enemy_coordinates in enemies_coordinates {
-        commands
+    for (number, &enemy_coordinates) in enemies_coordinates.iter().enumerate() {
+        let enemy_entity = commands
             .spawn(SpriteSheetComponents {
                 texture_atlas: texture_atlas.clone(),
                 transform,
@@ -41,6 +42,13 @@ pub fn create_enemies(
                 },
             })
             .with(LastPlayerPosition(None))
-            .with(RememberedObstacles(HashSet::new()));
+            .with(RememberedObstacles(HashSet::new()))
+            .current_entity()
+            .unwrap();
+
+        (*turn_queue).0.push(TurnQueueElement {
+            entity: enemy_entity,
+            priority: 100 * (number as u32),
+        });
     }
 }
