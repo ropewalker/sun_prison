@@ -7,7 +7,7 @@ use std::collections::{HashSet, VecDeque};
 
 pub fn viewshed_update_system(
     mut viewer_coordinates_query: Query<(&mut Viewshed, &GameCoordinates)>,
-    obstacles_query: Query<With<Opaque, &GameCoordinates>>,
+    obstacles_query: Query<&GameCoordinates, With<Opaque>>,
 ) {
     for (mut viewshed, viewer_coordinates) in viewer_coordinates_query.iter_mut() {
         viewshed.visible_positions.clear();

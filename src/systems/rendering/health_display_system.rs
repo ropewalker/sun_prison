@@ -2,7 +2,7 @@ use crate::components::*;
 use bevy::prelude::*;
 
 pub fn health_display_system(
-    player_query: Query<With<Player, Changed<Health>>>,
+    player_query: Query<&Health, (Changed<Health>, With<Player>)>,
     mut label_query: Query<(&mut Text, &Label)>,
 ) {
     if let Some(player_health) = player_query.iter().next() {

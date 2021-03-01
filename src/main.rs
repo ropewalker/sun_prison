@@ -10,12 +10,13 @@ use bevy::prelude::*;
 use bevy::render::pass::ClearColor;
 use bevy::window::WindowMode;
 
+#[bevy_main]
 fn main() {
     App::build()
         .add_resource(WindowDescriptor {
             title: "Sun Prison".to_string(),
-            width: 1440,
-            height: 1080,
+            width: 720.,
+            height: 540.,
             vsync: true,
             mode: WindowMode::Windowed,
             ..Default::default()

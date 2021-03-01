@@ -1,15 +1,16 @@
 use super::*;
 use std::collections::HashMap;
 
-type QueryWithoutPlayer<'a, T> = Query<'a, Without<Player, T>>;
+type MovableNonPlayer = (With<Movable>, Without<Player>);
+type EntityWithCoordinates<'a> = (Entity, &'a mut GameCoordinates);
 
 pub fn player_movement_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
     (mut game_state, mut turn_queue): (ResMut<GameState>, ResMut<TurnQueue>),
-    mut player_position_query: Query<With<Player, &mut GameCoordinates>>,
-    mut movables_query: QueryWithoutPlayer<With<Movable, (Entity, &mut GameCoordinates)>>,
-    immovables_query: Query<With<Immovable, (Entity, &GameCoordinates)>>,
-    portal_query: Query<With<Exit, &GameCoordinates>>,
+    mut player_position_query: Query<&mut GameCoordinates, With<Player>>,
+    mut movables_query: Query<EntityWithCoordinates, MovableNonPlayer>,
+    immovables_query: Query<(Entity, &GameCoordinates), With<Immovable>>,
+    portal_query: Query<&GameCoordinates, With<Exit>>,
     mut label_query: Query<(&mut Text, &Label)>,
 ) {
     if *game_state == GameState::PlayerTurn {

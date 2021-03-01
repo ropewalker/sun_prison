@@ -11,7 +11,7 @@ pub fn create_tile(
     let transform = Transform::identity();
 
     commands
-        .spawn(SpriteSheetComponents {
+        .spawn(SpriteSheetBundle {
             texture_atlas,
             transform,
             ..Default::default()
@@ -26,7 +26,7 @@ pub fn create_highlight(
     texture_atlas: Handle<TextureAtlas>,
 ) {
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 2.0));
-    let mut sprite_sheet_components = SpriteSheetComponents {
+    let mut sprite_sheet_components = SpriteSheetBundle {
         texture_atlas,
         transform,
         ..Default::default()
@@ -45,7 +45,7 @@ pub fn create_fog(
     texture_atlas: Handle<TextureAtlas>,
 ) {
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.9));
-    let sprite_sheet_components = SpriteSheetComponents {
+    let sprite_sheet_components = SpriteSheetBundle {
         texture_atlas,
         transform,
         ..Default::default()

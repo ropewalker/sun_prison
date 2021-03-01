@@ -14,11 +14,7 @@ impl GameCoordinates {
                 cubelet: self.position.cubelet.rotate(axis),
                 normal: self.position.normal.rotate(axis),
             },
-            tangent: if let Some(tangent) = self.tangent {
-                Some(tangent.rotate(axis))
-            } else {
-                None
-            },
+            tangent: self.tangent.map(|tangent| tangent.rotate(axis)),
         }
     }
 }

@@ -7,8 +7,8 @@ pub fn cube_rotation_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
     mut game_state: ResMut<GameState>,
     mut turn_queue: ResMut<TurnQueue>,
-    player_query: Query<With<Player, &RotationInfo>>,
-    mut coordinates_query: Query<Without<Highlight, &mut GameCoordinates>>,
+    player_query: Query<&RotationInfo, With<Player>>,
+    mut coordinates_query: Query<&mut GameCoordinates, Without<Highlight>>,
 ) {
     if *game_state == GameState::PlayerTurn && keyboard_input.just_pressed(KeyCode::Space) {
         let RotationInfo { axis, layer } = player_query.iter().next().unwrap();

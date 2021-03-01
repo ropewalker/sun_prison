@@ -3,10 +3,10 @@ use bevy::prelude::*;
 
 pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
     let font_handle = asset_server.get_handle("fonts/FiraSans-Bold.ttf");
-    let font_size = 60.0;
+    let font_size = 30.0;
 
     commands
-        .spawn(TextComponents {
+        .spawn(TextBundle {
             style: Style {
                 align_self: AlignSelf::FlexStart,
                 position_type: PositionType::Absolute,
@@ -23,6 +23,7 @@ pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
                 style: TextStyle {
                     font_size,
                     color: Color::BLACK,
+                    ..Default::default()
                 },
             },
             ..Default::default()
@@ -30,7 +31,7 @@ pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
         .with(Label {
             label_type: LabelType::GameEvents,
         })
-        .spawn(TextComponents {
+        .spawn(TextBundle {
             style: Style {
                 align_self: AlignSelf::FlexStart,
                 position_type: PositionType::Absolute,
@@ -47,6 +48,7 @@ pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
                 style: TextStyle {
                     font_size,
                     color: Color::BLACK,
+                    ..Default::default()
                 },
             },
             ..Default::default()

@@ -22,7 +22,7 @@ pub fn create_walls(
 
     for wall_coordinates in walls_coordinates {
         let commands = commands
-            .spawn(SpriteSheetComponents {
+            .spawn(SpriteSheetBundle {
                 texture_atlas: texture_atlas.clone(),
                 transform,
                 ..Default::default()

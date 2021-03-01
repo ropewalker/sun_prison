@@ -3,8 +3,8 @@ use super::*;
 pub fn turn_system(
     mut game_state: ResMut<GameState>,
     turn_queue: ResMut<TurnQueue>,
-    player_query: Query<With<Player, Entity>>,
-    enemy_query: Query<With<Enemy, Entity>>,
+    player_query: Query<Entity, With<Player>>,
+    enemy_query: Query<Entity, With<Enemy>>,
 ) {
     if *game_state == GameState::PassingTurn {
         if let Some(TurnQueueElement {

@@ -2,8 +2,8 @@ use crate::components::*;
 use bevy::prelude::*;
 
 pub fn fog_update_system(
-    mut fog_query: Query<With<Fog, (&GameCoordinates, &mut TextureAtlasSprite)>>,
-    player_query: Query<With<Player, Changed<Viewshed>>>,
+    mut fog_query: Query<(&GameCoordinates, &mut TextureAtlasSprite), With<Fog>>,
+    player_query: Query<&Viewshed, (Changed<Viewshed>, With<Player>)>,
 ) {
     let viewshed = player_query.iter().next().unwrap();
 

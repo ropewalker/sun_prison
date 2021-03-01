@@ -16,7 +16,7 @@ pub fn create_portal(
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.1));
 
     commands
-        .spawn(SpriteSheetComponents {
+        .spawn(SpriteSheetBundle {
             texture_atlas,
             transform,
             ..Default::default()

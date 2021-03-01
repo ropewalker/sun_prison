@@ -4,8 +4,8 @@ use bevy::prelude::*;
 
 pub fn highlight_layer_system(
     keyboard_input: ChangedRes<Input<KeyCode>>,
-    player_query: Query<With<Player, &RotationInfo>>,
-    mut highlights_query: Query<With<Highlight, (&GameCoordinates, &mut TextureAtlasSprite)>>,
+    player_query: Query<&RotationInfo, With<Player>>,
+    mut highlights_query: Query<(&GameCoordinates, &mut TextureAtlasSprite), With<Highlight>>,
 ) {
     let RotationInfo { axis, layer } = player_query.iter().next().unwrap();
 

@@ -2,19 +2,19 @@ use super::*;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
-type QueryWithEnemy<'a, T> = Query<'a, With<Enemy, T>>;
+type QueryWithEnemy<'a, T> = Query<'a, T, With<Enemy>>;
 type EnemyComponents<'a> = (
     &'a Viewshed,
     &'a mut RememberedObstacles,
     &'a mut LastPlayerPosition,
     &'a mut GameCoordinates,
 );
-type QueryWithObstacle<'a, T> = Query<'a, With<Obstacle, T>>;
+type QueryWithObstacle<'a, T> = Query<'a, T, With<Obstacle>>;
 
 pub fn enemies_movement_system(
     mut game_state: ResMut<GameState>,
     mut turn_queue: ResMut<TurnQueue>,
-    mut player_position_query: Query<With<Player, (&mut Health, &GameCoordinates)>>,
+    mut player_position_query: Query<(&mut Health, &GameCoordinates), With<Player>>,
     mut label_query: Query<(&mut Text, &Label)>,
     mut queries: QuerySet<(
         QueryWithEnemy<EnemyComponents>,

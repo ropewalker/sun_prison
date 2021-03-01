@@ -24,7 +24,7 @@ pub fn create_enemies(
 
     for (number, &enemy_coordinates) in enemies_coordinates.iter().enumerate() {
         let enemy_entity = commands
-            .spawn(SpriteSheetComponents {
+            .spawn(SpriteSheetBundle {
                 texture_atlas: texture_atlas.clone(),
                 transform,
                 ..Default::default()
