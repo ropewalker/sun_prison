@@ -9,9 +9,9 @@ pub fn health_display_system(
         for (mut text, label) in label_query.iter_mut() {
             if label.label_type == LabelType::Health {
                 if player_health.0 > 0 {
-                    (*text).value = format!("You have {} HP.", player_health.0);
+                    (*text).sections[0].value = format!("You have {} HP.", player_health.0);
                 } else {
-                    (*text).value = "You died.".to_string();
+                    (*text).sections[0].value = "You died.".to_string();
                 }
             }
         }

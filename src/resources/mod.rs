@@ -1,15 +1,9 @@
 mod constants;
 
 pub use self::constants::*;
-use bevy::input::keyboard::KeyboardInput;
 use bevy::prelude::*;
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
-
-#[derive(Default)]
-pub struct KeyboardState {
-    pub event_reader: EventReader<KeyboardInput>,
-}
 
 #[derive(Eq, PartialEq)]
 pub enum GameState {
@@ -34,7 +28,7 @@ pub struct TurnQueueElement {
 
 impl PartialOrd for TurnQueueElement {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(&other))
+        Some(self.cmp(other))
     }
 }
 

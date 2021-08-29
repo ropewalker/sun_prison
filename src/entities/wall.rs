@@ -21,20 +21,21 @@ pub fn create_walls(
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 1.0));
 
     for wall_coordinates in walls_coordinates {
-        let commands = commands
-            .spawn(SpriteSheetBundle {
+        let wall = commands
+            .spawn_bundle(SpriteSheetBundle {
                 texture_atlas: texture_atlas.clone(),
                 transform,
                 ..Default::default()
             })
-            .with(wall_coordinates)
-            .with(Opaque)
-            .with(Obstacle);
+            .insert(wall_coordinates)
+            .insert(Opaque)
+            .insert(Obstacle)
+            .id();
 
         if movable {
-            commands.with(Movable);
+            commands.entity(wall).insert(Movable);
         } else {
-            commands.with(Immovable);
+            commands.entity(wall).insert(Immovable);
         }
     }
 }

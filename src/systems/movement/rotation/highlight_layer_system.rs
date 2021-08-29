@@ -3,10 +3,14 @@ use crate::components::*;
 use bevy::prelude::*;
 
 pub fn highlight_layer_system(
-    keyboard_input: ChangedRes<Input<KeyCode>>,
+    keyboard_input: Res<Input<KeyCode>>,
     player_query: Query<&RotationInfo, With<Player>>,
     mut highlights_query: Query<(&GameCoordinates, &mut TextureAtlasSprite), With<Highlight>>,
 ) {
+    if !keyboard_input.is_changed() {
+        return;
+    }
+
     let RotationInfo { axis, layer } = player_query.iter().next().unwrap();
 
     for (coordinates, mut sprite) in highlights_query.iter_mut() {

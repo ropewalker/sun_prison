@@ -6,7 +6,7 @@ pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
     let font_size = 30.0;
 
     commands
-        .spawn(TextBundle {
+        .spawn_bundle(TextBundle {
             style: Style {
                 align_self: AlignSelf::FlexStart,
                 position_type: PositionType::Absolute,
@@ -17,21 +17,23 @@ pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
                 },
                 ..Default::default()
             },
-            text: Text {
-                value: "It is dark here.".to_string(),
-                font: font_handle.clone(),
-                style: TextStyle {
+            text: Text::with_section(
+                "It is dark here.".to_string(),
+                TextStyle {
+                    font: font_handle.clone(),
                     font_size,
                     color: Color::BLACK,
-                    ..Default::default()
                 },
-            },
+                TextAlignment::default(),
+            ),
             ..Default::default()
         })
-        .with(Label {
+        .insert(Label {
             label_type: LabelType::GameEvents,
-        })
-        .spawn(TextBundle {
+        });
+
+    commands
+        .spawn_bundle(TextBundle {
             style: Style {
                 align_self: AlignSelf::FlexStart,
                 position_type: PositionType::Absolute,
@@ -42,18 +44,18 @@ pub fn create_labels(commands: &mut Commands, asset_server: &Res<AssetServer>) {
                 },
                 ..Default::default()
             },
-            text: Text {
-                value: "You have 3 HP.".to_string(),
-                font: font_handle,
-                style: TextStyle {
+            text: Text::with_section(
+                "You have 3 HP.".to_string(),
+                TextStyle {
+                    font: font_handle,
                     font_size,
                     color: Color::BLACK,
-                    ..Default::default()
                 },
-            },
+                TextAlignment::default(),
+            ),
             ..Default::default()
         })
-        .with(Label {
+        .insert(Label {
             label_type: LabelType::Health,
         });
 }

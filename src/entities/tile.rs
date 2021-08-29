@@ -11,13 +11,13 @@ pub fn create_tile(
     let transform = Transform::identity();
 
     commands
-        .spawn(SpriteSheetBundle {
+        .spawn_bundle(SpriteSheetBundle {
             texture_atlas,
             transform,
             ..Default::default()
         })
-        .with(game_coordinates)
-        .with(Tile);
+        .insert(game_coordinates)
+        .insert(Tile);
 }
 
 pub fn create_highlight(
@@ -34,9 +34,9 @@ pub fn create_highlight(
     sprite_sheet_components.sprite.color.set_a(0.0);
 
     commands
-        .spawn(sprite_sheet_components)
-        .with(game_coordinates)
-        .with(Highlight);
+        .spawn_bundle(sprite_sheet_components)
+        .insert(game_coordinates)
+        .insert(Highlight);
 }
 
 pub fn create_fog(
@@ -52,9 +52,9 @@ pub fn create_fog(
     };
 
     commands
-        .spawn(sprite_sheet_components)
-        .with(game_coordinates)
-        .with(Fog);
+        .spawn_bundle(sprite_sheet_components)
+        .insert(game_coordinates)
+        .insert(Fog);
 }
 
 pub fn create_planet(

@@ -1,18 +1,24 @@
 use super::*;
 use std::collections::HashMap;
 
+type EntityWithMutCoordinates<'a> = (Entity, &'a mut GameCoordinates);
 type MovableNonPlayer = (With<Movable>, Without<Player>);
-type EntityWithCoordinates<'a> = (Entity, &'a mut GameCoordinates);
+type DefinitelyImmovable = (With<Immovable>, Without<Movable>);
+type Portal = (With<Exit>, Without<Movable>, Without<Immovable>);
 
 pub fn player_movement_system(
-    keyboard_input: ChangedRes<Input<KeyCode>>,
+    keyboard_input: Res<Input<KeyCode>>,
     (mut game_state, mut turn_queue): (ResMut<GameState>, ResMut<TurnQueue>),
-    mut player_position_query: Query<&mut GameCoordinates, With<Player>>,
-    mut movables_query: Query<EntityWithCoordinates, MovableNonPlayer>,
-    immovables_query: Query<(Entity, &GameCoordinates), With<Immovable>>,
-    portal_query: Query<&GameCoordinates, With<Exit>>,
+    mut player_position_query: Query<&mut GameCoordinates, (With<Player>, With<Movable>)>,
+    mut movables_query: Query<EntityWithMutCoordinates, MovableNonPlayer>,
+    immovables_query: Query<(Entity, &GameCoordinates), DefinitelyImmovable>,
+    exit_query: Query<&GameCoordinates, Portal>,
     mut label_query: Query<(&mut Text, &Label)>,
 ) {
+    if !keyboard_input.is_changed() {
+        return;
+    }
+
     if *game_state == GameState::PlayerTurn {
         let mut player_coordinates = player_position_query.iter_mut().next().unwrap();
 
@@ -91,13 +97,13 @@ pub fn player_movement_system(
                 }
             }
 
-            let portal_coordinates = portal_query.iter().next().unwrap();
+            let portal_coordinates = exit_query.iter().next().unwrap();
 
             if player_coordinates.position == portal_coordinates.position {
                 *game_state = GameState::Victory;
                 for (mut text, label) in label_query.iter_mut() {
                     if label.label_type == LabelType::GameEvents {
-                        (*text).value = "You won!".to_string();
+                        (*text).sections[0].value = "You won!".to_string();
                     }
                 }
             } else {

@@ -104,7 +104,7 @@ impl Add<UnitVector> for Vector3 {
     type Output = Vector3;
 
     fn add(self, other: UnitVector) -> Vector3 {
-        let vector: Vector3 = other.to_vector();
+        let vector: Vector3 = other.as_vector();
         self + vector
     }
 }

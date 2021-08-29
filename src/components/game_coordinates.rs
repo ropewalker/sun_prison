@@ -30,7 +30,7 @@ impl Position {
         self.cubelet.x.abs() <= PLANET_RADIUS
             && self.cubelet.y.abs() <= PLANET_RADIUS
             && self.cubelet.z.abs() <= PLANET_RADIUS
-            && self.cubelet.dot(&self.normal.to_vector()) == PLANET_RADIUS
+            && self.cubelet.dot(&self.normal.as_vector()) == PLANET_RADIUS
     }
 
     #[allow(dead_code)]
@@ -40,12 +40,12 @@ impl Position {
         } else if self.normal == -other.normal {
             let (abscissa, ordinate) = self.normal.abscissa_and_ordinate();
             let (self_x, self_y) = (
-                self.cubelet.dot(&abscissa.to_vector()),
-                self.cubelet.dot(&ordinate.to_vector()),
+                self.cubelet.dot(&abscissa.as_vector()),
+                self.cubelet.dot(&ordinate.as_vector()),
             );
             let (other_x, other_y) = (
-                other.cubelet.dot(&abscissa.to_vector()),
-                other.cubelet.dot(&ordinate.to_vector()),
+                other.cubelet.dot(&abscissa.as_vector()),
+                other.cubelet.dot(&ordinate.as_vector()),
             );
 
             2 * PLANET_RADIUS

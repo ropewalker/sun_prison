@@ -24,19 +24,21 @@ fn init_map() -> HashMap<(isize, isize), String> {
 }
 
 pub fn setup(
-    commands: &mut Commands,
+    mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut turn_queue: ResMut<TurnQueue>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    commands
-        .spawn(CameraUiBundle::default())
-        .spawn(Camera2dBundle::default());
+    let mut camera = OrthographicCameraBundle::new_2d();
+    camera.transform = Transform::from_translation(Vec3::new(0.0, 0.0, 10.0));
+    commands.spawn_bundle(camera);
+
+    commands.spawn_bundle(UiCameraBundle::default());
 
     asset_server.load_folder("images").unwrap();
     asset_server.load_folder("fonts").unwrap();
 
-    create_labels(commands, &asset_server);
+    create_labels(&mut commands, &asset_server);
 
     let mut player_coordinates = None;
     let mut portal_coordinates = None;
@@ -111,7 +113,7 @@ pub fn setup(
     //player
     if let Some(player_coordinates) = player_coordinates {
         create_player(
-            commands,
+            &mut commands,
             &asset_server,
             &mut turn_queue,
             &mut texture_atlases,
@@ -124,7 +126,7 @@ pub fn setup(
     //portal
     if let Some(portal_coordinates) = portal_coordinates {
         create_portal(
-            commands,
+            &mut commands,
             &asset_server,
             &mut texture_atlases,
             portal_coordinates,
@@ -135,7 +137,7 @@ pub fn setup(
 
     //enemies
     create_enemies(
-        commands,
+        &mut commands,
         &asset_server,
         &mut turn_queue,
         &mut texture_atlases,
@@ -144,7 +146,7 @@ pub fn setup(
     );
 
     create_enemies(
-        commands,
+        &mut commands,
         &asset_server,
         &mut turn_queue,
         &mut texture_atlases,
@@ -153,7 +155,7 @@ pub fn setup(
     );
 
     create_enemies(
-        commands,
+        &mut commands,
         &asset_server,
         &mut turn_queue,
         &mut texture_atlases,
@@ -163,7 +165,7 @@ pub fn setup(
 
     //walls
     create_walls(
-        commands,
+        &mut commands,
         &asset_server,
         &mut texture_atlases,
         wall_coordinates,
@@ -172,7 +174,7 @@ pub fn setup(
 
     //movable_walls
     create_walls(
-        commands,
+        &mut commands,
         &asset_server,
         &mut texture_atlases,
         mov_wall_coordinates,
@@ -180,5 +182,5 @@ pub fn setup(
     );
 
     //tiles
-    create_planet(commands, &asset_server, &mut texture_atlases);
+    create_planet(&mut commands, &asset_server, &mut texture_atlases);
 }

@@ -2,7 +2,7 @@ use super::*;
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, HashMap, HashSet};
 
-type QueryWithEnemy<'a, T> = Query<'a, T, With<Enemy>>;
+type QueryWithEnemy<'a, T> = Query<'a, T, (With<Enemy>, Without<Player>)>;
 type EnemyComponents<'a> = (
     &'a Viewshed,
     &'a mut RememberedObstacles,
@@ -98,9 +98,9 @@ pub fn enemies_movement_system(
         for (mut text, label) in label_query.iter_mut() {
             if label.label_type == LabelType::GameEvents {
                 if hits > 0 {
-                    (*text).value = format!("You got hit for {} HP.", hits);
+                    (*text).sections[0].value = format!("You got hit for {} HP.", hits);
                 } else {
-                    (*text).value = "It is dark here.".to_string();
+                    (*text).sections[0].value = "It is dark here.".to_string();
                 }
             }
         }
@@ -171,8 +171,8 @@ fn first_step(
 
     let mut current = goal;
 
-    while came_from.contains_key(&current) {
-        let (previous, direction) = came_from.get(&current).unwrap();
+    while came_from.contains_key(current) {
+        let (previous, direction) = came_from.get(current).unwrap();
 
         if *previous == start.position {
             return Some(GameCoordinates {
@@ -199,8 +199,8 @@ impl QueueElement {
             - self
                 .node
                 .came_from
-                .to_vector()
-                .dot(&self.node.coordinates.tangent.unwrap().to_vector())
+                .as_vector()
+                .dot(&self.node.coordinates.tangent.unwrap().as_vector())
     }
 }
 

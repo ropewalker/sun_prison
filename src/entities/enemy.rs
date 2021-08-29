@@ -24,16 +24,16 @@ pub fn create_enemies(
 
     for (number, &enemy_coordinates) in enemies_coordinates.iter().enumerate() {
         let enemy_entity = commands
-            .spawn(SpriteSheetBundle {
+            .spawn_bundle(SpriteSheetBundle {
                 texture_atlas: texture_atlas.clone(),
                 transform,
                 ..Default::default()
             })
-            .with(kind)
-            .with(enemy_coordinates)
-            .with(Movable)
-            .with(Obstacle)
-            .with(Viewshed {
+            .insert(kind)
+            .insert(enemy_coordinates)
+            .insert(Movable)
+            .insert(Obstacle)
+            .insert(Viewshed {
                 visible_positions: HashSet::new(),
                 shape: match kind {
                     Enemy::Zombie => ViewshedShape::Quadrant,
@@ -41,10 +41,9 @@ pub fn create_enemies(
                     Enemy::Demon => ViewshedShape::All,
                 },
             })
-            .with(LastPlayerPosition(None))
-            .with(RememberedObstacles(HashSet::new()))
-            .current_entity()
-            .unwrap();
+            .insert(LastPlayerPosition(None))
+            .insert(RememberedObstacles(HashSet::new()))
+            .id();
 
         (*turn_queue).0.push(TurnQueueElement {
             entity: enemy_entity,

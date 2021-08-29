@@ -13,7 +13,7 @@ use bevy::window::WindowMode;
 #[bevy_main]
 fn main() {
     App::build()
-        .add_resource(WindowDescriptor {
+        .insert_resource(WindowDescriptor {
             title: "Sun Prison".to_string(),
             width: 720.,
             height: 540.,
@@ -21,7 +21,7 @@ fn main() {
             mode: WindowMode::Windowed,
             ..Default::default()
         })
-        .add_resource(ClearColor(Color::rgba(1.0, 1.0, 1.0, 1.0)))
+        .insert_resource(ClearColor(Color::rgba(1.0, 1.0, 1.0, 1.0)))
         .init_resource::<GameState>()
         .init_resource::<TurnQueue>()
         .add_plugins(DefaultPlugins)

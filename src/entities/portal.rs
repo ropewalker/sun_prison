@@ -16,11 +16,11 @@ pub fn create_portal(
     let transform = Transform::from_translation(Vec3::new(0.0, 0.0, 0.1));
 
     commands
-        .spawn(SpriteSheetBundle {
+        .spawn_bundle(SpriteSheetBundle {
             texture_atlas,
             transform,
             ..Default::default()
         })
-        .with(Exit)
-        .with(portal_coordinates);
+        .insert(Exit)
+        .insert(portal_coordinates);
 }
