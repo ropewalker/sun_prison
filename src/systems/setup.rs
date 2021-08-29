@@ -6,14 +6,14 @@ use bevy::prelude::*;
 use std::collections::HashMap;
 use std::fs;
 
-fn init_map() -> HashMap<(isize, isize), String> {
+fn init_map() -> HashMap<(i32, i32), String> {
     match fs::read_to_string("assets/config/map.txt") {
         Ok(layout) => {
             let mut map = HashMap::new();
 
             for (y, line) in layout.trim().lines().enumerate() {
                 for (x, c) in line.trim().split(' ').enumerate() {
-                    map.insert((x as isize, y as isize), c.to_string());
+                    map.insert((x as i32, y as i32), c.to_string());
                 }
             }
 
@@ -61,7 +61,7 @@ pub fn setup(
 
                 let game_coordinates = Position { cubelet, normal }.into();
 
-                let i = i as isize;
+                let i = i as i32;
 
                 let sign = 2 * (i % 2) - 1;
 

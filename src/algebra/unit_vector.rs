@@ -70,16 +70,16 @@ impl Add<UnitVector> for UnitVector {
     }
 }
 
-impl Mul<isize> for UnitVector {
+impl Mul<i32> for UnitVector {
     type Output = Vector3;
 
-    fn mul(self, other: isize) -> Vector3 {
+    fn mul(self, other: i32) -> Vector3 {
         let vector = self.as_vector();
         other * vector
     }
 }
 
-impl Mul<UnitVector> for isize {
+impl Mul<UnitVector> for i32 {
     type Output = Vector3;
 
     fn mul(self, other: UnitVector) -> Vector3 {

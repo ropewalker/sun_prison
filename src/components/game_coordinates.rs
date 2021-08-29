@@ -34,7 +34,7 @@ impl Position {
     }
 
     #[allow(dead_code)]
-    pub fn manhattan_distance_to(&self, other: &Position) -> isize {
+    pub fn manhattan_distance_to(&self, other: &Position) -> i32 {
         if self.normal == other.normal {
             (self.cubelet - other.cubelet).manhattan_length()
         } else if self.normal == -other.normal {
@@ -84,7 +84,7 @@ impl From<Position> for GameCoordinates {
 
 pub struct RotationInfo {
     pub axis: UnitVector,
-    pub layer: isize,
+    pub layer: i32,
 }
 
 pub fn calculate_rotation_info(coordinates: &GameCoordinates) -> RotationInfo {

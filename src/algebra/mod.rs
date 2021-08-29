@@ -5,13 +5,13 @@ pub use unit_vector::*;
 
 #[derive(Eq, PartialEq, Hash, Debug, Copy, Clone, Ord, PartialOrd)]
 pub struct Vector3 {
-    pub x: isize,
-    pub y: isize,
-    pub z: isize,
+    pub x: i32,
+    pub y: i32,
+    pub z: i32,
 }
 
 impl Vector3 {
-    pub fn manhattan_length(&self) -> isize {
+    pub fn manhattan_length(&self) -> i32 {
         self.x.abs() + self.y.abs() + self.z.abs()
     }
 
@@ -23,7 +23,7 @@ impl Vector3 {
         }
     }
 
-    pub fn dot(&self, other: &Vector3) -> isize {
+    pub fn dot(&self, other: &Vector3) -> i32 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
@@ -67,8 +67,8 @@ impl Vector3 {
     }
 }
 
-impl From<(isize, isize, isize)> for Vector3 {
-    fn from((x, y, z): (isize, isize, isize)) -> Self {
+impl From<(i32, i32, i32)> for Vector3 {
+    fn from((x, y, z): (i32, i32, i32)) -> Self {
         Vector3 { x, y, z }
     }
 }
@@ -149,10 +149,10 @@ impl Neg for Vector3 {
     }
 }
 
-impl Mul<isize> for Vector3 {
+impl Mul<i32> for Vector3 {
     type Output = Vector3;
 
-    fn mul(self, other: isize) -> Vector3 {
+    fn mul(self, other: i32) -> Vector3 {
         Vector3 {
             x: self.x * other,
             y: self.y * other,
@@ -161,7 +161,7 @@ impl Mul<isize> for Vector3 {
     }
 }
 
-impl Mul<Vector3> for isize {
+impl Mul<Vector3> for i32 {
     type Output = Vector3;
 
     fn mul(self, other: Vector3) -> Vector3 {

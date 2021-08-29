@@ -2,7 +2,7 @@ use crate::algebra::*;
 use crate::components::*;
 use crate::resources::PLANET_RADIUS;
 use bevy::prelude::*;
-use num_rational::Rational;
+use num_rational::Rational32;
 use std::collections::{HashSet, VecDeque};
 
 pub fn viewshed_update_system(
@@ -66,8 +66,8 @@ pub fn viewshed_update_system(
 
             rows.push_back(Row {
                 depth: 1,
-                start_slope: Rational::from_integer(-1),
-                end_slope: Rational::from_integer(1),
+                start_slope: Rational32::from_integer(-1),
+                end_slope: Rational32::from_integer(1),
             });
 
             while !rows.is_empty() {
@@ -227,42 +227,42 @@ impl Quadrant {
     }
 }
 
-fn round_ties_up(n: Rational) -> isize {
-    (n + Rational::new_raw(1, 2)).floor().to_integer()
+fn round_ties_up(n: Rational32) -> i32 {
+    (n + Rational32::new_raw(1, 2)).floor().to_integer()
 }
 
-fn round_ties_down(n: Rational) -> isize {
-    (n - Rational::new_raw(1, 2)).ceil().to_integer()
+fn round_ties_down(n: Rational32) -> i32 {
+    (n - Rational32::new_raw(1, 2)).ceil().to_integer()
 }
 
-fn slope(tile: &Tile) -> Rational {
+fn slope(tile: &Tile) -> Rational32 {
     let (row_depth, col) = (tile.row, tile.col);
-    Rational::new(2 * col - 1, 2 * row_depth)
+    Rational32::new(2 * col - 1, 2 * row_depth)
 }
 
 fn is_symmetric(row: &Row, tile: &Tile) -> bool {
     let col = tile.col;
 
-    Rational::from_integer(col) >= Rational::from_integer(row.depth) * row.start_slope
-        && Rational::from_integer(col) <= Rational::from_integer(row.depth) * row.end_slope
+    Rational32::from_integer(col) >= Rational32::from_integer(row.depth) * row.start_slope
+        && Rational32::from_integer(col) <= Rational32::from_integer(row.depth) * row.end_slope
 }
 
 #[derive(Copy, Clone)]
 struct Tile {
-    row: isize,
-    col: isize,
+    row: i32,
+    col: i32,
 }
 
 struct Row {
-    depth: isize,
-    start_slope: Rational,
-    end_slope: Rational,
+    depth: i32,
+    start_slope: Rational32,
+    end_slope: Rational32,
 }
 
 impl Row {
     fn tiles(&self) -> impl Iterator<Item = Tile> {
-        let min_col = round_ties_up(Rational::from_integer(self.depth) * self.start_slope);
-        let max_col = round_ties_down(Rational::from_integer(self.depth) * self.end_slope);
+        let min_col = round_ties_up(Rational32::from_integer(self.depth) * self.start_slope);
+        let max_col = round_ties_down(Rational32::from_integer(self.depth) * self.end_slope);
 
         let depth = self.depth;
 

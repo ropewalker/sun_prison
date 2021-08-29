@@ -190,11 +190,11 @@ fn first_step(
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 struct QueueElement {
     node: PathNode,
-    priority: isize,
+    priority: i32,
 }
 
 impl QueueElement {
-    fn heuristic(&self, goal: &Position) -> isize {
+    fn heuristic(&self, goal: &Position) -> i32 {
         2 * self.node.coordinates.position.manhattan_distance_to(goal)
             - self
                 .node
